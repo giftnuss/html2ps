@@ -239,7 +239,7 @@ require_once(HTML2PS_DIR.'filter.data.ucs2.class.php');
 require_once(HTML2PS_DIR.'filter.data.html2xhtml.class.php');
 require_once(HTML2PS_DIR.'filter.data.xhtml2xhtml.class.php');
 
-require_once(HTML2PS_DIR.'parser._interface.class.php');
+require_once(HTML2PS_DIR.'lib/interfaces/Parser.php');
 require_once(HTML2PS_DIR.'parser.xhtml.class.php');
 
 require_once(HTML2PS_DIR.'filter.pre._interface.class.php');
@@ -282,6 +282,9 @@ require_once(HTML2PS_DIR.'autofix.url.php');
 
 require_once(HTML2PS_DIR.'fetcher._interface.class.php');
 require_once(HTML2PS_DIR.'features/_factory.php');
+
+require_once HTML2PS_DIR . 'lib/exceptions/Error.php';
+require_once HTML2PS_DIR . 'lib/exceptions/ParserError.php';
 
 class Pipeline {
   var $fetchers;

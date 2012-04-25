@@ -1,14 +1,20 @@
 <?php
-class ParserXHTML extends Parser {
-  function &process($html, &$pipeline, &$media) {
+
+class
+  ParserXHTML 
+implements
+  Parser
+{
+  function process($html, $pipeline, $media)
+  {
     // Run the XML parser on the XHTML we've prepared
     $dom_tree = TreeBuilder::build($html);
 
     // Check if parser returned valid document
     if (is_null($dom_tree)) {
-      readfile(HTML2PS_DIR.'templates/cannot_parse.html');
-      error_log(sprintf("Cannot parse document: %s", $pipeline->get_base_url()));
-      die("HTML2PS Error");
+      throw new ParserError(
+          sprintf("Cannot parse document: %s", $pipeline->get_base_url())
+      );
     }
 
     /**
@@ -36,7 +42,7 @@ class ParserXHTML extends Parser {
      * This should be done here, as the document body may include STYLE node 
      * (this violates HTML standard, but is rather often appears in Web)
      */
-    $css =& $pipeline->get_current_css();
+    $css = $pipeline->get_current_css();
     $css->scan_styles($dom_tree, $pipeline);
 
     if (!is_null($media)) {
@@ -46,8 +52,8 @@ class ParserXHTML extends Parser {
       $pipeline->_setupScales($media);
     };
 
-    $body =& traverse_dom_tree_pdf($dom_tree);
-    $box =& create_pdf_box($body, $pipeline);   
+    $body = traverse_dom_tree_pdf($dom_tree);
+    $box = create_pdf_box($body, $pipeline);   
 
     return $box;
   }
@@ -89,4 +95,3 @@ class ParserXHTML extends Parser {
     return false;
   }
 }
-?>
