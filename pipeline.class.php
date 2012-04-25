@@ -285,8 +285,10 @@ require_once(HTML2PS_DIR.'features/_factory.php');
 
 require_once HTML2PS_DIR . 'lib/exceptions/Error.php';
 require_once HTML2PS_DIR . 'lib/exceptions/ParserError.php';
+require_once HTML2PS_DIR . 'lib/exceptions/DomError.php';
 
-class Pipeline {
+class Pipeline
+{
   var $fetchers;
   var $data_filters;
   var $error_message;
