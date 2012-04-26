@@ -5,7 +5,7 @@ require_once(HTML2PS_DIR.'fetcher._interface.class.php');
 /**
  * This class handles fetching HTTP code using CURL extension
  */
-class FetcherUrlCurl extends Fetcher {
+class FetcherUrlCurl implements Fetcher {
   /**
    * @var String URL being fetched
    * @access private

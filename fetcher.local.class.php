@@ -1,6 +1,7 @@
 <?php
 
-class FetcherLocalFile extends Fetcher {
+class FetcherLocalFile implements Fetcher
+{
   var $_content;
   
   function FetcherLocalFile($file) {
@@ -19,4 +20,3 @@ class FetcherLocalFile extends Fetcher {
     return '';
   }
 }
-?>

@@ -1,6 +1,7 @@
 <?php
 
-class TestBorderLeft extends GenericTest {
+class TestBorderLeft extends GenericTest
+{
   function testBorderLeft1() {
     $tree = $this->runPipeline(file_get_contents('test.border-left.1.html'));
 
@@ -40,4 +41,3 @@ class TestBorderLeft extends GenericTest {
   }
 }
 
-?>

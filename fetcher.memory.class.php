@@ -1,6 +1,6 @@
 <?php
 
-class FetcherMemory extends Fetcher {
+class FetcherMemory implements Fetcher {
   var $base_path;
   var $base_url;
   var $content;

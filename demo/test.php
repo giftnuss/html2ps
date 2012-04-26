@@ -34,7 +34,7 @@ function convert_to_pdf($pdf) {
 		}
 	}
 
-	class MyFetcherLocalFile extends Fetcher {
+	class MyFetcherLocalFile implements Fetcher {
 	var $_content;
 
 		function MyFetcherLocalFile() {

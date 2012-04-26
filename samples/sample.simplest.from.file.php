@@ -27,7 +27,7 @@ class MyDestinationFile extends Destination {
   }
 }
 
-class MyFetcherLocalFile extends Fetcher {
+class MyFetcherLocalFile implements Fetcher {
   var $_content;
 
   function MyFetcherLocalFile($file) {

@@ -8,7 +8,7 @@ define('HTTP_NOT_FOUND', 404);
 /**
  * @TODO send authorization headers only if they have been required by the server;
  */
-class FetcherUrl extends Fetcher {
+class FetcherUrl implements Fetcher {
   var $_connections;
 
   var $protocol;
