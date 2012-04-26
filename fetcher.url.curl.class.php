@@ -1,7 +1,5 @@
 <?php
 
-require_once(HTML2PS_DIR.'fetcher._interface.class.php');
-
 /**
  * This class handles fetching HTTP code using CURL extension
  */
