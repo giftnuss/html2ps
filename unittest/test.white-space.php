@@ -1,7 +1,9 @@
 <?php
 
-class TestWhiteSpace extends GenericTest {
-  function testWhiteSpace1() {
+class TestWhiteSpace extends GenericTest
+{
+  function testWhiteSpace1()
+  {
     $tree = $this->runPipeline(file_get_contents('test.white-space.1.html'));
 
     $element =& $tree->get_element_by_id('div-normal');

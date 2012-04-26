@@ -5,12 +5,14 @@ class MyFetcherMemory implements Fetcher
   var $base_path;
   var $content;
 
-  function MyFetcherMemory($content, $base_path) {
+  function __construct($content, $base_path)
+  {
     $this->content   = $content;
     $this->base_path = $base_path;
   }
 
-  function get_data($url) {
+  function get_data($url)
+  {
     if (!$url) {
       return new FetchedDataURL($this->content, array(), "");
     } else {
@@ -24,8 +26,14 @@ class MyFetcherMemory implements Fetcher
     }
   }
 
-  function get_base_url() {
+  function get_base_url()
+  {
     return 'file:///'.$this->base_path.'/dummy.html';
+  }
+  
+  function error_message()
+  {
+    throw new TodoError("ERROR MESSAGE");
   }
 }
 

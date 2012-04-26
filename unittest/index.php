@@ -15,12 +15,13 @@ require_once(HTML2PS_DIR.'pipeline.factory.class.php');
 require_once('fetcher.memory.php');
 require_once('generic.test.php');
 
-$test = &new GroupTest('All tests');
+$test = new TestSuite('All tests');
 $testfiles = glob('test.*.php');
+
 foreach ($testfiles as $testfile) {
 //  $test->addTestFile($testfile);
 };
-$test->addTestFile('test.white-space.php');
+$test->addFile('test.white-space.php');
 $test->run(new HtmlReporter());
 
 ?>
