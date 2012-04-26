@@ -57,6 +57,38 @@ function is($have, $want, $desc = '') {
     return _proclaim($pass, $desc, /* todo */ false, $have, $want);
 }
 
+function is_linewise($have, $want, $desc = ''){
+    $lineendings = '(\015{1,2}\012|\015|\012)';
+    $havelines = preg_split($lineendings,$have);
+    $wantlines = preg_split($lineendings,$want);
+    $linecount = (count($havelines) >= count($wantlines)
+        ? count($havelines) : count($wantlines));
+    
+    for($idx = 0; $idx < $linecount; $idx++) {
+        if(isset($havelines[$idx])) {
+            $haveline = $havelines[$idx];
+        }
+        else {
+            $have = "Line " . ($idx+1) . " missing";
+            $want = $wantlines[$idx];
+            return _proclaim(false,$desc,false,$have,$want);
+        }
+        if(isset($wantlines[$idx])) {
+            $wantline = $wantlines[$idx];
+        }
+        else {
+            $have = "Line " . ($idx+1) . " is '" . $haveline . "'";
+            $want = "is missing";
+            return _proclaim(false,$desc,false,$have,$want);
+        }
+        if($haveline != $wantline) {
+            return _proclaim(false,$desc,false,
+                "Line " . ($idx+1) . " '$haveline'","'$wantline'");
+        }        
+    }
+    return _proclaim(true,$desc,false,"Line " . ($idx+1) . "","");
+}
+
 function isnt($have, $want, $desc = '') {
     $pass = $have != $want;
     return _proclaim($pass, $desc, /* todo */ false, $have, $want, /* negated */ true);
@@ -138,7 +170,13 @@ function require_ok($file, $desc = '')
 {
     $pass = require $file;
     return _proclaim($pass, $desc == '' ? "require $file" : $desc);
-} 
+}
+
+function use_ok($file, $desc = '')
+{
+    $pass = require_once $file;
+    return _proclaim($pass, $desc == '' ? "require_once $file" : $desc);
+}
 
 function is_deeply($have, $want, $desc = '')
 {
@@ -146,9 +184,9 @@ function is_deeply($have, $want, $desc = '')
     $pass = is_null($diff);
 
     if (!$pass) {
-        $have = strlen($diff['gpath']) ? ($diff['gpath'] . ' = ' . $diff['have']) 
+        $have = strlen($diff['gpath']) ? ($diff['gpath'] . ' = ' . $diff['have'])
                                        : _repl($have);
-        $want = strlen($diff['epath']) ? ($diff['epath'] . ' = ' . $diff['want']) 
+        $want = strlen($diff['epath']) ? ($diff['epath'] . ' = ' . $diff['want'])
                                        : _repl($want);
     }
 
@@ -158,7 +196,8 @@ function is_deeply($have, $want, $desc = '')
 function isa_ok($obj, $want, $desc = '')
 {
     $pass = is_a($obj, $want);
-    _proclaim($pass, $desc, /* todo */ false, $name, $want);
+    $isclass = (is_object($obj) && get_class($obj));
+    _proclaim($pass, $desc, /* todo */ false, $isclass, $want);
 }
 
 function todo_start($why = '')
@@ -221,7 +260,7 @@ function _proclaim(
         # the second item in the stack
         $caller = debug_backtrace();
         $call = $caller['1'];
-    
+
         if (($have != null) || ($want != null)) {
           diag(
               sprintf(" Failed%stest '%s'\n in %s at line %d\n have: %s\n  want: %s",
@@ -297,11 +336,11 @@ function _idx($obj, $path = '') {
 
 function _cmp_deeply($have, $exp, $path = '') {
     if (is_array($exp)) {
-        
+
         if (!is_array($have)) {
             return _diff($path, _repl($have), $path, _repl($exp));
         }
-        
+
         $gk = array_keys($have);
         $ek = array_keys($exp);
         $mc = max(count($gk), count($ek));
@@ -309,16 +348,16 @@ function _cmp_deeply($have, $exp, $path = '') {
         for ($el = 0; $el < $mc; $el++) {
             # One array shorter than the other?
             if ($el >= count($ek)) {
-                return _diff(_idx($gk[$el], $path), _repl($have[$gk[$el]]), 
+                return _diff(_idx($gk[$el], $path), _repl($have[$gk[$el]]),
                              'missing', 'nothing');
             } else if ($el >= count($gk)) {
-                return _diff('missing', 'nothing', 
+                return _diff('missing', 'nothing',
                              _idx($ek[$el], $path), _repl($exp[$ek[$el]]));
             }
-            
+
             # Keys differ?
             if ($gk[$el] != $ek[$el]) {
-                return _diff(_idx($gk[$el], $path), _repl($have[$gk[$el]]), 
+                return _diff(_idx($gk[$el], $path), _repl($have[$gk[$el]]),
                              _idx($ek[$el], $path), _repl($exp[$ek[$el]]));
             }
 
@@ -335,7 +374,7 @@ function _cmp_deeply($have, $exp, $path = '') {
             return _diff($path, _repl($have), $path, _repl($exp));
         }
     }
-    
+
     return null;
 }
 
@@ -382,9 +421,9 @@ Test.php - TAP test framework for PHP with a L<Test::More>-like interface
 =head1 SYNOPSIS
 
     #!/usr/bin/env php
-    <?php  
+    <?php
     require 'Test.php';
-  
+
     plan($num); # plan $num tests
     # or
     plan('no_plan'); # We don't know how many
@@ -392,31 +431,31 @@ Test.php - TAP test framework for PHP with a L<Test::More>-like interface
     plan('skip_all'); # Skip all tests
     # or
     plan('skip_all', $reason); # Skip all tests with a reason
-  
+
     diag('message in test output') # Trailing \n not required
-  
+
     # $test_name is always optional and should be a short description of
     # the test, e.g. "some_function() returns an integer"
-  
+
     # Various ways to say "ok"
     ok($have == $want, $test_name);
-  
+
     # Compare with == and !=
     is($have, $want, $test_name);
     isnt($have, $want, $test_name);
-  
+
     # Run a preg regex match on some data
     like($have, $regex, $test_name);
     unlike($have, $regex, $test_name);
-  
+
     # Compare something with a given comparison operator
     cmp_ok($have, '==', $want, $test_name);
     # Compare something with a comparison function (should return bool)
     cmp_ok($have, $func, $want, $test_name);
-  
+
     # Recursively check datastructures for equalness
     is_deeply($have, $want, $test_name);
-  
+
     # Always pass or fail a test under an optional name
     pass($test_name);
     fail($test_name);
@@ -433,7 +472,7 @@ Test.php - TAP test framework for PHP with a L<Test::More>-like interface
     }
     todo_end();
     ?>
-  
+
 =head1 DESCRIPTION
 
 F<Test.php> is an implementation of Perl's L<Test::More> for PHP. Like
@@ -451,7 +490,7 @@ tests in a directory named F<t> under the root but they can be
 anywhere you like. Make a test in this directory or one of its subdirs
 and try running it with php(1):
 
-    $ php t/pass.t 
+    $ php t/pass.t
     1..1
     ok 1 This dummy test passed
 
@@ -459,8 +498,8 @@ The TAP output consists of very simple output, of course reading
 larger output is going to be harder which is where prove(1) comes
 in. prove is a harness program that reads test output and produces
 reports based on it:
-    
-    $ prove t/pass.t 
+
+    $ prove t/pass.t
     t/pass....ok
     All tests successful.
     Files=1, Tests=1,  0 wallclock secs ( 0.03 cusr +  0.02 csys =  0.05 CPU)
@@ -471,20 +510,20 @@ example:
 
     test: Test.php
 		prove -r t
-    
+
 For reference the example test file above looks like this, the shebang
 on the first line is needed so that prove(1) and other test harness
 programs know they're dealing with a PHP file.
 
     #!/usr/bin/env php
     <?php
-    
+
     require 'Test.php';
-    
+
     plan(1);
     pass('This dummy test passed');
     ?>
-    
+
 =head1 SEE ALSO
 
 L<TAP> - The TAP protocol
