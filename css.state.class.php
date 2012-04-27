@@ -1,14 +1,16 @@
 <?php
 
-class CSSState {
+class CSSState
+{
   var $_state;
   var $_stateDefaultFlags;
   var $_handlerSet;
   var $_baseFontSize;
 
-  function CSSState(&$handlerSet) {
-    $this->_handlerSet        =& $handlerSet;
-    $this->_state             =  array($this->_getDefaultState());
+  function CSSState(CSS $handlerSet)
+  {
+    $this->_handlerSet = $handlerSet;
+    $this->_state =  array($this->_getDefaultState());
     $this->_stateDefaultFlags =  array($this->_getDefaultStateFlags());
 
     /**
@@ -18,12 +20,14 @@ class CSSState {
     $this->_baseFontSize      =  array($this->_state[0][CSS_FONT]->size->toPt(0));
   }
 
-  function _getDefaultState() {
-    return $this->_handlerSet->_getDefaultState();
+  function _getDefaultState()
+  {
+    return $this->_handlerSet->getDefaultState();
   }
 
-  function _getDefaultStateFlags() {
-    return $this->_handlerSet->_getDefaultStateFlags();
+  function _getDefaultStateFlags()
+  {
+    return $this->_handlerSet->getDefaultStateFlags();
   }
 
   function replaceParsed($property_data, $property_list) {
@@ -160,12 +164,13 @@ class CSSState {
   /**
    * see get_property for optimization description
    */
-  function set_property($code, $value) {
+  function set_property($code, $value)
+  {
     $this->set_propertyDefault($code, $value);
 
     static $cache = array();
     if (!isset($cache[$code])) {
-      $cache[$code] =& CSS::get_handler($code);
+      $cache[$code] = CSS::get_handler($code);
     };
 
     $cache[$code]->clearDefaultFlags($this);

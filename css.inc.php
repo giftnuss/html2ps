@@ -1,13 +1,26 @@
 <?php
 // $Header: /cvsroot/html2ps/css.inc.php,v 1.28 2007/04/07 11:16:34 Konstantin Exp $
 
-class CSS {
+class CSS
+{
   var $_handlers;
   var $_mapping;
   var $_defaultState;
   var $_defaultStateFlags;
+  
+  public function __construct()
+  {
+    $this->_handlers = array();
+    $this->_mapping  = array();
+  }
 
-  function _getDefaultState() {
+  public function getDefaultState()
+  {
+    return $this->_getDefaultState();
+  }
+
+  protected function _getDefaultState()
+  {
     if (!isset($this->_defaultState)) {
       $this->_defaultState = array();
 
@@ -19,8 +32,14 @@ class CSS {
 
     return $this->_defaultState;
   }
+  
+  public function getDefaultStateFlags()
+  {
+    return $this->_getDefaultStateFlags();
+  }
 
-  function _getDefaultStateFlags() {
+  protected function _getDefaultStateFlags()
+  {
     if (!isset($this->_defaultStateFlags)) {
       $this->_defaultStateFlags = array();
 
@@ -33,11 +52,13 @@ class CSS {
     return $this->_defaultStateFlags;
   }
   
-  function getHandlers() {
+  public function getHandlers()
+  {
     return $this->_handlers;
   }
 
-  function getInheritableTextHandlers() {
+  public function getInheritableTextHandlers()
+  {
     if (!isset($this->_handlersInheritableText)) {
       $this->_handlersInheritabletext = array();
       foreach ($this->_handlers as $property => $handler) {
@@ -50,7 +71,8 @@ class CSS {
     return $this->_handlersInheritableText;
   }
 
-  function getInheritableHandlers() {
+  public function getInheritableHandlers()
+  {
     if (!isset($this->_handlersInheritable)) {
       $this->_handlersInheritable = array();
       foreach ($this->_handlers as $property => $handler) {
@@ -63,7 +85,8 @@ class CSS {
     return $this->_handlersInheritable;
   }
 
-  function &get() {
+  public static function get()
+  {
     global $__g_css_handler_set;
 
     if (!isset($__g_css_handler_set)) {
@@ -73,14 +96,10 @@ class CSS {
     return $__g_css_handler_set;
   }
 
-  function CSS() {
-    $this->_handlers = array();
-    $this->_mapping  = array();
-  }
-
-  function getDefaultValue($property) {
-    $css =& CSS::get();
-    $handler =& $css->_get_handler($property);
+  function getDefaultValue($property)
+  {
+    $css = CSS::get();
+    $handler = $css->_get_handler($property);
     $value = $handler->default_value();
 
     if (is_object($value)) {
@@ -90,13 +109,15 @@ class CSS {
     };
   }
 
-  function &get_handler($property) {
-    $css =& CSS::get();
+  function &get_handler($property)
+  {
+    $css = CSS::get();
     $handler =& $css->_get_handler($property);
     return $handler;
   }
 
-  function &_get_handler($property) {
+  function &_get_handler($property)
+  {
     if (isset($this->_handlers[$property])) {
       return $this->_handlers[$property];
     } else {
@@ -105,7 +126,8 @@ class CSS {
     };
   }
 
-  function _name2code($key) {
+  function _name2code($key)
+  {
     if (!isset($this->_mapping[$key])) { 
       return null; 
     };
@@ -113,17 +135,19 @@ class CSS {
     return $this->_mapping[$key];
   }
 
-  function name2code($key) {
-    $css =& CSS::get();
+  function name2code($key)
+  {
+    $css = CSS::get();
     return $css->_name2code($key);
   }
 
-  function register_css_property(&$handler) {
+  public static function register_css_property(&$handler)
+  {
     $property = $handler->get_property_code();
     $name     = $handler->get_property_name();
 
-    $css =& CSS::get();
-    $css->_handlers[$property] =& $handler;
+    $css = CSS::get();
+    $css->_handlers[$property] = $handler;
     $css->_mapping[$name] = $property;
   }
 
@@ -137,17 +161,20 @@ class CSS {
    * nmchar		[_a-z0-9-]|{nonascii}|{escape}
    * ident		-?{nmstart}{nmchar}*
    */
-  function get_identifier_regexp() {
+  function get_identifier_regexp()
+  {
     return '-?(?:[_a-z]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])(?:[_a-z0-9-]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*';
   }
 
-  function is_identifier($string) {
+  function is_identifier($string)
+  {
     return preg_match(sprintf('/%s/', 
                               CSS::get_identifier_regexp()), 
                       $string);
   }
 
-  function parse_string($string) {
+  function parse_string($string)
+  {
     if (preg_match(sprintf('/^(%s)\s*(.*)$/s', CSS_STRING1_REGEXP), $string, $matches)) {
       $value = $matches[1];
       $rest = $matches[2];
@@ -169,9 +196,8 @@ class CSS {
     return array(null, $string);
   }
 
-  function remove_backslash_at_newline($value) {
+  function remove_backslash_at_newline($value)
+  {
     return preg_replace("/\\\\\n/", '', $value);
   }
 }
-
-?>
