@@ -1,12 +1,7 @@
 <?php
 
-require_once(HTML2PS_DIR.'inline.content.builder.php');
-
-class InlineContentBuilderPreWrap extends InlineContentBuilder {
-  function InlineContentBuilderPreWrap() {
-    $this->InlineContentBuilder();
-  }
-
+class InlineContentBuilderPreWrap extends InlineContentBuilder
+{
   /**
    * CSS 2.1 16.6 Whitespace: the 'white-space' property
    *
@@ -41,4 +36,3 @@ class InlineContentBuilderPreWrap extends InlineContentBuilder {
   }
 }
 
-?>

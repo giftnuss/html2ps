@@ -1,18 +1,15 @@
 <?php
 
-require_once(HTML2PS_DIR.'inline.content.builder.php');
-
-class InlineContentBuilderNormal extends InlineContentBuilder {
-  function InlineContentBuilderNormal() {
-    $this->InlineContentBuilder();
-  }
-
+class InlineContentBuilderNormal extends InlineContentBuilder
+{
   /**
    * CSS 2.1 p.16.6
    * white-space: normal
-   * This value directs user agents to collapse sequences of whitespace, and break lines as necessary to fill line boxes.
+   * This value directs user agents to collapse sequences of whitespace, and
+   * break lines as necessary to fill line boxes.
    */
-  function build(&$box, $text, &$pipeline) {
+  function build(&$box, $text, Pipeline $pipeline)
+  {
     $text = $this->remove_leading_linefeeds($text);
     $text = $this->remove_trailing_linefeeds($text);
 
@@ -57,4 +54,3 @@ class InlineContentBuilderNormal extends InlineContentBuilder {
   }
 }
 
-?>

@@ -1,12 +1,7 @@
 <?php
 
-require_once(HTML2PS_DIR.'inline.content.builder.php');
-
-class InlineContentBuilderPreLine extends InlineContentBuilder {
-  function InlineContentBuilderPreLine() {
-    $this->InlineContentBuilder();
-  }
-
+class InlineContentBuilderPreLine extends InlineContentBuilder
+{
   /**
    * CSS 2.1 p.16.6
    * white-space: normal
@@ -36,4 +31,3 @@ class InlineContentBuilderPreLine extends InlineContentBuilder {
   }
 }
 
-?>

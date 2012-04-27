@@ -737,25 +737,27 @@ array(UC_LINE_BREAK_OP => array(UC_LINE_BREAK_OP => LB_PROHIBITED,
 /**
  * See CSS 2.1 16.6.1 The 'white-space' processing model
  */
-class InlineContentBuilder {
-  function InlineContentBuilder() {
-  }
-
-  function add_line_break(&$box, &$pipeline) {
-    $break_box =& new BRBox();
+class InlineContentBuilder
+{
+  function add_line_break(&$box, Pipeline $pipeline)
+  {
+    $break_box = new BRBox();
     $break_box->readCSS($pipeline->get_current_css_state());
     $box->add_child($break_box);
   }
 
-  function build(&$box, $text, &$pipeline) {
+  function build(&$box, $text, Pipeline $pipeline)
+  {
     error_no_method('build', get_class($this));
   }
 
-  function break_into_lines($content) {
+  function break_into_lines($content)
+  {
     return preg_split('/[\r\n]/u', $content);
   }
 
-  function break_into_words($content) {
+  function break_into_words($content)
+  {
     $content = trim($content);
     if ($content == '') {
       return array();
@@ -795,7 +797,8 @@ class InlineContentBuilder {
     return $words;
   }
 
-  function find_complex_break($current_class, $classes, &$breaks, $offset, $length) {
+  function find_complex_break($current_class, $classes, &$breaks, $offset, $length)
+  {
     if ($offset >= $length) {
       return 0;
     };
@@ -811,7 +814,8 @@ class InlineContentBuilder {
     return $i;
   }
 
-  function find_line_break($classes, &$breaks, $length) {
+  function find_line_break($classes, &$breaks, $length)
+  {
     if (!$length) {
       return 0;
     };
@@ -897,11 +901,13 @@ class InlineContentBuilder {
     return $i;
   }
 
-  function is_break_allowed($previous_class, $current_class) {
+  function is_break_allowed($previous_class, $current_class)
+  {
     return true;
   }
 
-  function get_line_break_class($ucs2_char) {
+  function get_line_break_class($ucs2_char)
+  {
     static $class_cache = array();
 
     if (!isset($class_cache[$ucs2_char])) {
@@ -950,7 +956,8 @@ class InlineContentBuilder {
     return $table_handle;
   }
 
-  function generate_line_break_class_table($output_filename) {
+  function generate_line_break_class_table($output_filename)
+  {
     $class_codes = array('BK' => 1,
                          'CR' => 2,
                          'LF' => 3,
