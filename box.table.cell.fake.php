@@ -1,10 +1,12 @@
 <?php
 
-class FakeTableCellBox extends TableCellBox {
+class FakeTableCellBox extends TableCellBox
+{
   var $colspan;
   var $rowspan;
 
-  function create(&$pipeline) {
+  public static function create(Pipeline $pipeline)
+  {
     $box =& new FakeTableCellBox;
     
     $css_state =& $pipeline->get_current_css_state();
@@ -23,7 +25,8 @@ class FakeTableCellBox extends TableCellBox {
     return $box;
   }
 
-  function FakeTableCellBox() {
+  function __construct()
+  {
     // Required to reset any constraints initiated by CSS properties
     $this->colspan = 1;
     $this->rowspan = 1;

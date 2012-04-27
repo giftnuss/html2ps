@@ -1,6 +1,7 @@
 <?php
 
-class FormBox extends BlockBox {
+class FormBox extends BlockBox
+{
   /**
    * @var String form name; it will be used as a prefix for field names when submitting forms
    * @access private
@@ -15,7 +16,8 @@ class FormBox extends BlockBox {
     return parent::show($driver);
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     if ($root->has_attribute('name')) {
       $name = $root->get_attribute('name');
     } elseif ($root->has_attribute('id')) {

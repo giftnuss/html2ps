@@ -6,7 +6,8 @@ require_once(HTML2PS_DIR.'encoding.inc.php');
 define('SYMBOL_SHY', code_to_utf8(0xAD));
 define('BROKEN_SYMBOL', chr(0xC2));
 
-class LineBox {
+class LineBox
+{
   var $top;
   var $right;
   var $bottom;
@@ -52,7 +53,8 @@ class LineBox {
     // Left edge of the line box should never be modified
   }
 
-  function fake_box(&$box) {
+  function fake_box(&$box)
+  {
     // Create the fake box object
 
     $fake_state = new CSSState(CSS::get());
@@ -79,7 +81,8 @@ class LineBox {
   }
 }
 
-class InlineBox extends GenericInlineBox {
+class InlineBox extends GenericInlineBox
+{
   var $_lines;
 
   function InlineBox() {
@@ -90,7 +93,8 @@ class InlineBox extends GenericInlineBox {
     $this->_lines = array();
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     // Create contents of this inline box
     if ($root->node_type() == XML_TEXT_NODE) {
       $css_state =& $pipeline->get_current_css_state();
@@ -133,7 +137,8 @@ class InlineBox extends GenericInlineBox {
     return $box;
   }
 
-  function &create_from_text($text, $white_space, &$pipeline) {
+  public static function create_from_text($text, $white_space, Pipeline $pipeline)
+  {
     $box =& new InlineBox();
     $box->readCSS($pipeline->get_current_css_state());
 

@@ -1,10 +1,11 @@
 <?php
 // $Header: /cvsroot/html2ps/box.list-item.php,v 1.34 2006/09/07 18:38:12 Konstantin Exp $
 
-class ListItemBox extends BlockBox {
+class ListItemBox extends BlockBox
+{
   var $size;
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline) {
     $box = new ListItemBox($root, $pipeline);
     $box->readCSS($pipeline->get_current_css_state());
 

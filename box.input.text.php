@@ -3,21 +3,24 @@
 
 /// define('SIZE_SPACE_KOEFF',1.65); (defined in tag.input.inc.php)
 
-class TextInputBox extends InlineControlBox {
+class TextInputBox extends InlineControlBox
+{
   /**
    * @var String contains the default value of this text field
    * @access private
    */
   var $_value;
 
-  function TextInputBox($value, $name) {
+  function __construct($value, $name)
+  {
     $this->InlineControlBox();
 
     $this->_value = $value;
     $this->_field_name = $name;
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     // Text to be displayed
     if ($root->has_attribute('value')) {
       $text = trim($root->get_attribute('value'));
@@ -86,4 +89,3 @@ class TextInputBox extends InlineControlBox {
     return $status;
   }
 }
-?>

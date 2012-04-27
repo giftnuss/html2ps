@@ -1,11 +1,9 @@
 <?php
 
-class BodyBox extends BlockBox {
-  function BodyBox() {
-    $this->BlockBox();
-  }
-
-  function &create(&$root, &$pipeline) {
+class BodyBox extends BlockBox
+{
+  public static function &create(&$root, &$pipeline)
+  {
     $box = new BodyBox();
     $box->readCSS($pipeline->get_current_css_state());
     $box->create_content($root, $pipeline);
@@ -28,7 +26,8 @@ class BodyBox extends BlockBox {
     return $this->get_top_margin();    
   }
 
-  function reflow(&$parent, &$context) {
+  function reflow(&$parent, &$context)
+  {
     parent::reflow($parent, $context);
     
     // Extend the body height to fit all contained floats
@@ -38,5 +37,3 @@ class BodyBox extends BlockBox {
     };
   }
 }
-
-?>

@@ -1,12 +1,14 @@
 <?php
 // $Header: /cvsroot/html2ps/box.select.php,v 1.24 2007/01/03 19:39:29 Konstantin Exp $
 
-class SelectBox extends InlineControlBox {
+class SelectBox extends InlineControlBox
+{
   var $_name;
   var $_value;
   var $_options;
 
-  function SelectBox($name, $value, $options) {
+  function __construct($name, $value, $options)
+  {
     // Call parent constructor
     $this->InlineBox();
 
@@ -15,7 +17,8 @@ class SelectBox extends InlineControlBox {
     $this->_options = $options;
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     $name = $root->get_attribute('name');
 
     $value = '';

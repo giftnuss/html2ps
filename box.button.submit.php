@@ -3,7 +3,8 @@
 /**
  * Handles INPUT type="submit" boxes generation.
  */
-class ButtonSubmitBox extends ButtonBox {
+class ButtonSubmitBox extends ButtonBox
+{
   /**
    * @var String URL to post the form to; may be null if this is not a 'submit' button
    * @access private
@@ -33,7 +34,8 @@ class ButtonSubmitBox extends ButtonBox {
    * @param String $field field name (interactive forms)
    * @param String $value field value (interactive forms)
    */
-  function ButtonSubmitBox($field, $value, $action) {
+  function __construct($field, $value, $action)
+  {
     $this->ButtonBox();
     $this->_action_url = $action;
     $this->_field_name = $field;
@@ -48,7 +50,8 @@ class ButtonSubmitBox extends ButtonBox {
    *
    * @return input box
    */
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     /**
      * If no "value" attribute is specified, display the default button text.
      * Note the difference between displayed text and actual field value!
@@ -77,7 +80,8 @@ class ButtonSubmitBox extends ButtonBox {
    *
    * @param OutputDriver $driver reference to current output driver object
    */
-  function _render_field(&$driver) {
+  function _render_field(&$driver)
+  {
     $driver->field_pushbuttonsubmit($this->get_left_padding() - $this->get_margin_left(), 
                                     $this->get_top_padding() + $this->get_margin_top(), 
                                     $this->get_width() + $this->get_padding_left() + $this->get_padding_right() + $this->get_margin_left() + $this->get_margin_right(), 
@@ -87,5 +91,3 @@ class ButtonSubmitBox extends ButtonBox {
                                     $this->_action_url);
   }
 }
-
-?>

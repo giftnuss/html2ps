@@ -1,11 +1,9 @@
 <?php
 
-class ButtonResetBox extends ButtonBox {
-  function ButtonResetBox($text) {
-    $this->ButtonBox($text);
-  }
-
-  function &create(&$root, &$pipeline) {
+class ButtonResetBox extends ButtonBox
+{
+  public static function &create(&$root, Pipeline $pipeline)
+  {
     if ($root->has_attribute("value")) {
       $text = $root->get_attribute("value");
     } else {

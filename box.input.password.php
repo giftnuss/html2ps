@@ -1,8 +1,10 @@
 <?php
 // $Header: /cvsroot/html2ps/box.input.password.php,v 1.6 2006/10/06 20:10:52 Konstantin Exp $
 
-class PasswordInputBox extends TextInputBox {
-  function &create(&$root, &$pipeline) {
+class PasswordInputBox extends TextInputBox
+{
+  public static function create(&$root, Pipeline $pipeline)
+  {
     // Text to be displayed
     if ($root->has_attribute('value')) {
       $text = str_repeat("*",strlen($root->get_attribute("value")));
@@ -63,4 +65,4 @@ class PasswordInputBox extends TextInputBox {
     return $status;
   }
 }
-?>
+

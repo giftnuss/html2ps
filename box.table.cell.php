@@ -1,7 +1,8 @@
 <?php
 // $Header: /cvsroot/html2ps/box.table.cell.php,v 1.40 2007/01/24 18:55:45 Konstantin Exp $
 
-class TableCellBox extends GenericContainerBox {
+class TableCellBox extends GenericContainerBox
+{
   var $colspan;
   var $rowspan;
   var $column;
@@ -9,7 +10,8 @@ class TableCellBox extends GenericContainerBox {
   var $_suppress_first;
   var $_suppress_last;
 
-  function TableCellBox() {
+  function __construct()
+  {
     // Call parent constructor
     $this->GenericContainerBox();
 
@@ -25,7 +27,8 @@ class TableCellBox extends GenericContainerBox {
     $this->row     = 0;
   }
 
-  function get_min_width(&$context) {   
+  function get_min_width(&$context)
+  {   
     if (isset($this->_cache[CACHE_MIN_WIDTH])) {
       return $this->_cache[CACHE_MIN_WIDTH];
     };
@@ -89,7 +92,8 @@ class TableCellBox extends GenericContainerBox {
     return $min_width;
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
 
     $this->_readCSS($state,
@@ -109,7 +113,8 @@ class TableCellBox extends GenericContainerBox {
     return false;
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     $css_state = $pipeline->get_current_css_state();
 
     $box =& new TableCellBox();

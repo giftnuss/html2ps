@@ -17,14 +17,8 @@
  *
  * @link http://www.w3.org/TR/CSS21/visuren.html#block-box CSS 2.1 Block-level elements and block boxes
  */
-class BlockBox extends GenericContainerBox {
-  /**
-   * Create empty block element
-   */
-  function BlockBox() {
-    $this->GenericContainerBox();
-  }
-
+class BlockBox extends GenericContainerBox
+{
   /**
    * Create new block element and automatically fill in its contents using 
    * parsed HTML data
@@ -35,7 +29,8 @@ class BlockBox extends GenericContainerBox {
    *
    * @see GenericContainerBox::create_content()
    */
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     $box = new BlockBox();
     $box->readCSS($pipeline->get_current_css_state());
     $box->create_content($root, $pipeline);
@@ -53,7 +48,8 @@ class BlockBox extends GenericContainerBox {
    * @see InlineBox
    * @see InlineBox::create_from_text()
    */
-  function &create_from_text($content, &$pipeline) {
+  public static function create_from_text($content, Pipeline $pipeline)
+  {
     $box = new BlockBox();
     $box->readCSS($pipeline->get_current_css_state());
     $box->add_child(InlineBox::create_from_text($content, 
@@ -79,7 +75,8 @@ class BlockBox extends GenericContainerBox {
    *
    * @todo check whether percentage values should be really ignored during relative positioning
    */
-  function reflow(&$parent, &$context) {
+  function reflow(&$parent, &$context)
+  {
     switch ($this->get_css_property(CSS_POSITION)) {
     case POSITION_STATIC:
       $this->reflow_static($parent, $context);
