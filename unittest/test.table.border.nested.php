@@ -17,14 +17,14 @@ class TestTableBorderNested extends GenericTest {
 ');
 
     $table = $tree->get_element_by_id('table');
-    $table_border = $table->getCSSProperty(CSS_BORDER);
+    $table_border = $table->get_css_property(CSS_BORDER);
     $this->assertEqual($table_border->left->style , BS_NONE);
     $this->assertEqual($table_border->right->style , BS_NONE);
     $this->assertEqual($table_border->top->style , BS_NONE);
     $this->assertEqual($table_border->bottom->style , BS_NONE);
 
     $cell = $tree->get_element_by_id('cell');
-    $cell_border = $cell->getCSSProperty(CSS_BORDER);
+    $cell_border = $cell->get_css_property(CSS_BORDER);
     $this->assertEqual($cell_border->left->style , BS_NONE);
     $this->assertEqual($cell_border->right->style , BS_NONE);
     $this->assertEqual($cell_border->top->style , BS_NONE);

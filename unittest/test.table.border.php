@@ -17,7 +17,7 @@ class TestTableBorder extends GenericTest {
 ');
 
     $table = $tree->get_element_by_id('table');
-    $table_border = $table->getCSSProperty(CSS_BORDER);
+    $table_border = $table->get_css_property(CSS_BORDER);
 
     $this->assertEqual($table_border->left->style , BS_SOLID);
     $this->assertEqual($table_border->right->style , BS_SOLID);
@@ -30,7 +30,7 @@ class TestTableBorder extends GenericTest {
     $this->assertTrue($table_border->bottom->width->getPoints() > 0);
 
     $cell1 = $tree->get_element_by_id('cell1');
-    $cell1_border = $cell1->getCSSProperty(CSS_BORDER);
+    $cell1_border = $cell1->get_css_property(CSS_BORDER);
     $this->assertEqual($cell1_border->left->style , BS_SOLID);
     $this->assertEqual($cell1_border->right->style , BS_SOLID);
     $this->assertEqual($cell1_border->top->style , BS_SOLID);
@@ -46,7 +46,7 @@ class TestTableBorder extends GenericTest {
                       'Expected non-zero bottom border width');
 
     $cell2 = $tree->get_element_by_id('cell2');
-    $cell2_border = $cell2->getCSSProperty(CSS_BORDER);
+    $cell2_border = $cell2->get_css_property(CSS_BORDER);
     $this->assertEqual($cell2_border->left->style , BS_SOLID);
     $this->assertEqual($cell2_border->right->style , BS_SOLID);
     $this->assertEqual($cell2_border->top->style , BS_SOLID);
@@ -80,7 +80,7 @@ class TestTableBorder extends GenericTest {
 ');
 
     $table = $tree->get_element_by_id('table');
-    $table_border = $table->getCSSProperty(CSS_BORDER);
+    $table_border = $table->get_css_property(CSS_BORDER);
 
     $this->assertEqual($table_border->left->style , BS_SOLID);
     $this->assertEqual($table_border->right->style , BS_SOLID);
@@ -93,7 +93,7 @@ class TestTableBorder extends GenericTest {
     $this->assertTrue($table_border->bottom->width->getPoints() > 0);
 
     $cell1 = $tree->get_element_by_id('cell1');
-    $cell1_border = $cell1->getCSSProperty(CSS_BORDER);
+    $cell1_border = $cell1->get_css_property(CSS_BORDER);
     $this->assertEqual($cell1_border->left->style , BS_SOLID);
     $this->assertEqual($cell1_border->right->style , BS_SOLID);
     $this->assertEqual($cell1_border->top->style , BS_SOLID);
@@ -109,7 +109,7 @@ class TestTableBorder extends GenericTest {
                       'Expected non-zero bottom border width');
 
     $cell2 = $tree->get_element_by_id('cell2');
-    $cell2_border = $cell2->getCSSProperty(CSS_BORDER);
+    $cell2_border = $cell2->get_css_property(CSS_BORDER);
     $this->assertEqual($cell2_border->left->style , BS_SOLID);
     $this->assertEqual($cell2_border->right->style , BS_SOLID);
     $this->assertEqual($cell2_border->top->style , BS_SOLID);

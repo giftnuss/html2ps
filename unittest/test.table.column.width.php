@@ -16,7 +16,7 @@ class TestTableColumnWidth extends GenericTest {
     $real_width = max($pipeline->output_driver->stringwidth('LARGE', 'Times-Roman', 'iso-8859-1', pt2pt(30)),
                       pt2pt(10));
 
-    $width =& $large->getCSSProperty(CSS_WIDTH);
+    $width =& $large->get_css_property(CSS_WIDTH);
     $this->assertTrue($width->isConstant());
     $this->assertEqual($width->width, $real_width);
     $this->assertEqual($large->get_width(), $real_width);
@@ -36,7 +36,7 @@ class TestTableColumnWidth extends GenericTest {
 
     $real_width = pt2pt(150);
 
-    $width =& $large->getCSSProperty(CSS_WIDTH);
+    $width =& $large->get_css_property(CSS_WIDTH);
     $this->assertTrue($width->isConstant());
     $this->assertEqual($width->width, $real_width);
     $this->assertEqual($large->get_width(), $real_width);

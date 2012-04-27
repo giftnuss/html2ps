@@ -4,7 +4,7 @@ class TestCSSPageBreakAfter extends GenericTest {
   function testCSSPageBreakAfter1() {
     $tree = $this->runPipeline(file_get_contents('test.css.page.break.after.1.html'));
     $div = $tree->get_element_by_id('div');
-    $this->assertEqual(PAGE_BREAK_AVOID, $div->getCSSProperty(CSS_PAGE_BREAK_AFTER));
+    $this->assertEqual(PAGE_BREAK_AVOID, $div->get_css_property(CSS_PAGE_BREAK_AFTER));
   }
 
   function testCSSPageBreakAfter2() {

@@ -6,7 +6,7 @@ class TestBorderLeft extends GenericTest
     $tree = $this->runPipeline(file_get_contents('test.border-left.1.html'));
 
     $element =& $tree->get_element_by_id('div1');
-    $border =& $element->getCSSProperty(CSS_BORDER);
+    $border =& $element->get_css_property(CSS_BORDER);
     $top =& $border->get_top();
     $this->assertEqual($top->get_style(), BS_NONE);
     $bottom =& $border->get_bottom();

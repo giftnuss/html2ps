@@ -24,9 +24,9 @@ NORMAL
     $outer_div = $tree->get_element_by_id('outer');
     $inner_div = $tree->get_element_by_id('inner');
 
-    $body_font_size  = $tree->getCSSProperty(CSS_FONT_SIZE);
-    $outer_font_size = $outer_div->getCSSProperty(CSS_FONT_SIZE);
-    $inner_font_size = $inner_div->getCSSProperty(CSS_FONT_SIZE);
+    $body_font_size  = $tree->get_css_property(CSS_FONT_SIZE);
+    $outer_font_size = $outer_div->get_css_property(CSS_FONT_SIZE);
+    $inner_font_size = $inner_div->get_css_property(CSS_FONT_SIZE);
  
     $this->assertEqual($body_font_size->getPoints()*2, 
                        $outer_font_size->getPoints());
@@ -56,9 +56,9 @@ NORMAL
     $outer_div = $tree->get_element_by_id('outer');
     $inner_div = $tree->get_element_by_id('inner');
 
-    $body_font_size  = $tree->getCSSProperty(CSS_FONT_SIZE);
-    $outer_font_size = $outer_div->getCSSProperty(CSS_FONT_SIZE);
-    $inner_font_size = $inner_div->getCSSProperty(CSS_FONT_SIZE);
+    $body_font_size  = $tree->get_css_property(CSS_FONT_SIZE);
+    $outer_font_size = $outer_div->get_css_property(CSS_FONT_SIZE);
+    $inner_font_size = $inner_div->get_css_property(CSS_FONT_SIZE);
 
     $this->assertEqual($body_font_size->getPoints()*2, 
                        $outer_font_size->getPoints());

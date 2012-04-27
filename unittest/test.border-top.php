@@ -5,7 +5,7 @@ class TestBorderTop extends GenericTest {
     $tree = $this->runPipeline(file_get_contents('test.border-top.1.html'));
 
     $element =& $tree->get_element_by_id('div1');
-    $border =& $element->getCSSProperty(CSS_BORDER);
+    $border =& $element->get_css_property(CSS_BORDER);
     $right =& $border->get_right();
     $this->assertEqual($right->get_style(), BS_NONE);
     $bottom =& $border->get_bottom();
@@ -22,7 +22,7 @@ class TestBorderTop extends GenericTest {
     $this->assertEqual($color->b, 0);
 
     $element =& $tree->get_element_by_id('div2');
-    $border =& $element->getCSSProperty(CSS_BORDER);
+    $border =& $element->get_css_property(CSS_BORDER);
     $right =& $border->get_right();
     $this->assertEqual($right->get_style(), BS_NONE);
     $bottom =& $border->get_bottom();

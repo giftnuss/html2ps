@@ -41,7 +41,7 @@ LINE5
                        sprintf("Two pages expected, got %s", 
                                count($page_heights)));
 
-    $this->assertEqual($second_div->getCSSProperty(CSS_ORPHANS), 0);
+    $this->assertEqual($second_div->get_css_property(CSS_ORPHANS), 0);
 
     $this->assertWithinMargin($page_heights[0], 
                               $first_div->get_full_height() + pt2pt(10),
@@ -88,7 +88,7 @@ LINE5
                        sprintf("Two pages expected, got %s", 
                                count($page_heights)));
 
-    $this->assertEqual($second_div->getCSSProperty(CSS_ORPHANS), 2);
+    $this->assertEqual($second_div->get_css_property(CSS_ORPHANS), 2);
 
     $this->assertWithinMargin($page_heights[0], 
                               $first_div->get_full_height(),
@@ -135,7 +135,7 @@ LINE5
                        sprintf("Two pages expected, got %s", 
                                count($page_heights)));
 
-    $this->assertEqual($second_div->getCSSProperty(CSS_ORPHANS), 3);
+    $this->assertEqual($second_div->get_css_property(CSS_ORPHANS), 3);
 
     $this->assertWithinMargin($page_heights[0], 
                               $first_div->get_full_height(),

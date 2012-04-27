@@ -8,7 +8,7 @@ class TestWidthAbsolutePositioned extends GenericTest {
                                $media,
                                $pipeline);
 
-    $font_size = $tree->getCSSProperty(CSS_FONT_SIZE);
+    $font_size = $tree->get_css_property(CSS_FONT_SIZE);
     $base = $font_size->getPoints();
 
     $element =& $tree->get_element_by_id('div1');

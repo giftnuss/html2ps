@@ -24,10 +24,10 @@ LINE5
 ');
 
     $div = $tree->get_element_by_id('first');
-    $this->assertEqual($div->getCSSProperty(CSS_ORPHANS), 0);
+    $this->assertEqual($div->get_css_property(CSS_ORPHANS), 0);
 
     $div = $tree->get_element_by_id('second');
-    $this->assertEqual($div->getCSSProperty(CSS_ORPHANS), 0);
+    $this->assertEqual($div->get_css_property(CSS_ORPHANS), 0);
   }
 }
 

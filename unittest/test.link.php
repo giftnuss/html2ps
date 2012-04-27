@@ -6,7 +6,7 @@ class TestLink extends GenericTest {
 
     $element =& $tree->get_element_by_id('div1');
 
-    $color =& $element->getCSSProperty(CSS_COLOR);
+    $color =& $element->get_css_property(CSS_COLOR);
     $this->assertEqual($color->r, 1);
     $this->assertEqual($color->g, 0);
     $this->assertEqual($color->b, 0);
@@ -17,7 +17,7 @@ class TestLink extends GenericTest {
 
     $element =& $tree->get_element_by_id('div1');
 
-    $color =& $element->getCSSProperty(CSS_COLOR);
+    $color =& $element->get_css_property(CSS_COLOR);
     $this->assertEqual($color->r, 1);
     $this->assertEqual($color->g, 0);
     $this->assertEqual($color->b, 0);

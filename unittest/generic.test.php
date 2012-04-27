@@ -1,5 +1,9 @@
 <?php
 
+define('SIMPLETEST_DIR', '../../lib/simpletest/');
+require_once(SIMPLETEST_DIR.'unit_tester.php');
+require_once(SIMPLETEST_DIR.'mock_objects.php');
+
 class GenericTest extends UnitTestCase
 {
   function layoutPipeline($html, &$pipeline, &$media, &$context, &$positioned_filter)
@@ -10,7 +14,7 @@ class GenericTest extends UnitTestCase
     return $pipeline->_layout_item("", $media, 0, $context, $positioned_filter);
   }
 
-  function &preparePipeline(&$media)
+  function preparePipeline(Media $media)
   {
     $pipeline = PipelineFactory::create_default_pipeline("", "");
     $pipeline->configure(array('scalepoints' => false));
@@ -35,4 +39,4 @@ class GenericTest extends UnitTestCase
     return $tree;
   }
 }
-?>
+

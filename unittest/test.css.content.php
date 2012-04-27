@@ -1,19 +1,23 @@
 <?php
 
-class TestCSSContent extends GenericTest {
-  function testCSSContentWithEscapesInsideHTML() {
-    $tree = $this->runPipeline(file_get_contents('test.css.content.1.html'));
 
-    $element0 =& $tree->get_element_by_id('div1');
+class TestCSSContent extends GenericTest
+{
+  function testCSSContentWithEscapesInsideHTML()
+  {
+    $tree = $this->runPipeline(file_get_contents('test.css.content.1.html'));
+print_r($tree);
+    $element0 = $tree->get_element_by_id('div1');
     $element = $element0->content[1];
 
-    $content =& $element->getCSSProperty(CSS_CONTENT);
+    $content =& $element->get_css_property(CSS_CONTENT);
 
     $counters =& new CSSCounterCollection();
     $this->assertEqual($content->render($counters), "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page");
   }
 
-  function testCSSContentWithEscapes() {
+  function testCSSContentWithEscapes()
+  {
     $null = null;
     $collection =& parse_css_property('content: "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page";', $null);
 
@@ -24,7 +28,8 @@ class TestCSSContent extends GenericTest {
     $this->assertEqual($content->render($counters), "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page");
   }
 
-  function testCSSHTMLContentWithEscapes() {
+  function testCSSHTMLContentWithEscapes()
+  {
     $null = null;
     $collection =& parse_css_property('-html2ps-html-content: "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page";', $null);
 
@@ -35,7 +40,8 @@ class TestCSSContent extends GenericTest {
     $this->assertEqual($content->render($counters), "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page");
   }
 
-  function testCSSContentWithCounters() {
+  function testCSSContentWithCounters()
+  {
     $null = null;
     $collection =& parse_css_property('content: "Page " counter(page) " of " counter(pages);', $null);
 
@@ -55,7 +61,8 @@ class TestCSSContent extends GenericTest {
     $this->assertEqual($content->render($counters), "Page 10 of ");
   }
 
-  function testCSSContentWithCountersAndSemicolons() {
+  function testCSSContentWithCountersAndSemicolons()
+  {
     $null = null;
     $collection =& parse_css_property('content: "Page; " counter(page) " of; " counter(pages);', $null);
 
@@ -75,7 +82,8 @@ class TestCSSContent extends GenericTest {
     $this->assertEqual($content->render($counters), "Page; 1 of; 10");
   }
 
-  function testCSSContentEmptyWithQuotes() {
+  function testCSSContentEmptyWithQuotes()
+  {
     $null = null;
     $collection =& parse_css_property('content: "";', $null);
 
@@ -86,7 +94,8 @@ class TestCSSContent extends GenericTest {
     $this->assertEqual($content->render($counters), "");
   }
 
-  function testCSSContentEmptyWithApostrophes() {
+  function testCSSContentEmptyWithApostrophes()
+  {
     $null = null;
     $collection =& parse_css_property('content: \'\';', $null);
 
@@ -97,7 +106,8 @@ class TestCSSContent extends GenericTest {
     $this->assertEqual($content->render($counters), "");
   }
 
-  function testCSSContentEmptyWithOtherProperties() {
+  function testCSSContentEmptyWithOtherProperties()
+  {
     $null = null;
     $collection =& parse_css_properties("-html2ps-html-content: ''; content: ''; width: auto; height: auto; margin: 0; border: none; padding: 0; font: auto;", $null);
 
@@ -114,4 +124,3 @@ class TestCSSContent extends GenericTest {
   }
 }
 
-?>

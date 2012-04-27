@@ -21,15 +21,15 @@ body { background-attachment: fixed; }
 ');
 
     $div1 =& $tree->get_element_by_id('div1');
-    $this->assertEqual(BACKGROUND_ATTACHMENT_FIXED, $div1->getCSSProperty(CSS_BACKGROUND_ATTACHMENT));
+    $this->assertEqual(BACKGROUND_ATTACHMENT_FIXED, $div1->get_css_property(CSS_BACKGROUND_ATTACHMENT));
 
     $div2 =& $tree->get_element_by_id('div2');
-    $this->assertEqual(BACKGROUND_ATTACHMENT_SCROLL, $div2->getCSSProperty(CSS_BACKGROUND_ATTACHMENT));
+    $this->assertEqual(BACKGROUND_ATTACHMENT_SCROLL, $div2->get_css_property(CSS_BACKGROUND_ATTACHMENT));
 
     $div3 =& $tree->get_element_by_id('div3');
-    $this->assertEqual(BACKGROUND_ATTACHMENT_SCROLL, $div3->getCSSProperty(CSS_BACKGROUND_ATTACHMENT));
+    $this->assertEqual(BACKGROUND_ATTACHMENT_SCROLL, $div3->get_css_property(CSS_BACKGROUND_ATTACHMENT));
 
-    $this->assertEqual(BACKGROUND_ATTACHMENT_FIXED, $tree->getCSSProperty(CSS_BACKGROUND_ATTACHMENT));
+    $this->assertEqual(BACKGROUND_ATTACHMENT_FIXED, $tree->get_css_property(CSS_BACKGROUND_ATTACHMENT));
   }
 }
 
