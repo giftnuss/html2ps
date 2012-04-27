@@ -24,8 +24,9 @@ class Color extends CSSValue {
     $this->b += ($color->b - $this->b)*$alpha;
   }
 
-  function &copy() {
-    $color =& new Color();
+  function copy()
+  {
+    $color = new Color();
 
     $color->r = $this->r;
     $color->g = $this->g;

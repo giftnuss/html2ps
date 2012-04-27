@@ -5,28 +5,30 @@ define('SCALE_NONE',0);
 define('SCALE_WIDTH',1);
 define('SCALE_HEIGHT',2);
 
-class GenericImgBox extends GenericInlineBox {
-  function GenericImgBox() {
-    $this->GenericInlineBox();
-  }
-
-  function get_max_width_natural(&$context) {
+class GenericImgBox extends GenericInlineBox
+{
+  function get_max_width_natural(&$context)
+  {
     return $this->get_full_width($context);
   }
 
-  function get_min_width(&$context) { 
+  function get_min_width(&$context)
+  { 
     return $this->get_full_width(); 
   }
 
-  function get_max_width(&$context) { 
+  function get_max_width(&$context)
+  { 
     return $this->get_full_width(); 
   }
 
-  function is_null() { 
+  function is_null()
+  { 
     return false; 
   }
 
-  function pre_reflow_images() {
+  function pre_reflow_images()
+  {
     switch ($this->scale) {
     case SCALE_WIDTH:
       // Only 'width' attribute given
@@ -53,7 +55,8 @@ class GenericImgBox extends GenericInlineBox {
     };
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
 
     // '-html2ps-link-target'
@@ -64,7 +67,8 @@ class GenericImgBox extends GenericInlineBox {
     };
   }
 
-  function reflow_static(&$parent, &$context) {  
+  function reflow_static(&$parent, &$context)
+  {  
     $this->pre_reflow_images();
     
     GenericFormattedBox::reflow($parent, $context);
@@ -88,7 +92,8 @@ class GenericImgBox extends GenericInlineBox {
     $parent->extend_height($this->get_bottom_margin());
   }
 
-  function _get_font_name(&$driver, $subword_index) {
+  function _get_font_name(&$driver, $subword_index)
+  {
     if (isset($this->_cache[CACHE_TYPEFACE][$subword_index])) {
       return $this->_cache[CACHE_TYPEFACE][$subword_index];
     };
@@ -106,7 +111,8 @@ class GenericImgBox extends GenericInlineBox {
     return $typeface;
   }
 
-  function reflow_text(&$driver) {
+  function reflow_text(&$driver)
+  {
     // In XHTML images are treated as a common inline elements; they are affected by line-height and font-size
     global $g_config;
     if ($g_config['mode'] == 'xhtml') {
@@ -150,27 +156,28 @@ class GenericImgBox extends GenericInlineBox {
 
   // Image boxes are regular inline boxes; whitespaces after images should be rendered
   // 
-  function reflow_whitespace(&$linebox_started, &$previous_whitespace) {
+  function reflow_whitespace(&$linebox_started, &$previous_whitespace)
+  {
     $linebox_started = true;
     $previous_whitespace = false;
     return;
   }
 
-  function show_fixed(&$driver) {
+  function show_fixed(&$driver)
+  {
     return $this->show($driver);
   }
 }
 
-class BrokenImgBox extends GenericImgBox {
+class BrokenImgBox extends GenericImgBox
+{
   var $alt;
 
-  function BrokenImgBox($width, $height, $alt) {
+  function __construct($width, $height, $alt)
+  {
+    parent::__construct();
     $this->scale = SCALE_NONE;
     $this->encoding = DEFAULT_ENCODING;
-
-    // Call parent constructor
-    $this->GenericImgBox();
-
     $this->alt = $alt;
   }  
 
@@ -214,29 +221,29 @@ class BrokenImgBox extends GenericImgBox {
 
     $driver->restore();
 
-    $strategy =& new StrategyLinkRenderingNormal();
+    $strategy = new StrategyLinkRenderingNormal();
     $strategy->apply($this, $driver);
 
     return true;
   }
 }
 
-class ImgBox extends GenericImgBox {
+class ImgBox extends GenericImgBox
+{
   var $image;
   var $type; // unused; should store the preferred image format (JPG / PNG)
 
-  function ImgBox($img) {
+  function __construct($img)
+  {
+    parent::__construct();
     $this->encoding = DEFAULT_ENCODING;
     $this->scale = SCALE_NONE;
-
-    // Call parent constructor
-    $this->GenericImgBox();
-
     // Store image for further processing
     $this->image = $img;
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     // Open image referenced by HTML tag
     // Some crazy HTML writers add leading and trailing spaces to SRC attribute value - we need to remove them
     //
@@ -263,7 +270,7 @@ class ImgBox extends GenericImgBox {
 
       $alt = $root->get_attribute('alt');
 
-      $box =& new BrokenImgBox($width, $height, $alt);
+      $box = new BrokenImgBox($width, $height, $alt);
 
       $box->readCSS($pipeline->get_current_css_state());
 
@@ -277,7 +284,7 @@ class ImgBox extends GenericImgBox {
       
       return $box;
     } else {
-      $box =& new ImgBox($src_img);
+      $box = new ImgBox($src_img);
       $box->readCSS($pipeline->get_current_css_state());
       $box->_setupSize();
      
@@ -285,7 +292,8 @@ class ImgBox extends GenericImgBox {
     }
   }
 
-  function _setupSize() {
+  function _setupSize()
+  {
     $this->put_width(px2pt($this->image->sx()));
     $this->put_height(px2pt($this->image->sy()));
     $this->default_baseline = $this->get_full_height();
@@ -325,7 +333,8 @@ class ImgBox extends GenericImgBox {
     };
   }
 
-  function show(&$driver) {
+  function show(&$driver)
+  {
     // draw generic box
     GenericFormattedBox::show($driver);
 
@@ -342,10 +351,10 @@ class ImgBox extends GenericImgBox {
                           $this->get_width() / $this->image->sx(), 
                           $this->get_height() / $this->image->sy());
 
-    $strategy =& new StrategyLinkRenderingNormal();
+    $strategy = new StrategyLinkRenderingNormal();
     $strategy->apply($this, $driver);
 
     return true;
   }
 }
-?>
+

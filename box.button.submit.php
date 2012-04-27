@@ -36,7 +36,7 @@ class ButtonSubmitBox extends ButtonBox
    */
   function __construct($field, $value, $action)
   {
-    $this->ButtonBox();
+    parent::__construct();
     $this->_action_url = $action;
     $this->_field_name = $field;
     $this->_value = $value;
@@ -66,7 +66,7 @@ class ButtonSubmitBox extends ButtonBox
     $value = $root->get_attribute('value');
     
     $css_state =& $pipeline->get_current_css_state();
-    $box =& new ButtonSubmitBox($field, $value, $css_state->get_property(CSS_HTML2PS_FORM_ACTION));
+    $box = new ButtonSubmitBox($field, $value, $css_state->get_property(CSS_HTML2PS_FORM_ACTION));
     $box->readCSS($css_state);
     $box->_setup($text, $pipeline);
 

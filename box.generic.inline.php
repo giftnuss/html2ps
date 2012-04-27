@@ -1,9 +1,6 @@
 <?php
-class GenericInlineBox extends GenericContainerBox {
-  function GenericInlineBox() {
-    $this->GenericContainerBox();
-  }
-
+class GenericInlineBox extends GenericContainerBox
+{
   // @todo this code is duplicated in box.block.php
   //
   function reflow(&$parent, &$context) {

@@ -5,22 +5,21 @@ require_once(HTML2PS_DIR.'pdf.fpdf.php');
 require_once(HTML2PS_DIR.'pdf.fpdf.makefont.php');
 // require_once(HTML2PS_DIR.'fpdf/font/makefont/makefont.php');
 
-class OutputDriverFPDF extends OutputDriverGenericPDF {
+class OutputDriverFPDF extends OutputDriverGenericPDF
+{
   var $pdf;
   var $locallinks;
   var $cx;
   var $cy;
 
-  function OutputDriverFPDF() {
-    $this->OutputDriverGenericPDF();   
-  }
-
-  function add_link($x, $y, $w, $h, $target) {
+  function add_link($x, $y, $w, $h, $target)
+  {
     $this->_coords2pdf_annotation($x, $y);
     $this->pdf->add_link_external($x, $y, $w, $h, $target);
   }
 
-  function add_local_link($left, $top, $width, $height, $anchor) {
+  function add_local_link($left, $top, $width, $height, $anchor)
+  {
     if (!isset($this->locallinks[$anchor->name])) {
       $x = 0;
       $y = $anchor->y;
@@ -45,13 +44,15 @@ class OutputDriverFPDF extends OutputDriverGenericPDF {
 
   // UNfortunately, FPDF do not provide any coordinate-space transformation routines
   // so we need to reverse the Y-axis manually
-  function _coords2pdf(&$x, &$y) {
+  function _coords2pdf(&$x, &$y)
+  {
     $y = mm2pt($this->media->height()) - $y;
   }
 
   // Annotation coordinates are always interpreted in the default (untranslated!) 
   // user space. (See PDF Reference 1.6 Section 8.4 p.575)
-  function _coords2pdf_annotation(&$x, &$y) {
+  function _coords2pdf_annotation(&$x, &$y)
+  {
     $y = $y - $this->offset;
     $this->_coords2pdf($x, $y);
   }
@@ -158,7 +159,8 @@ class OutputDriverFPDF extends OutputDriverGenericPDF {
     return $this->pdf->GetFontDescender($name, $encoding);
   }
 
-  function image($image, $x, $y, $scale) {
+  function image($image, $x, $y, $scale)
+  {
     $tmpname = $this->_mktempimage($image);
 
     $this->_coords2pdf($x, $y);
@@ -171,7 +173,8 @@ class OutputDriverFPDF extends OutputDriverGenericPDF {
     unlink($tmpname);
   }
 
-  function image_rx($image, $x, $y, $width, $right, $ox, $oy, $scale) {
+  function image_rx($image, $x, $y, $width, $right, $ox, $oy, $scale)
+  {
     $tmpname = $this->_mktempimage($image);
 
     // Fill part to the right 
@@ -197,7 +200,8 @@ class OutputDriverFPDF extends OutputDriverGenericPDF {
     unlink($tmpname);
   }
 
-  function image_rx_ry($image, $x, $y, $width, $height, $right, $bottom, $ox, $oy, $scale) {
+  function image_rx_ry($image, $x, $y, $width, $height, $right, $bottom, $ox, $oy, $scale)
+  {
     $tmpname = $this->_mktempimage($image);
 
     // Fill bottom-right quadrant
@@ -325,10 +329,11 @@ class OutputDriverFPDF extends OutputDriverGenericPDF {
     parent::next_page($height);
   }
 
-  function reset(&$media) {
+  function reset(Media $media)
+  {
     parent::reset($media);   
 
-    $this->pdf =& new FPDF('P','pt',array(mm2pt($media->width()), mm2pt($media->height())));
+    $this->pdf = new FPDF('P','pt',array(mm2pt($media->width()), mm2pt($media->height())));
 
     if (defined('DEBUG_MODE')) {
       $this->pdf->SetCompression(false);

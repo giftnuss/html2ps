@@ -68,7 +68,8 @@
   define("PDF_FORM_SUBMIT_EFORMAT", 1 << 2);
   define("PDF_FORM_SUBMIT_GET",     1 << 3);
   
-  class PDFIndirectObject {
+  class PDFIndirectObject
+  {
     var $object_id;
     var $generation_id;
     
@@ -182,7 +183,8 @@ EOF
     }
   }
 
-  class PDFPage extends PDFIndirectObject {
+  class PDFPage extends PDFIndirectObject
+  {
     var $annotations;
     var $_width;
     var $_height;
@@ -1200,7 +1202,7 @@ EOF
     }
 
     function add_field_select($x, $y, $w, $h, $name, $value, $options) {
-      $field =& new PDFFieldSelect($this,
+      $field = new PDFFieldSelect($this,
                                    $this->_generate_new_object_number(),    // Object identifier
                                    0,                                       // Generation
                                    new PDFRect($x, $y, $w, $h),             // Annotation rectangle
@@ -1227,7 +1229,7 @@ EOF
      * @TODO check if fully qualified field name will be unique in PDF file
      */
     function add_field_checkbox($x, $y, $w, $h, $name, $value, $checked) {
-      $field =& new PDFFieldCheckBox($this,
+      $field = new PDFFieldCheckBox($this,
                                      $this->_generate_new_object_number(),    // Object identifier
                                      0,                                       // Generation
                                      new PDFRect($x, $y, $w, $h),             // Annotation rectangle
@@ -1267,7 +1269,7 @@ EOF
       if (isset($this->_form_radios[$group_name])) {
         $field =& $this->_form_radios[$group_name];
       } else {
-        $field =& new PDFFieldRadioGroup($this, 
+        $field = new PDFFieldRadioGroup($this, 
                                          $this->_generate_new_object_number(),
                                          0,
                                          $group_name);
@@ -1278,7 +1280,7 @@ EOF
         $this->_form_radios[$group_name] =& $field;
       };
 
-      $radio =& new PDFFieldRadio($this, 
+      $radio = new PDFFieldRadio($this, 
                                   $this->_generate_new_object_number(),
                                   0,
                                   new PDFRect($x, $y, $w, $h),
@@ -1302,7 +1304,7 @@ EOF
      * @return Field number
      */
     function add_field_text($x, $y, $w, $h, $value, $field_name) {
-      $field =& new PDFFieldText($this, 
+      $field = new PDFFieldText($this, 
                                  $this->_generate_new_object_number(),
                                  0,
                                  new PDFRect($x, $y, $w, $h), 
@@ -1318,7 +1320,7 @@ EOF
     }
 
     function add_field_multiline_text($x, $y, $w, $h, $value, $field_name) {
-      $field =& new PDFFieldMultilineText($this, 
+      $field = new PDFFieldMultilineText($this, 
                                           $this->_generate_new_object_number(),
                                           0,
                                           new PDFRect($x, $y, $w, $h), 
@@ -1346,7 +1348,7 @@ EOF
      * @return Field number
      */
     function add_field_password($x, $y, $w, $h, $value, $field_name) {
-      $field =& new PDFFieldPassword($this,
+      $field = new PDFFieldPassword($this,
                                      $this->_generate_new_object_number(),
                                      0,
                                      new PDFRect($x, $y, $w, $h),
@@ -1362,7 +1364,7 @@ EOF
     }
 
     function add_field_pushbuttonimage($x, $y, $w, $h, $field_name, $value, $actionURL) {
-      $field =& new PDFFieldPushButtonImage($this,
+      $field = new PDFFieldPushButtonImage($this,
                                             $this->_generate_new_object_number(),
                                             0,
                                             new PDFRect($x, $y, $w, $h),
@@ -1379,7 +1381,7 @@ EOF
     }
 
     function add_field_pushbuttonsubmit($x, $y, $w, $h, $field_name, $value, $actionURL) {
-      $field =& new PDFFieldPushButtonSubmit($this,
+      $field = new PDFFieldPushButtonSubmit($this,
                                              $this->_generate_new_object_number(),
                                              0,
                                              new PDFRect($x, $y, $w, $h),
@@ -1396,7 +1398,7 @@ EOF
     }
 
     function add_field_pushbuttonreset($x, $y, $w, $h) {
-      $field =& new PDFFieldPushButtonReset($this,
+      $field = new PDFFieldPushButtonReset($this,
                                             $this->_generate_new_object_number(),
                                             0,
                                             new PDFRect($x, $y, $w, $h),
@@ -1411,7 +1413,7 @@ EOF
     }
 
     function add_field_pushbutton($x, $y, $w, $h) {
-      $field =& new PDFFieldPushButton($this,
+      $field = new PDFFieldPushButton($this,
                                        $this->_generate_new_object_number(),
                                        0,
                                        new PDFRect($x, $y, $w, $h),
@@ -1782,7 +1784,7 @@ EOF
 
       $this->setup_format($width, $height);
 
-      $this->_pages[] =& new PDFPage($this, $width, $height, $this->_generate_new_object_number(), 0);
+      $this->_pages[] = new PDFPage($this, $width, $height, $this->_generate_new_object_number(), 0);
 
       //Start a new page
       if ($this->state == FPDF_STATE_UNINITIALIZED) {
@@ -2056,7 +2058,8 @@ EOF
       $this->_pages[count($this->_pages)-1]->add_annotation($link);      
     }    
 
-    function Text($x, $y, $txt) {
+    function Text($x, $y, $txt)
+    {
       //Output a string
       $s = sprintf('BT %.2f %.2f Td (%s) Tj ET',$x*$this->k,($this->h-$y)*$this->k,$this->_escape($txt));
 
@@ -2142,11 +2145,13 @@ EOF
       };
     }
 
-    function _getfontpath() {
+    function _getfontpath()
+    {
       return CACHE_DIR;
     }
 
-    function _putpages() {
+    function _putpages()
+    {
       $nb=$this->page;
 
       if ($this->DefOrientation=='P') {
@@ -2726,7 +2731,8 @@ EOF
     /**
      * Add a line to the document
      */
-    function _out($s) {
+    function _out($s)
+    {
       if ($this->state == FPDF_STATE_PAGE_STARTED) {
         $this->pages[$this->page].=$s."\n";
       } else {

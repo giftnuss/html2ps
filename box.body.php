@@ -2,7 +2,7 @@
 
 class BodyBox extends BlockBox
 {
-  public static function &create(&$root, &$pipeline)
+  public static function create(&$root, Pipeline $pipeline)
   {
     $box = new BodyBox();
     $box->readCSS($pipeline->get_current_css_state());
@@ -10,19 +10,23 @@ class BodyBox extends BlockBox
     return $box;
   }
 
-  function get_bottom_background() { 
+  function get_bottom_background()
+  { 
     return $this->get_bottom_margin(); 
   }
 
-  function get_left_background()   { 
+  function get_left_background()
+  { 
     return $this->get_left_margin();   
   }
 
-  function get_right_background()  { 
+  function get_right_background()
+  { 
     return $this->get_right_margin();  
   }
 
-  function get_top_background()    { 
+  function get_top_background()
+  { 
     return $this->get_top_margin();    
   }
 
@@ -34,6 +38,6 @@ class BodyBox extends BlockBox
     $float_bottom = $context->float_bottom();
     if (!is_null($float_bottom)) {
       $this->extend_height($float_bottom);
-    };
+    }
   }
 }

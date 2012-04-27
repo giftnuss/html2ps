@@ -1,26 +1,27 @@
 <?php
 // $Header: /cvsroot/html2ps/box.inline.control.php,v 1.7 2006/09/07 18:38:12 Konstantin Exp $
 
-class InlineControlBox extends InlineBox {
-  function InlineControlBox() {
-    $this->InlineBox();
-  }
-
-  function get_min_width(&$context, $limit = 10E6) { 
+class InlineControlBox extends InlineBox
+{
+  function get_min_width(&$context, $limit = 10E6)
+  { 
     return $this->get_max_width($context, $limit);
   }
 
-  function get_max_width(&$context, $limit = 10E6) { 
+  function get_max_width(&$context, $limit = 10E6)
+  { 
     return 
       GenericContainerBox::get_max_width($context, $limit) - 
-      $this->_get_hor_extra(); 
+        $this->_get_hor_extra(); 
   }
 
-  function line_break_allowed() { 
+  function line_break_allowed()
+  { 
     return false; 
   }
   
-  function reflow_static(&$parent, &$context) {  
+  function reflow_static(&$parent, &$context)
+  {  
     GenericFormattedBox::reflow($parent, $context);
 
     // Determine the box width
@@ -61,7 +62,8 @@ class InlineControlBox extends InlineBox {
     $parent->extend_height($this->get_bottom_margin());
   }
 
-  function setup_content($text, &$pipeline) {
+  function setup_content($text, &$pipeline)
+  {
     /**
      * Contents of the text box are somewhat similar to the inline box: 
      * a sequence of the text and whitespace boxes; we generate this sequence using
@@ -81,7 +83,8 @@ class InlineControlBox extends InlineBox {
     };
   }
 
-  function show(&$viewport) {   
+  function show(&$viewport)
+  {   
     // Now set the baseline of a button box to align it vertically when flowing isude the 
     // text line
     $this->default_baseline = $this->content[0]->baseline + $this->get_extra_top();
@@ -90,4 +93,4 @@ class InlineControlBox extends InlineBox {
     return GenericContainerBox::show($viewport);
   }
 }
-?>
+

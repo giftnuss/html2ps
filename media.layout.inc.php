@@ -5,12 +5,14 @@ $GLOBALS['g_predefined_media'] = array();
 $GLOBALS['g_media'] = null;
 
 // TODO: check for validity
-function add_predefined_media($name, $height, $width) {
+function add_predefined_media($name, $height, $width)
+{
   global $g_predefined_media;
   $g_predefined_media[$name] = array('height' => $height, 'width' => $width);
 }
 
-class Media {
+class Media
+{
   var $margins;
   var $size;
   var $pixels;
@@ -20,34 +22,41 @@ class Media {
    * @param Array $size associative array with 'height' and 'width' keys (mm)
    * @param Array $margins associative array with 'top', 'bottom', 'left' and 'right' keys (mm)
    */
-  function Media($size, $margins) {
+  function __construct($size, $margins)
+  {
     $this->size    = $size;
     $this->margins = $margins;
     $this->pixels  = 800;
   }
 
-  function &copy() {
-    $new_item =& new Media($this->size, $this->margins);
+  function copy()
+  {
+    $new_item = new Media($this->size, $this->margins);
     $new_item->pixels = $this->pixels;
     return $new_item;
   }
 
-  function doInherit() {
+  function doInherit()
+  {
   }
 
-  function get_width() {
+  function get_width()
+  {
     return $this->is_landscape ? $this->size['height'] : $this->size['width'] ;
   }
 
-  function width()  { 
+  function width()
+  { 
     return $this->get_width();
   }
 
-  function get_height() {
+  function get_height()
+  {
     return $this->height();
   }
 
-  function height() { 
+  function height()
+  { 
     return $this->is_landscape ? $this->size['width']  : $this->size['height']; 
   }
 
@@ -59,7 +68,8 @@ class Media {
     return $this->height() - $this->margins['bottom'] - $this->margins['top'];
   }
 
-  function set_height($height) {
+  function set_height($height)
+  {
     $this->size['height'] = $height;
   }
 
@@ -81,14 +91,16 @@ class Media {
   }
  
   // TODO: validity checking
-  function &predefined($name) {
+  public static function predefined($name)
+  {
     global $g_predefined_media;
 
     // Let's check if the chosen media defined
     if (isset($g_predefined_media[$name])) {
-      $media =& new Media($g_predefined_media[$name], array('top'=>0, 'bottom'=>0, 'left'=>0, 'right'=>0));
-    } else {
-      $media = null;
+      $media =new Media($g_predefined_media[$name], array('top'=>0, 'bottom'=>0, 'left'=>0, 'right'=>0));
+    }
+    else {
+      throw new MediaError("Unknown media type '$name'.");
     };
 
     return $media;

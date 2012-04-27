@@ -14,7 +14,8 @@ function config_get_allowed_media() {
   return array($GLOBALS['g_config']['cssmedia'], 'all');
 }
 
-function parse_encoding_override_node_config_file($root, &$resolver) {
+function parse_encoding_override_node_config_file($root, &$resolver)
+{
   $child = $root->first_child();
   do {
     if ($child->node_type() == XML_ELEMENT_NODE) {
@@ -66,12 +67,14 @@ function parse_encoding_override_node_config_file($root, &$resolver) {
   } while ($child = $child->next_sibling());
 }
 
-function parse_metrics_node_config_file($root, &$resolver) {
+function parse_metrics_node_config_file($root, &$resolver)
+{
   $resolver->add_afm_mapping($root->get_attribute('typeface'),
                              $root->get_attribute('file'));
 }
 
-function parse_ttf_node_config_file($root, &$resolver) {
+function parse_ttf_node_config_file($root, &$resolver)
+{
   switch (FONT_EMBEDDING_MODE) {
   case 'all':
     $embed_flag = true;
@@ -89,7 +92,8 @@ function parse_ttf_node_config_file($root, &$resolver) {
                              $embed_flag);
 }
 
-function parse_family_encoding_override_node_config_file($family, $root, &$resolver) {
+function parse_family_encoding_override_node_config_file($family, $root, &$resolver)
+{
   $child = $root->first_child();
   do {
     if ($child->node_type() == XML_ELEMENT_NODE) {
@@ -171,12 +175,9 @@ function parse_fonts_node_config_file($root, &$resolver) {
   } while ($child = $child->next_sibling());
 }
 
-function parse_config_file($filename) {
-  // Save old magic_quotes_runtime value and disable it
-  $mq_runtime = get_magic_quotes_runtime();
-  set_magic_quotes_runtime(0);
-
-  $doc = TreeBuilder::build(file_get_contents($filename));
+function parse_config_file($filename)
+{
+  $doc = TreeBuilder::build(file_get_contents($filename),'xml');
   $root=$doc->document_element();
 
   $child = $root->first_child();
@@ -199,8 +200,4 @@ function parse_config_file($filename) {
       };      
     };
   } while ($child = $child->next_sibling());
-
-  // Restore old magic_quotes_runtime values
-  set_magic_quotes_runtime($mq_runtime);
 }
-?>

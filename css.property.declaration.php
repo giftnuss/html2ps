@@ -1,40 +1,46 @@
 <?php
 
-class CSSPropertyDeclaration {
+class CSSPropertyDeclaration
+{
   var $_code;
   var $_value;
   var $_important;
 
-  function CSSPropertyDeclaration() {
+  function __construct()
+  {
     $this->_code      = 0;
     $this->_value     = null;
     $this->_important = false;
   }
 
-  function &get_value() {
+  function get_value() {
     return $this->_value;
   }
 
-  function set_code($code) {
+  function set_code($code)
+  {
     $this->_code = $code;
   }
 
-  function set_important($value) {
+  function set_important($value)
+  {
     $this->_important = $value;
   }
 
-  function set_value(&$value) {
-    $this->_value =& $value;
+  function set_value(&$value)
+  {
+    $this->_value = $value;
   }
 
-  function &create($code, $value, $pipeline) {
-    $handler =& CSS::get_handler($code);
+  public static function create($code, $value, Pipeline $pipeline)
+  {
+    $handler = CSS::get_handler($code);
     if (is_null($handler)) {
       $null = null;
       return $null;
     };
 
-    $declaration =& new CSSPropertyDeclaration();
+    $declaration = new CSSPropertyDeclaration();
     $declaration->_code = $code;
 
     if (preg_match("/^(.*)!\s*important\s*$/", $value, $matches)) {
@@ -52,8 +58,9 @@ class CSSPropertyDeclaration {
     return $this->_code;
   }
 
-  function &copy() {
-    $declaration =& new CSSPropertyDeclaration();
+  function copy()
+  {
+    $declaration = new CSSPropertyDeclaration();
     $declaration->_code = $this->_code;
 
     if (is_object($this->_value)) {
@@ -67,7 +74,8 @@ class CSSPropertyDeclaration {
     return $declaration;
   }
 
-  function is_important() {
+  function is_important()
+  {
     return $this->_important;
   }
 }

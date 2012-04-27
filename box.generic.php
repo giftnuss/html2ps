@@ -3,7 +3,8 @@
 
 require_once(HTML2PS_DIR.'globals.php');
 
-class GenericBox {
+class GenericBox
+{
   var $_cache;
   var $_css;
   var $_left;
@@ -16,7 +17,8 @@ class GenericBox {
 
   var $_cached_base_font_size;
 
-  function GenericBox() {
+  function __construct()
+  {
     $this->_cache = array();
     $this->_css   = array();
     $this->_cached_base_font_size = null;
@@ -40,7 +42,8 @@ class GenericBox {
     $this->_id = null;
   } 
 
-  function destroy() {
+  function destroy()
+  {
     unset($this->_cache);
     unset($this->_css);
     unset($this->_left);
@@ -53,7 +56,8 @@ class GenericBox {
   /**
    * see get_property for optimization description
    */
-  function setCSSProperty($code, $value) {
+  function setCSSProperty($code, $value)
+  {
     static $cache = array();
     if (!isset($cache[$code])) {
       $cache[$code] =& CSS::get_handler($code);
@@ -67,10 +71,11 @@ class GenericBox {
    * so even a slight overhead for CSS::get_handler call
    * accumulates in a significiant processing delay.
    */
-  function &get_css_property($code) {
+  function &get_css_property($code)
+  {
     static $cache = array();
     if (!isset($cache[$code])) {
-      $cache[$code] =& CSS::get_handler($code);
+      $cache[$code] = CSS::get_handler($code);
     };
 
     $value =& $cache[$code]->get($this->_css);
@@ -304,7 +309,7 @@ class GenericBox {
      */     
     $y = ($this->get_top() - $bottom) + (mm2pt($media->real_height()) - $page_heights[$page_index-1]) + mm2pt($media->margins['bottom']);
 
-    $anchor =& new Anchor($link_destination, 
+    $anchor = new Anchor($link_destination, 
                           $page_index, 
                           $x, 
                           $y);

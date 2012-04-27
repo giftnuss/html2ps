@@ -23,7 +23,8 @@ require_once(HTML2PS_DIR.'strategy.width.max.natural.php');
  * some minor float related-functions.
  * 
  */
-class GenericContainerBox extends GenericFormattedBox {
+class GenericContainerBox extends GenericFormattedBox
+{
   /**
    * @var Array A list of contained elements (of type GenericFormattedBox)
    * @access public
@@ -62,6 +63,29 @@ class GenericContainerBox extends GenericFormattedBox {
    * @access public
    */
   var $_current_y;
+  
+  function __construct()
+  {
+    parent::__construct();
+
+    // By default, box does not have any content
+    $this->content = array();
+
+    // Initialize line box
+    $this->_line = array();
+
+    // Initialize floats-related stuff
+    $this->_deferred_floats = array();
+
+    $this->_additional_text_indent = 0;
+
+    // Current-point
+    $this->_current_x = 0;
+    $this->_current_y = 0;
+
+    // Initialize floating children array
+    $this->_floats = array();
+  }
 
   function destroy() {
     for ($i=0, $size = count($this->content); $i < $size; $i++) {
@@ -362,28 +386,6 @@ class GenericContainerBox extends GenericFormattedBox {
     for ($i=0; $i < $size; $i++) {
       $this->content[$i]->offset($dx, $dy);
     }
-  }
-
-  function GenericContainerBox() {
-    $this->GenericFormattedBox();
-
-    // By default, box does not have any content
-    $this->content = array();
-
-    // Initialize line box
-    $this->_line = array();
-
-    // Initialize floats-related stuff
-    $this->_deferred_floats = array();
-
-    $this->_additional_text_indent = 0;
-
-    // Current-point
-    $this->_current_x = 0;
-    $this->_current_y = 0;
-
-    // Initialize floating children array
-    $this->_floats = array();
   }
 
   function add_deferred_float(&$float) {

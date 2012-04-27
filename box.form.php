@@ -7,8 +7,15 @@ class FormBox extends BlockBox
    * @access private
    */
   var $_name;
+  
+  function __construct($name)
+  {
+    parent::__construct();
+    $this->_name = $name;
+  }
 
-  function show(&$driver) {
+  function show(&$driver)
+  {
     global $g_config;
     if ($g_config['renderforms']) {
       $driver->new_form($this->_name);
@@ -31,12 +38,5 @@ class FormBox extends BlockBox
     $box->create_content($root, $pipeline);
     return $box;
   }
-
-  function FormBox($name) {
-    $this->BlockBox();
-
-    $this->_name = $name;
-  }
 }
 
-?>

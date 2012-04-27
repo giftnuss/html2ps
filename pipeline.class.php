@@ -1,8 +1,9 @@
 <?php
 
-require_once(HTML2PS_DIR.'lib/interfaces/Fetcher.php');
-require_once(HTML2PS_DIR.'lib/interfaces/Parser.php');
+require_once HTML2PS_DIR . 'lib/interfaces/Fetcher.php';
+require_once HTML2PS_DIR . 'lib/interfaces/Parser.php';
 
+require_once HTML2PS_DIR . 'lib/types/ContentType.php';
 
 require_once(HTML2PS_DIR.'utils_array.php');
 require_once(HTML2PS_DIR.'utils_graphic.php');
@@ -271,7 +272,6 @@ require_once(HTML2PS_DIR.'destination.file.class.php');
 
 require_once(HTML2PS_DIR.'xml.validation.inc.php');
 
-require_once(HTML2PS_DIR.'content_type.class.php');
 require_once(HTML2PS_DIR.'dispatcher.class.php');
 require_once(HTML2PS_DIR.'observer.class.php');
 
@@ -285,9 +285,18 @@ require_once(HTML2PS_DIR.'autofix.url.php');
 
 require_once(HTML2PS_DIR.'features/_factory.php');
 
+require_once HTML2PS_DIR . 'inline.content.builder.php';
+
+require_once HTML2PS_DIR . 'fetcher.url.class.php';
+
+require_once HTML2PS_DIR . 'value.generic.percentage.php';
+
 require_once HTML2PS_DIR . 'lib/exceptions/Error.php';
+require_once HTML2PS_DIR . 'lib/exceptions/AppError.php';
 require_once HTML2PS_DIR . 'lib/exceptions/ParserError.php';
 require_once HTML2PS_DIR . 'lib/exceptions/DomError.php';
+require_once HTML2PS_DIR . 'lib/exceptions/MediaError.php';
+require_once HTML2PS_DIR . 'lib/exceptions/TodoError.php';
 
 class Pipeline
 {
@@ -319,7 +328,8 @@ class Pipeline
 
   var $_page_break_strategy;
 
-  function Pipeline() {
+  function __construct()
+  {
     $this->_css = array();
     
     $this->_counters = array();
@@ -361,7 +371,7 @@ class Pipeline
     array_unshift($this->fetchers, $fetcher);
   }
 
-  function calculate_page_heights(&$media, &$box)
+  function calculate_page_heights(Media $media, &$box)
   {
     return $this->_page_break_strategy->run($this, $media, $box);
   }
@@ -384,7 +394,8 @@ class Pipeline
     ImageFactory::clear_cache();
   }
 
-  function configure($options) {
+  function configure($options)
+  {
     $defaults = array('compress'      => false,
                       'cssmedia'      => 'screen',
                       'debugbox'      => false,
@@ -428,7 +439,8 @@ class Pipeline
     };
   }
 
-  function _addFootnote(&$note_call) {
+  function _addFootnote(&$note_call)
+  {
     $this->_footnotes[] = $note_call;
   }
 
@@ -553,7 +565,7 @@ class Pipeline
    * @param $page_no Integer current page index (1-based)
    * @param $media 
    */
-  function render_margin_boxes($page_no, &$media)
+  function render_margin_boxes($page_no, Media $media)
   {
     $boxes = $this->reflow_margin_boxes($page_no, $media);
 
@@ -568,7 +580,7 @@ class Pipeline
     unset($boxes);
   }
 
-  function get_page_media($page_no, &$media)
+  function get_page_media($page_no, Media $media)
   {
     $page_rules = $this->get_page_rules($page_no);
     $size_landscape = $page_rules->get_property_value(CSS_SIZE);
@@ -642,7 +654,7 @@ class Pipeline
     return $collection;
   }
 
-  function reflow_page_box($page_no, &$media)
+  function reflow_page_box($page_no, Media $media)
   {
     $rules = $this->get_page_rules($page_no);
     $box = BoxPage::create($this, $rules);
@@ -650,7 +662,7 @@ class Pipeline
     return $box;
   }
 
-  function render_page_box($page_no, &$media)
+  function render_page_box($page_no, Media $media)
   {
     $box = $this->reflow_page_box($page_no, $media);
     $box->show($this->output_driver);
@@ -658,7 +670,7 @@ class Pipeline
     unset($box);
   }
 
-  function reflow_margin_boxes($page_no, &$media)
+  function reflow_margin_boxes($page_no, Media $media)
   {
     $at_rules = $this->_getMarginBoxes($page_no, $media);
     
@@ -989,12 +1001,12 @@ class Pipeline
     return $null;
   }
   
-  function process($data_id, &$media)
+  function process($data_id, Media $media)
   {
     return $this->process_batch(array($data_id), $media);
   }
 
-  function _setupScales(&$media)
+  function _setupScales(Media $media)
   {
     global $g_config;
     global $g_px_scale;
@@ -1018,14 +1030,9 @@ class Pipeline
    * @param Array $data_id_array Array of page identifiers to be processed (usually URLs or files paths)
    * @param Media $media Object describing the media to render for (size, margins, orientaiton & resolution)
    */
-  function process_batch($data_id_array, &$media)
+  function process_batch($data_id_array, Media $media)
   {
     $this->clear_box_id_map();
-
-    // Save and disable magic_quotes_runtime
-    $mq_runtime = get_magic_quotes_runtime();
-    set_magic_quotes_runtime(0);
-
     $this->_prepare($media);
 
     $this->_dispatcher->fire('before-batch', array('pipeline' => $this));
@@ -1040,14 +1047,11 @@ class Pipeline
     };
 
     $this->close();
-
-    // Restore magic_quotes_runtime setting
-    set_magic_quotes_runtime($mq_runtime);
-
     return true;
   }
 
-  function error_message() {
+  function error_message()
+  {
     $message = file_get_contents(HTML2PS_DIR.'templates/error._header.tpl');
 
     $message .= $this->error_message;
@@ -1150,8 +1154,13 @@ class Pipeline
     };
     $this->output_driver->show_postponed_in_fixed();
   }
+  
+  public function prepare(Media $media)
+  {
+    $this->_prepare($media);
+  }
 
-  function _prepare(&$media)
+  protected function _prepare(Media $media)
   {
     $this->_setupScales($media);
     $GLOBALS['g_media'] = $media;
@@ -1170,7 +1179,7 @@ class Pipeline
     $this->_cssState = array(new CSSState(CSS::get()));
   }
 
-  function _layout_item($data_id, &$media, $offset, &$context, &$postponed_filter)
+  function _layout_item($data_id, Media $media, $offset, &$context, &$postponed_filter)
   {
     $this->_reset_page_at_rules();
 

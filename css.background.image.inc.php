@@ -1,20 +1,25 @@
 <?php
 // $Header: /cvsroot/html2ps/css.background.image.inc.php,v 1.16 2006/07/09 09:07:44 Konstantin Exp $
 
-class CSSBackgroundImage extends CSSSubFieldProperty {
-  function get_property_code() {
+class CSSBackgroundImage extends CSSSubFieldProperty
+{
+  function get_property_code()
+  {
     return CSS_BACKGROUND_IMAGE;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'background-image';
   }
 
-  function default_value() { 
+  function default_value()
+  { 
     return new BackgroundImage(null, null); 
   }
 
-  function parse($value, &$pipeline) {
+  public static function parse($value, &$pipeline)
+  {
     global $g_config;
     if (!$g_config['renderimages']) {
       return CSSBackgroundImage::default_value();

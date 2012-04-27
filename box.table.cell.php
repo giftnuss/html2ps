@@ -117,7 +117,7 @@ class TableCellBox extends GenericContainerBox
   {
     $css_state = $pipeline->get_current_css_state();
 
-    $box =& new TableCellBox();
+    $box = new TableCellBox();
     $box->readCSS($css_state);
 
     // Use cellspacing / cellpadding values from the containing table

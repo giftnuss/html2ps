@@ -1,3 +1,14 @@
+2012-04-25 (sk)
+
+	* start - working with the code
+	* refactoring html parser
+        * update to php5
+
+2011-??-?? Justin Palmer [mediaslave] 
+
+	* Various minor updates.
+		- removed deprecated reference on return value
+
 2008-04-13 Konstantin Bournayev <bkon@bkon.ru>
 
  	* Release: html2ps-2.0.43

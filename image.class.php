@@ -13,38 +13,45 @@
 //
 $GLOBALS['g_image_cache'] = array();
 
-class Image {
+class Image
+{
   var $_handle;
   var $_filename;
   var $_type;
 
-  function Image($handle, $filename, $type) {
+  function __construct($handle, $filename, $type)
+  {
     $this->_handle = $handle;
     $this->_filename = $filename;
     $this->_type = $type;
   }
 
-  function get_filename() {
+  function get_filename()
+  {
     return $this->_filename;
   }
 
-  function get_handle() {
+  function get_handle()
+  {
     return $this->_handle;
   }
 
-  function get_type() {
+  function get_type()
+  {
     return $this->_type;
   }
 
-  function sx() {
+  function sx()
+  {
     if (!$this->_handle) {
       return 0;
-    };
+    }
 
     return imagesx($this->_handle);
   }
 
-  function sy() {
+  function sy()
+  {
     if (!$this->_handle) {
       return 0;
     };
@@ -53,11 +60,14 @@ class Image {
   }
 }
 
-class ImageFactory {
-  // Static funcion; checks if given URL is already cached and either returns 
-  // cached object or downloads the requested image
-  //
-  function get($url, &$pipeline) {
+class ImageFactory
+{
+  /**
+   * This funcion; checks if given URL is already cached and either returns 
+   * cached object or downloads the requested image
+   */
+  public static function get($url, Pipeline $pipeline)
+  {
     global $g_config, $g_image_cache;
     if (!$g_config['renderimages']) { 
       return null; 
@@ -102,7 +112,7 @@ class ImageFactory {
     //
     $handle = do_image_open($filename, $type);
     if ($handle) {
-      $g_image_cache[$url] =& new Image($handle,
+      $g_image_cache[$url] = new Image($handle,
                                         $filename,
                                         $type);
     } else {
@@ -114,19 +124,22 @@ class ImageFactory {
     return $g_image_cache[$url];
   }
 
-  // Makes the filename to contain the cached version of URL
-  // 
-  function make_cache_filename($url) {
+  /**
+   * Makes the filename to contain the cached version of URL
+   */
+  public static function make_cache_filename($url)
+  {
     // We cannot use the $url as an cache image name as it could be longer than 
     // allowed file name length (especially after escaping specialy symbols)
     // thus, we generate long almost random 32-character name using the md5 hash function
     //
-    return CACHE_DIR.md5(time() + $url + rand());
+    return CACHE_DIR . md5(time() + $url + rand());
   }
 
   // Checks if cache directory is available
   //
-  function check_cache_dir() {
+  function check_cache_dir()
+  {
     // TODO: some cool easily understandable error message for the case 
     // image cache directory cannot be created or accessed
     
@@ -166,7 +179,8 @@ class ImageFactory {
   //
   // TODO: Will cause problems with simultaneous access to the same images  
   //
-  function clear_cache() {
+  public static function clear_cache()
+  {
     foreach ($GLOBALS['g_image_cache'] as $key => $value) {
       if (!is_null($value) && is_file($value->get_filename())) {
         unlink($value->get_filename());

@@ -5,7 +5,14 @@ class ListItemBox extends BlockBox
 {
   var $size;
 
-  public static function create(&$root, Pipeline $pipeline) {
+  function __construct(&$root, Pipeline $pipeline)
+  {
+    // Call parent constructor
+    parent::__construct($root,$pipeline);
+  }
+
+  public static function create(&$root, Pipeline $pipeline)
+  {
     $box = new ListItemBox($root, $pipeline);
     $box->readCSS($pipeline->get_current_css_state());
 
@@ -34,7 +41,8 @@ class ListItemBox extends BlockBox
     return $box;
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
     
     $this->_readCSS($state,
@@ -60,11 +68,6 @@ class ListItemBox extends BlockBox
     } else {
       $this->marker_image = null;
     };
-  }
-
-  function ListItemBox(&$root, &$pipeline) {
-    // Call parent constructor
-    $this->BlockBox($root);
   }
 
   function reflow(&$parent, &$context) {

@@ -13,10 +13,9 @@ class LineBox
   var $bottom;
   var $left;
 
-  function LineBox() { }
-
-  function &copy() {
-    $box =& new LineBox;
+  function copy()
+  {
+    $box = new LineBox;
     $box->top    = $this->top;
     $box->right  = $this->right;
     $box->bottom = $this->bottom;
@@ -24,14 +23,16 @@ class LineBox
     return $box;
   }
 
-  function offset($dx, $dy) {
+  function offset($dx, $dy)
+  {
     $this->top    += $dy;
     $this->bottom += $dy;
     $this->left   += $dx;
     $this->right  += $dx;
   }
 
-  function create(&$box) {
+  public static function create(&$box)
+  {
     $lbox = new LineBox;
     $lbox->top    = $box->get_top();
     $lbox->right  = $box->get_right();
@@ -85,9 +86,10 @@ class InlineBox extends GenericInlineBox
 {
   var $_lines;
 
-  function InlineBox() {
+  function __construct()
+  {
     // Call parent's constructor
-    $this->GenericInlineBox();
+    parent::__construct();
 
     // Clear the list of line boxes inside this box
     $this->_lines = array();
@@ -103,7 +105,7 @@ class InlineBox extends GenericInlineBox
                                          $pipeline);
       return $box;
     } else {
-      $box =& new InlineBox();
+      $box = new InlineBox();
 
       $css_state =& $pipeline->get_current_css_state();
 
@@ -139,7 +141,7 @@ class InlineBox extends GenericInlineBox
 
   public static function create_from_text($text, $white_space, Pipeline $pipeline)
   {
-    $box =& new InlineBox();
+    $box = new InlineBox();
     $box->readCSS($pipeline->get_current_css_state());
 
     // Apply/inherit text-related CSS properties 

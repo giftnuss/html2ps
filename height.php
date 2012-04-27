@@ -10,7 +10,8 @@
 //
 // If both constraints are diapason constraints the first one is choosen
 //
-function merge_height_constraint($hc1, $hc2) {
+function merge_height_constraint($hc1, $hc2)
+{
   // First constraint is constant; return this, as second constraint 
   // will never override it
   if (!is_null($hc1->constant)) { return $hc1; };
@@ -43,12 +44,28 @@ function merge_height_constraint($hc1, $hc2) {
 // Note that constraint can be given as a diapason from min to max height
 // It is applied only of no strict height constraint is given
 //
-class HCConstraint {
+class HCConstraint
+{
   var $constant;
   var $min;
   var $max;
+  
+  /**
+   * Height constraint constructor
+   *
+   * @param $constant value of constant constraint or null of none
+   * @param $min value of minimal box height or null if none
+   * @param $max value of maximal box height or null if none
+   */
+  function __construct($constant, $min, $max)
+  {
+    $this->constant = $constant;
+    $this->min = $min;
+    $this->max = $max;
+  }
 
-  function applicable(&$box) {
+  function applicable(&$box)
+  {
     if (!is_null($this->constant)) { 
       return $this->applicable_value($this->constant, $box); 
     }
@@ -133,7 +150,8 @@ class HCConstraint {
     }
   }
 
-  function &create(&$box) {   
+  public static function create(&$box)
+  {   
     // Determine if there's constant restriction
     $value = $box->get_css_property(CSS_HEIGHT);
 
@@ -165,20 +183,8 @@ class HCConstraint {
       $max = array($value->getPoints(), false);
     };
 
-    $constraint =& new HCConstraint($constant, $min, $max);
+    $constraint = new HCConstraint($constant, $min, $max);
     return $constraint;
-  }
-
-  // Height constraint constructor
-  //
-  // @param $constant value of constant constraint or null of none
-  // @param $min value of minimal box height or null if none
-  // @param $max value of maximal box height or null if none
-  //
-  function HCConstraint($constant, $min, $max) {
-    $this->constant = $constant;
-    $this->min = $min;
-    $this->max = $max;
   }
 
   function apply_min($value, &$box, $no_table_recursion) {

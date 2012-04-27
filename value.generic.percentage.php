@@ -7,16 +7,19 @@ define('VALUE_NORMAL', 0);
 define('VALUE_AUTO',   1);
 define('VALUE_PERCENTAGE', 2);
 
-class CSSValuePercentage extends CSSValue {
+class CSSValuePercentage extends CSSValue
+{
   var $_value;
   var $_status;
 
-  function init($value, $status) {
+  function init($value, $status)
+  {
     $this->_value = $value;
     $this->_status = $status;
   }
-
-  function &_fromString($value, &$class_object) {
+  
+  protected static function _fromString($value, &$class_object)
+  {
     if ($value == 'inherit') {
       $dummy = CSS_PROPERTY_INHERIT;
       return $dummy;
@@ -37,7 +40,8 @@ class CSSValuePercentage extends CSSValue {
     return $class_object;
   }
 
-  function units2pt($font_size) {
+  function units2pt($font_size)
+  {
     if ($this->isNormal()) {
       $this->_value->units2pt($font_size);
     };
@@ -74,7 +78,8 @@ class CSSValuePercentage extends CSSValue {
     return $value;
   }
 
-  function getPercentage() {
+  function getPercentage()
+  {
     if ($this->_status != VALUE_PERCENTAGE) {
       die("Invalid percentage value type");
     };

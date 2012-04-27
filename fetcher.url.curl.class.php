@@ -99,5 +99,10 @@ class FetcherUrlCurl implements Fetcher {
   function set_proxy($proxy) {
     $this->_proxy = $proxy;
   }
+  
+  function error_message()
+  {
+    return '';
+  }
 }
 ?>

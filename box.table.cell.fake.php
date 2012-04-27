@@ -7,14 +7,14 @@ class FakeTableCellBox extends TableCellBox
 
   public static function create(Pipeline $pipeline)
   {
-    $box =& new FakeTableCellBox;
+    $box = new FakeTableCellBox;
     
     $css_state =& $pipeline->get_current_css_state();
     $css_state->pushDefaultState();
 
     $box->readCSS($css_state);
 
-    $nullbox =& new NullBox;
+    $nullbox = new NullBox;
     $nullbox->readCSS($css_state);
     $box->add_child($nullbox);
 

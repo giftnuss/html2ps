@@ -4,8 +4,18 @@
 require_once(HTML2PS_DIR.'doc.anchor.class.php');
 require_once(HTML2PS_DIR.'layout.vertical.php');
 
-class GenericFormattedBox extends GenericBox {
+class GenericFormattedBox extends GenericBox
+{
   var $uid;
+  
+  function __construct()
+  {
+    parent::__construct();
+
+    // Layout data
+    $this->baseline = 0;
+    $this->parent = null;
+  }
 
   function _get_collapsable_top_margin_internal() {
     $positive_margin = 0;
@@ -220,14 +230,6 @@ class GenericFormattedBox extends GenericBox {
     $context->push_collapsed_margin($internal_margin);
 
     return $y;
-  }
-
-  function GenericFormattedBox() {
-    $this->GenericBox();
-
-    // Layout data
-    $this->baseline = 0;
-    $this->parent = null;
   }
 
   function readCSS(&$state) {

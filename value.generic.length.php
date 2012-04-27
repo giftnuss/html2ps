@@ -2,7 +2,8 @@
 
 require_once(HTML2PS_DIR.'value.generic.php');
 
-class Value extends CSSValue {
+class Value extends CSSValue
+{
   /**
    * Type of unit this value is measured with
    */
@@ -10,31 +11,36 @@ class Value extends CSSValue {
   var $_number;
   var $_points;
 
-  function scale($scale) {
+  function __construct()
+  {
+    $this->_unit   = UNIT_PT;
+    $this->_number = 0;
+    $this->_points = 0;
+  }
+  
+  function scale($scale)
+  {
     $this->_number *= $scale;
     $this->_points *= $scale;
   }
 
-  function &copy() {
-    $value =& new Value;
+  function copy()
+  {
+    $value = new Value;
     $value->_unit   = $this->_unit;
     $value->_number = $this->_number;
     $value->_points = $this->_points;
     return $value;
   }
 
-  function getPoints() {
+  function getPoints()
+  {
     return $this->_points;
   }
 
-  function Value() {
-    $this->_unit   = UNIT_PT;
-    $this->_number = 0;
-    $this->_points = 0;
-  }
-
-  function &fromData($number, $unit) {
-    $value =& new Value;
+  public static function fromData($number, $unit)
+  {
+    $value = new Value;
     $value->_unit   = $unit;
     $value->_number = $number;
     $value->_points = 0;
@@ -45,18 +51,17 @@ class Value extends CSSValue {
    * Create  new  object using  data  contained  in  string CSS  value
    * representation
    */
-  function &fromString($string_value) {
-    $value =& new Value;
+  public static function &fromString($string_value)
+  {
+    $value = new Value;
     $value->_unit   = $value->unit_from_string($string_value);
     $value->_number = (double)$string_value;
     $value->_points = 0;
     return $value;
   }
 
-  /**
-   * @static
-   */
-  function unit_from_string($value) {
+  public static function unit_from_string($value)
+  {
     $unit = substr($value, strlen($value)-2, 2);
     switch ($unit) {
     case 'pt':
@@ -114,4 +119,3 @@ class Value extends CSSValue {
   }
 }
 
-?>

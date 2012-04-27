@@ -1,12 +1,14 @@
 <?php
 
-function &parse_css_property($string, &$pipeline) {
-  $collection =& parse_css_properties($string, $pipeline);
+function parse_css_property($string, Pipeline $pipeline)
+{
+  $collection = parse_css_properties($string, $pipeline);
   return $collection;
 }
 
-function &parse_css_properties($string, &$pipeline) {
-  $property_collection =& new CSSPropertyCollection();
+function parse_css_properties($string, Pipeline $pipeline)
+{
+  $property_collection = new CSSPropertyCollection();
 
   while ($string != '') {
     $string = parse_css_properties_property($string, $code);
@@ -21,7 +23,7 @@ function &parse_css_properties($string, &$pipeline) {
       $string = $matches[1];
     };
 
-    $property =& CSSPropertyDeclaration::create($code, $value, $pipeline);
+    $property = CSSPropertyDeclaration::create($code, $value, $pipeline);
     if (!is_null($property)) {
       $property_collection->add_property($property);
     };
@@ -30,7 +32,8 @@ function &parse_css_properties($string, &$pipeline) {
   return $property_collection;
 }
 
-function parse_css_properties_property($string, &$code) {
+function parse_css_properties_property($string, &$code)
+{
   $identifier_regexp = CSS::get_identifier_regexp();
 
   if (!preg_match(sprintf('/^\s*(%s)(.*)/si', $identifier_regexp), $string, $matches)) {
@@ -44,7 +47,8 @@ function parse_css_properties_property($string, &$code) {
   return $rest;
 }
 
-function parse_css_properties_value($string, &$value) {
+function parse_css_properties_value($string, &$value)
+{
   $string1_regexp = CSS_STRING1_REGEXP;
   $string2_regexp = CSS_STRING2_REGEXP;
 
@@ -78,4 +82,3 @@ function parse_css_properties_value($string, &$value) {
   return '';
 }
 
-?>

@@ -2,10 +2,12 @@
 
 require_once(HTML2PS_DIR.'css.constants.inc.php');
 
-class CSSPageSelector {
+class CSSPageSelector
+{
   var $_type;
 
-  function CSSPageSelector($type) {
+  function __construct($type)
+  {
     $this->set_type($type);
   }
 
@@ -18,16 +20,20 @@ class CSSPageSelector {
   }
 }
 
-class CSSPageSelectorAll extends CSSPageSelector {
-  function CSSPageSelectorAll() {
+class CSSPageSelectorAll extends CSSPageSelector
+{
+  function __construct()
+  {
     $this->CSSPageSelector(CSS_PAGE_SELECTOR_ALL);
   }
 }
 
-class CSSPageSelectorNamed extends CSSPageSelector  {
+class CSSPageSelectorNamed extends CSSPageSelector
+{
   var $_name;
 
-  function CSSPageSelectorNamed($name) {
+  function __construct($name)
+  {
     $this->CSSPageSelector(CSS_PAGE_SELECTOR_NAMED);
     $this->set_name($name);
   }
@@ -41,41 +47,50 @@ class CSSPageSelectorNamed extends CSSPageSelector  {
   }
 }
 
-class CSSPageSelectorFirst extends CSSPageSelector {
-  function CSSPageSelectorFirst() {
+class CSSPageSelectorFirst extends CSSPageSelector
+{
+  function __construct()
+  {
     $this->CSSPageSelector(CSS_PAGE_SELECTOR_FIRST);
   }
 }
 
-class CSSPageSelectorLeft extends CSSPageSelector {
-  function CSSPageSelectorLeft() {
+class CSSPageSelectorLeft extends CSSPageSelector
+{
+  function __construct()
+  {
     $this->CSSPageSelector(CSS_PAGE_SELECTOR_LEFT);
   }
 }
 
-class CSSPageSelectorRight extends CSSPageSelector {
-  function CSSPageSelectorRight() {
+class CSSPageSelectorRight extends CSSPageSelector
+{
+  function __construct() {
     $this->CSSPageSelector(CSS_PAGE_SELECTOR_RIGHT);
   }
 }
 
-class CSSAtRulePage {
+class CSSAtRulePage
+{
   var $selector;
   var $margin_boxes;
   var $css;
 
-  function CSSAtRulePage($selector, &$pipeline) {
+  function __construct($selector, Pipeline $pipeline)
+  {
     $this->selector = $selector;
     $this->margin_boxes = array();
 
-    $this->css =& new CSSPropertyCollection();
+    $this->css = new CSSPropertyCollection();
   }
 
-  function &getSelector() {
+  function getSelector()
+  {
     return $this->selector;
   }
 
-  function getAtRuleMarginBoxes() {
+  function getAtRuleMarginBoxes()
+  {
     return $this->margin_boxes;
   }
 
@@ -83,16 +98,19 @@ class CSSAtRulePage {
    * Note that only one margin box rule could be added; subsequent adds 
    * will overwrite existing data
    */
-  function addAtRuleMarginBox($rule) {
+  function addAtRuleMarginBox($rule)
+  {
     $this->margin_boxes[$rule->getSelector()] = $rule;
   }
 
-  function setCSSProperty($property) {
+  function setCSSProperty($property)
+  {
     $this->css->add_property($property);
   }
 }
 
-class CSSAtRuleMarginBox {
+class CSSAtRuleMarginBox
+{
   var $selector;
   var $css;
 
@@ -100,25 +118,29 @@ class CSSAtRuleMarginBox {
    * TODO: CSS_TEXT_ALIGN should get  top/bottom values by default for
    * left-top, left-bottom, right-top and right-bottom boxes
    */
-  function CSSAtRuleMarginBox($selector, &$pipeline) {
+  function __construct($selector, Pipeline $pipeline)
+  {
     $this->selector = $selector;
 
-    $css = "-html2ps-html-content: ''; content: ''; width: auto; height: auto; margin: 0; border: none; padding: 0; font: auto;";
+    $css = "-html2ps-html-content: ''; content: ''; width: auto; ' .
+      'height: auto; margin: 0; border: none; padding: 0; font: auto;";
     $css = $css . $this->_getCSSDefaults($selector);
 
     $this->css = new CSSRule(array(
                                    array(SELECTOR_ANY),
-                                   parse_css_properties($css, $null),
+                                   parse_css_properties($css, $pipeline),
                                    '',
                                    null),
                              $pipeline);
   }
 
-  function getSelector() {
+  function getSelector()
+  {
     return $this->selector;
   }
 
-  function _getCSSDefaults($selector) {
+  function _getCSSDefaults($selector)
+  {
     $text_align_handler =& CSS::get_handler(CSS_TEXT_ALIGN);
     $vertical_align_handler =& CSS::get_handler(CSS_VERTICAL_ALIGN);
     
@@ -201,7 +223,7 @@ function parse_css_atpage_rule($css, &$css_ruleset) {
   $css          = trim($matches[2]);
 
   $selector =& parse_css_atpage_selector($raw_selector);
-  $at_rule =& new CSSAtRulePage($selector, $css_ruleset);
+  $at_rule = new CSSAtRulePage($selector, $css_ruleset);
 
   /**
    * The body of @page rule may contain declaraction (detected by ';'), 
@@ -255,24 +277,24 @@ function parse_css_atpage_rule($css, &$css_ruleset) {
 function &parse_css_atpage_selector($selector) {
   switch ($selector) {
   case '':
-    $selector =& new CSSPageSelectorAll();
+    $selector = new CSSPageSelectorAll();
     return $selector;
   case ':first':
-    $selector =& new CSSPageSelectorFirst();
+    $selector = new CSSPageSelectorFirst();
     return $selector;
   case ':left':
-    $selector =& new CSSPageSelectorLeft();
+    $selector = new CSSPageSelectorLeft();
     return $selector;
   case ':right':
-    $selector =& new CSSPageSelectorRight();
+    $selector = new CSSPageSelectorRight();
     return $selector;
   default:
     if (CSS::is_identifier($selector)) {
-      $selector =& new CSSPageSelectorNamed($selector);
+      $selector = new CSSPageSelectorNamed($selector);
       return $selector;
     } else {
       error_log(sprintf('Unknown page selector in @page rule: \'%s\'', $selector));
-      $selector =& new CSSPageSelectorAll();
+      $selector = new CSSPageSelectorAll();
       return $selector;
     };
   };
@@ -369,7 +391,8 @@ function parse_css_atpage_margin_box_selector($css) {
   }
 };
 
-function parse_css_atpage_declaration($css, &$at_rule, &$pipeline) {
+function parse_css_atpage_declaration($css, &$at_rule, &$pipeline)
+{
   $parsed =& parse_css_property($css, $pipeline);
 
   if (!is_null($parsed)) {
@@ -380,7 +403,8 @@ function parse_css_atpage_declaration($css, &$at_rule, &$pipeline) {
   };
 }
 
-function parse_css_atpage_margin_box_declaration($css, &$at_rule, &$pipeline) {
+function parse_css_atpage_margin_box_declaration($css, &$at_rule, &$pipeline)
+{
   $parsed =& parse_css_property($css, $pipeline);
 
   if (!is_null($parsed)) {

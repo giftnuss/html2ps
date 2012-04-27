@@ -54,7 +54,7 @@ class ButtonBox extends InlineControlBox
       $text = DEFAULT_BUTTON_TEXT;
     };
 
-    $box =& new ButtonBox();
+    $box = new ButtonBox();
     $box->readCSS($pipeline->get_current_css_state());
 
     /**

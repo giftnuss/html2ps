@@ -4,17 +4,20 @@
 // TODO: from my POV, it wll be better to pass the font- or CSS-controlling object to the constructor
 // instead of using globally visible functions in 'show'.
 
-class TextBoxString extends TextBox {
-  function &create($text, $encoding) {
-    $box =& new TextBoxString($text, $encoding);
-    $box->readCSS($pipeline->get_current_css_state());
-    return $box;
+class TextBoxString extends TextBox
+{
+  function __construct($word, $encoding)
+  {
+    // Call parent constructor
+    parent::__construct();
+    $this->add_subword($word, $encoding, array());
   }
 
-  function TextBoxString($word, $encoding) {
-    // Call parent constructor
-    $this->TextBox();
-    $this->add_subword($word, $encoding, array());
+  public static function create($text, $encoding, Pipeline $pipeline)
+  {
+    $box = new TextBoxString($text, $encoding);
+    $box->readCSS($pipeline->get_current_css_state());
+    return $box;
   }
 
   function get_extra_bottom() {

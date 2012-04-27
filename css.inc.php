@@ -109,14 +109,14 @@ class CSS
     };
   }
 
-  function &get_handler($property)
+  public static function get_handler($property)
   {
     $css = CSS::get();
-    $handler =& $css->_get_handler($property);
+    $handler = $css->_get_handler($property);
     return $handler;
   }
 
-  function &_get_handler($property)
+  protected function _get_handler($property)
   {
     if (isset($this->_handlers[$property])) {
       return $this->_handlers[$property];
@@ -135,7 +135,7 @@ class CSS
     return $this->_mapping[$key];
   }
 
-  function name2code($key)
+  public static function name2code($key)
   {
     $css = CSS::get();
     return $css->_name2code($key);
@@ -161,7 +161,7 @@ class CSS
    * nmchar		[_a-z0-9-]|{nonascii}|{escape}
    * ident		-?{nmstart}{nmchar}*
    */
-  function get_identifier_regexp()
+  public static function get_identifier_regexp()
   {
     return '-?(?:[_a-z]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])(?:[_a-z0-9-]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*';
   }
@@ -173,7 +173,7 @@ class CSS
                       $string);
   }
 
-  function parse_string($string)
+  public static function parse_string($string)
   {
     if (preg_match(sprintf('/^(%s)\s*(.*)$/s', CSS_STRING1_REGEXP), $string, $matches)) {
       $value = $matches[1];
@@ -182,7 +182,7 @@ class CSS
       $value = CSS::remove_backslash_at_newline($value);
 
       return array($value, $rest);
-    };
+    }
 
     if (preg_match(sprintf('/^(%s)\s*(.*)$/s', CSS_STRING2_REGEXP), $string, $matches)) {
       $value = $matches[1];
@@ -191,12 +191,12 @@ class CSS
       $value = CSS::remove_backslash_at_newline($value);
 
       return array($value, $rest);
-    };
+    }
 
     return array(null, $string);
   }
 
-  function remove_backslash_at_newline($value)
+  public static function remove_backslash_at_newline($value)
   {
     return preg_replace("/\\\\\n/", '', $value);
   }

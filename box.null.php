@@ -1,17 +1,26 @@
 <?php
 // $Header: /cvsroot/html2ps/box.null.php,v 1.18 2006/07/09 09:07:44 Konstantin Exp $
 
-class NullBox extends GenericInlineBox {
-  function get_min_width(&$context) { return 0; }
-  function get_max_width(&$context) { return 0; }
-  function get_height() { return 0; }
-
-  function NullBox() {
-    $this->GenericInlineBox();
+class NullBox extends GenericInlineBox
+{
+  function get_min_width(&$context)
+  {
+    return 0;
   }
   
-  function &create() { 
-    $box =& new NullBox;
+  function get_max_width(&$context)
+  {
+    return 0;
+  }
+  
+  function get_height()
+  {
+    return 0;
+  }
+  
+  public static function create()
+  { 
+    $box = new NullBox;
 
     $css_state = new CSSState(CSS::get());
     $css_state->pushState();
@@ -20,11 +29,13 @@ class NullBox extends GenericInlineBox {
     return $box; 
   }
 
-  function show(&$viewport) {
+  function show(&$viewport)
+  {
     return true;
   }
 
-  function reflow_static(&$parent, &$context) {
+  function reflow_static(&$parent, &$context)
+  {
     if (!$parent) {
       $this->put_left(0);
       $this->put_top(0);
@@ -37,6 +48,9 @@ class NullBox extends GenericInlineBox {
     $this->put_top($parent->get_top());
   }
 
-  function is_null() { return true; }
+  function is_null()
+  {
+    return true;
+  }
 }
-?>
+

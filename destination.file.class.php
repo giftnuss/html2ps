@@ -1,22 +1,38 @@
 <?php
-class DestinationFile extends Destination {
-  var $_link_text;
 
-  function DestinationFile($filename, $link_text = null) {
-    $this->Destination($filename);
-
-    $this->_link_text = $link_text;
+class DestinationFile extends Destination
+{
+  var $_destfile_name;
+  var $_ouput_dir;
+  
+  public function setOutputDir($dirname)
+  {
+    $this->_ouput_dir = $dirname;
+  }
+  
+  public function getOutputDir()
+  {
+    if(empty($this->_ouput_dir)) {
+      return OUTPUT_FILE_DIRECTORY;
+    }
+    else {
+      return $this->_ouput_dir;
+    }
   }
 
-  function process($tmp_filename, $content_type) {
-    $dest_filename = OUTPUT_FILE_DIRECTORY.$this->filename_escape($this->get_filename()).".".$content_type->default_extension;
+  function process($tmp_filename, $content_type)
+  {
+    $dest_filename = $this->getOutputDir() .
+      $this->filename_escape($this->get_filename()) . "." .
+        $content_type->default_extension;
 
-    copy($tmp_filename, $dest_filename);
-
-    $text = $this->_link_text;
-    $text = preg_replace('/%link%/', 'file://'.$dest_filename, $text);
-    $text = preg_replace('/%name%/', $this->get_filename(), $text);
-    print $text;
+    if(false === copy($tmp_filename, $dest_filename)) {
+      throw new IoError("Can not copy to file $dest_filename");
+    }
+  }
+  
+  function getResult()
+  {
+    return $this->_destfile_name;
   }
 }
-?>

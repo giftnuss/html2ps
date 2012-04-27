@@ -2,7 +2,8 @@
 
 class TestBorderLeft extends GenericTest
 {
-  function testBorderLeft1() {
+  function testBorderLeft1()
+  {
     $tree = $this->runPipeline(file_get_contents('test.border-left.1.html'));
 
     $element =& $tree->get_element_by_id('div1');

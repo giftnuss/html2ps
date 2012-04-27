@@ -2,12 +2,10 @@
 
 require_once(HTML2PS_DIR.'box.generic.formatted.php');
 
-class SimpleInlineBox extends GenericBox {
-  function SimpleInlineBox() {
-    $this->GenericBox();
-  }
-
-  function readCSS(&$state) {
+class SimpleInlineBox extends GenericBox
+{
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
 
     $this->_readCSS($state,
@@ -38,10 +36,11 @@ class SimpleInlineBox extends GenericBox {
     return 0;
   }
 
-  function show(&$driver) {
+  function show(&$driver)
+  {
     parent::show($driver);
 
-    $strategy =& new StrategyLinkRenderingNormal();
+    $strategy = new StrategyLinkRenderingNormal();
     $strategy->apply($this, $driver);
   }
 }

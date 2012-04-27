@@ -1,21 +1,23 @@
 <?php
 
-class ButtonBrokenImageBox extends BrokenImgBox {
+class ButtonBrokenImageBox extends BrokenImgBox
+{
   var $_field_name;
   var $_field_value;
   var $_action_url;
 
-  function ButtonBrokenImageBox($width, $height, $alt, $field, $value, $action_url) {
-    $this->BrokenImgBox($width, $height, $alt);
+  function __construct($width, $height, $alt, $field, $value, $action_url)
+  {
+    parent::__construct($width, $height, $alt);
 
     $this->_field_name  = $field;
     $this->_field_value = $value;
     $this->set_action_url($action_url);
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
-
     $this->_readCSS($state,
                     array(CSS_HTML2PS_FORM_ACTION));
   }
@@ -42,31 +44,34 @@ class ButtonBrokenImageBox extends BrokenImgBox {
   }
 }
 
-class ButtonImageBox extends ImgBox {
+class ButtonImageBox extends ImgBox
+{
   var $_field_name;
   var $_field_value;
   var $_action_url;
 
-  function ButtonImageBox($img, $field, $value, $action_url) {
-    $this->ImgBox($img);
+  function __construct($img, $field, $value, $action_url)
+  {
+    parent::__construct($img);
 
     $this->_field_name  = $field;
     $this->_field_value = $value;
     $this->set_action_url($action_url);
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
-
-    $this->_readCSS($state,
-                    array(CSS_HTML2PS_FORM_ACTION));
+    $this->_readCSS($state, array(CSS_HTML2PS_FORM_ACTION));
   }
 
-  function set_action_url($action_url) {
+  function set_action_url($action_url)
+  {
     $this->_action_url = $action_url;
   }
 
-  function show(&$driver) {
+  function show(&$driver)
+  {
     $status = parent::show($driver);
 
     global $g_config;
@@ -83,7 +88,8 @@ class ButtonImageBox extends ImgBox {
     return $status;
   }
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline)
+  {
     $name  = $root->get_attribute('name');
     $value = $root->get_attribute('value');
 
@@ -109,14 +115,14 @@ class ButtonImageBox extends ImgBox {
       $alt = $root->get_attribute('alt');
       
       $css_state =& $pipeline->get_current_css_state();
-      $box =& new ButtonBrokenImagebox($width, $height, $alt, $name, $value, 
+      $box = new ButtonBrokenImagebox($width, $height, $alt, $name, $value, 
                                        $css_state->get_property(CSS_HTML2PS_FORM_ACTION));
       $box->readCSS($css_state);
       return $box;
     };
 
     $css_state =& $pipeline->get_current_css_state();
-    $box =& new ButtonImageBox($src_img, $name, $value, 
+    $box = new ButtonImageBox($src_img, $name, $value, 
                                $css_state->get_property(CSS_HTML2PS_FORM_ACTION));
     $box->readCSS($css_state);
     $box->_setupSize();
@@ -125,4 +131,3 @@ class ButtonImageBox extends ImgBox {
   }    
 }
 
-?>

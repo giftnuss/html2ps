@@ -18,15 +18,10 @@ require_once(HTML2PS_DIR.'layout.vertical.php');
  *
  * @link http://www.w3.org/TR/html4/struct/text.html#edef-BR HTML 4.01 Forcing a line break: the BR element 
  */
-class BRBox extends GenericBox {
-  /**
-   * Create new BR element
-   */
-  function BRBox() {
-    $this->GenericBox();
-  }
-
-  function apply_clear($y, &$context) {
+class BRBox extends GenericBox
+{
+  function apply_clear($y, &$context)
+  {
     return LayoutVertical::apply_clear($this, $y, $context);
   }
 
@@ -34,7 +29,8 @@ class BRBox extends GenericBox {
     return true;
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
 
     /**
@@ -56,8 +52,9 @@ class BRBox extends GenericBox {
    * 
    * @return BRBox new BR element object
    */
-  function &create(&$pipeline) {
-    $box =& new BRBox();
+  public static function create(Pipeline $pipeline)
+  {
+    $box = new BRBox();
     $box->readCSS($pipeline->get_current_css_state());
     return $box;
   }

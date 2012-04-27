@@ -1,6 +1,7 @@
 <?php
 
-class EdgePDF {
+class EdgePDF
+{
   var $width;
   var $color;
   var $style;
@@ -12,7 +13,8 @@ class EdgePDF {
    * never modified partially, so we could use one shared object 
    * as a default value
    */
-  function EdgePDF() {
+  function __construct()
+  {
     static $default_width = null;
     if (is_null($default_width)) {
       $default_width =& Value::fromData(0, UNIT_PT);
@@ -20,7 +22,7 @@ class EdgePDF {
 
     static $default_color = null;
     if (is_null($default_color)) {
-      $default_color =& new Color(array(0,0,0), true);
+      $default_color = new Color(array(0,0,0), true);
     };
 
     $this->width =& $default_width;
@@ -30,11 +32,13 @@ class EdgePDF {
     $this->_isDefaultColor = true;
   }
 
-  function isDefaultColor() {
+  function isDefaultColor()
+  {
     return $this->_isDefaultColor;
   }
 
-  function setColor(&$color) {
+  function setColor($color)
+  {
     if ($color != CSS_PROPERTY_INHERIT) {
       $this->color = $color->copy();
     } else {
@@ -44,7 +48,8 @@ class EdgePDF {
     $this->_isDefaultColor = false;
   }
 
-  function doInherit(&$state, $code_width, $code_color, $code_style) {
+  function doInherit(&$state, $code_width, $code_color, $code_style)
+  {
     if ($this->width === CSS_PROPERTY_INHERIT) {
       $value = $state->getInheritedProperty($code_width);
       $this->width = $value->copy();
@@ -61,17 +66,18 @@ class EdgePDF {
     };
   }
 
-  function &create($data) {
-    $edge =& new EdgePDF();
+  public static function create($data)
+  {
+    $edge = new EdgePDF();
     $edge->width = $data['width'];
-    $edge->color =& new Color($data['color'], is_transparent($data['color']));
+    $edge->color = new Color($data['color'], is_transparent($data['color']));
     $edge->style = $data['style'];
     $edge->_isDefaultColor = true;
     return $edge;
   }
 
   function &copy() {
-    $edge =& new EdgePDF();
+    $edge = new EdgePDF();
 
     if ($this->width != CSS_PROPERTY_INHERIT) {
       $edge->width = $this->width->copy();

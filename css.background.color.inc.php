@@ -3,24 +3,29 @@
 
 // 'background-color' and color part of 'background' CSS properies handler
 
-class CSSBackgroundColor extends CSSSubFieldProperty {
-  function get_property_code() {
+class CSSBackgroundColor extends CSSSubFieldProperty
+{
+  function get_property_code()
+  {
     return CSS_BACKGROUND_COLOR;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'background-color';
   }
 
-  function default_value() {
-    // Transparent color
+  function default_value()
+  {
+    // TODO: Transparent color
     return new Color(array(0,0,0), true);
   }
   
   // Note: we cannot use parse_color_declaration here directly, as at won't process composite 'background' values
   // containing, say, both background image url and background color; on the other side, 
   // parse_color_declaration slow down if we'll put this composite-value processing there
-  function parse($value) {
+  function parse($value)
+  {
     // We should not split terms at whitespaces immediately preceeded by ( or , symbols, as 
     // it would break "rgb( xxx, yyy, zzz)" notation
     // 
@@ -37,7 +42,7 @@ class CSSBackgroundColor extends CSSSubFieldProperty {
         return CSS_PROPERTY_INHERIT;
       }
 
-      $color =& parse_color_declaration($term);
+      $color = parse_color_declaration($term);
 
       if (!$color->isTransparent()) {
         return $color;
@@ -47,7 +52,8 @@ class CSSBackgroundColor extends CSSSubFieldProperty {
     return CSSBackgroundColor::default_value();
   }
 
-  function get_visible_background_color() {
+  function get_visible_background_color()
+  {
     $owner =& $this->owner();
     
     for ($i=0, $size = count($owner->_stack); $i<$size; $i++) {
@@ -59,4 +65,3 @@ class CSSBackgroundColor extends CSSSubFieldProperty {
   }
 }
 
-?>

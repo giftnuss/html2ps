@@ -1,58 +1,62 @@
 <?php
 // $Header: /cvsroot/html2ps/box.whitespace.php,v 1.33 2007/01/24 18:55:46 Konstantin Exp $
 
-class WhitespaceBox extends TextBox {
-  function &create(&$pipeline) {
-    $box =& new WhitespaceBox();
+class WhitespaceBox extends TextBox
+{
+  public static function create(Pipeline $pipeline)
+  {
+    $box = new WhitespaceBox();
     $box->readCSS($pipeline->get_current_css_state());
     $box->add_subword(" ", 'iso-8859-1', array());
     return $box;
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     parent::readCSS($state);
-
-    $this->_readCSSLengths($state,
-                           array(CSS_WORD_SPACING));
+    $this->_readCSSLengths($state, array(CSS_WORD_SPACING));
   }
 
-  function get_extra_bottom() {
+  function get_extra_bottom()
+  {
     return 0;
   }
 
   // "Pure" Text boxes never have margins/border/padding
-  function get_extra_left() {
+  function get_extra_left()
+  {
     return 0;
   }
 
   // "Pure" Text boxes never have margins/border/padding
-  function get_extra_right() {
+  function get_extra_right()
+  {
     return 0;
   }
 
-  function get_extra_top() {
+  function get_extra_top()
+  {
     return 0;
   }
 
-  function get_full_width() {
+  function get_full_width()
+  {
     return $this->width;
   }
 
-  function get_margin_top() {
+  function get_margin_top()
+  {
     return 0;
   }
 
-  function get_min_width(&$context) {
+  function get_min_width(&$context)
+  {
     return $this->width;
   }
 
-  function get_max_width(&$context) {
+  function get_max_width(&$context)
+  {
     return $this->width;
-  }
-
-  function WhitespaceBox() {
-    // Call parent constructor
-    $this->TextBox();
   }
 
   // (!) SIDE EFFECT: current whitespace box can be replaced by a null box during reflow.

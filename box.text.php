@@ -6,7 +6,8 @@ require_once(HTML2PS_DIR.'box.inline.simple.php');
 // TODO: from my POV, it wll be better to pass the font- or CSS-controlling object to the constructor
 // instead of using globally visible functions in 'show'.
 
-class TextBox extends SimpleInlineBox {
+class TextBox extends SimpleInlineBox
+{
   var $words;
   var $encodings;
   var $hyphens;
@@ -15,8 +16,9 @@ class TextBox extends SimpleInlineBox {
   var $_wrappable;
   var $wrapped;
 
-  function TextBox() {
-    $this->SimpleInlineBox();
+  function __construct()
+  {
+    parent::__construct();
 
     $this->words        = array();
     $this->encodings    = array();
@@ -31,6 +33,24 @@ class TextBox extends SimpleInlineBox {
     $this->descender = 0;
     $this->width     = 0;
     $this->height    = 0;
+  }
+  
+  public static function create($text, $encoding, Pipeline $pipeline)
+  {
+    $box =& TextBox::create_empty($pipeline);
+    $box->add_subword($text, $encoding, array());
+    return $box;
+  }
+
+  public static function create_empty(Pipeline $pipeline)
+  {
+    $box = new TextBox();
+    $css_state = $pipeline->get_current_css_state();
+
+    $box->readCSS($css_state);
+    $css_state = $pipeline->get_current_css_state();
+
+    return $box;
   }
 
   /**
@@ -139,22 +159,6 @@ class TextBox extends SimpleInlineBox {
     $this->words[]     = $subword;
     $this->encodings[] = $encoding;
     $this->hyphens[]   = $hyphens;
-  }
-
-  function &create($text, $encoding, &$pipeline) {
-    $box =& TextBox::create_empty($pipeline);
-    $box->add_subword($text, $encoding, array());
-    return $box;
-  }
-
-  function &create_empty(&$pipeline) {
-    $box =& new TextBox();
-    $css_state = $pipeline->get_current_css_state();
-
-    $box->readCSS($css_state);
-    $css_state = $pipeline->get_current_css_state();
-
-    return $box;
   }
 
   function readCSS(&$state) {

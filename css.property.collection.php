@@ -25,11 +25,11 @@ class CSSPropertyCollection {
   }
 
   function &copy() {
-    $collection =& new CSSPropertyCollection();
+    $collection = new CSSPropertyCollection();
     
     for ($i = 0, $size = count($this->_properties); $i < $size; $i++) {
       $property =& $this->_properties[$i];
-      $collection->_properties[] =& $property->copy();
+      $collection->_properties[] = $property->copy();
     };
 
     $collection->_positions    = $this->_positions;
@@ -113,7 +113,8 @@ class CSSPropertyCollection {
    * Merge two sets of CSS properties, overwriting old values
    * with values from $collection
    */
-  function merge($collection) {
+  function merge($collection)
+  {
     $properties = $collection->getPropertiesSortedByPriority();
     foreach ($properties as $property) {
       $this->add_property($property);

@@ -31,10 +31,25 @@ class FetcherUrl implements Fetcher
   // ---------------------------------------------
   // FetcherURL - PUBLIC methods
   // ---------------------------------------------
+  function __construct()
+  {
+    $this->_connections = array();
+
+    $this->error_message = "";
+
+    $this->redirects = 0;
+    $this->port = 80;
+
+    // Default encoding
+    //    $this->encoding = "iso-8859-1";
+
+    $this->user_agent = DEFAULT_USER_AGENT;
+  }
 
   // "Fetcher" interface implementation
 
-  function get_base_url() {
+  function get_base_url()
+  {
     return $this->url;
   }
 
@@ -96,24 +111,9 @@ class FetcherUrl implements Fetcher
     }
   }
 
-  function error_message() {
+  function error_message()
+  {
     return $this->error_message;
-  }
-
-  // FetcherURL - constructor
-
-  function FetcherURL() {
-    $this->_connections = array();
-
-    $this->error_message = "";
-
-    $this->redirects = 0;
-    $this->port = 80;
-
-    // Default encoding
-    //    $this->encoding = "iso-8859-1";
-
-    $this->user_agent = DEFAULT_USER_AGENT;
   }
 
   // ---------------------------------------------
@@ -216,7 +216,8 @@ class FetcherUrl implements Fetcher
   * 
   * @param $path - url path expected, during big code base, from some part urls is passed.
   */
-  function _simplify_path($path) {
+  static function _simplify_path($path)
+  {
     $simplified_path = $path;
     $parsed_path = parse_url($path);
     $prepared_path = $parsed_path['path'];
