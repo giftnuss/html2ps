@@ -8,7 +8,8 @@
 $GLOBALS['g_frame_level'] = 0;
 
 // Called when frame node  is to be processed 
-function inc_frame_level() {
+function inc_frame_level()
+{
   global $g_frame_level;
   $g_frame_level ++;
 
@@ -20,7 +21,8 @@ function inc_frame_level() {
 
 // Called when frame (and all nested frames, of course) processing have been completed
 //
-function dec_frame_level() {
+function dec_frame_level()
+{
   global $g_frame_level;
   $g_frame_level --;
 }
@@ -31,7 +33,8 @@ function dec_frame_level() {
 //
 // @return flag indication of current box need a block box wrapper
 //
-function _fix_display_position_float(&$css_state) {
+function _fix_display_position_float(&$css_state)
+{
   // Specified value -> Computed value
   // inline-table -> table
   // inline, run-in, table-row-group, table-column, table-column-group, table-header-group, 
@@ -87,20 +90,20 @@ function _fix_display_position_float(&$css_state) {
   }
 }
 
-function &create_pdf_box(&$root, &$pipeline) {
+function create_pdf_box(&$root, Pipeline $pipeline)
+{
   // we must to be sure that first element is object 
   if (is_object($root)) {
     switch ($root->node_type()) {
     case XML_DOCUMENT_NODE:
       // TODO: some magic from traverse_dom_tree
-      $box =& create_document_box($root, $pipeline);
-      return $box;
+      return create_document_box($root, $pipeline);
     case XML_ELEMENT_NODE:   
-      $box =& create_node_box($root, $pipeline);
-      return $box;
+      return create_node_box($root, $pipeline);
     case XML_TEXT_NODE:
-      $box =& create_text_box($root, $pipeline);
-      return $box;
+      return create_text_box($root, $pipeline);
+    case XML_COMMENT_NODE:
+      return null;
     default:
       die("unsupported node type:".$root->node_type());
     }
@@ -157,8 +160,8 @@ function &create_node_box(&$root, &$pipeline) {
   // 'display', 'position', and 'float'  interact as follows:
   // 1. If 'display' has the value 'none', then 'position' and 'float' do not apply. 
   //    In this case, the element generates no box.
-  $position_handler =& CSS::get_handler(CSS_POSITION);
-  $float_handler    =& CSS::get_handler(CSS_FLOAT);
+  $position_handler = CSS::get_handler(CSS_POSITION);
+  $float_handler = CSS::get_handler(CSS_FLOAT);
 
   // 2. Otherwise, if 'position' has the value 'absolute' or 'fixed', the box is absolutely positioned, 
   //    the computed value of 'float' is 'none', and display is set according to the table below. 
@@ -404,7 +407,7 @@ function &create_text_box(&$root, &$pipeline) {
    * correspond, for example, to whitespace between tags.
    */
   if ($root->content !== "") {
-    $box =& InlineBox::create($root, $pipeline);
+    $box = InlineBox::create($root, $pipeline);
   } else {
     $box = null;
   }
