@@ -18,7 +18,7 @@ class GenericTest extends UnitTestCase
     $pipeline->data_filters[] = new DataFilterHTML2XHTML();
     $pipeline->destination = new DestinationFile("test.pdf");
 
-    $pipeline->_prepare($media);
+    $pipeline->prepare($media);
     return $pipeline;
   }
 

@@ -17,8 +17,8 @@ class TestCSSPageBreakInside extends GenericTest {
 
     $div = $tree->get_element_by_id('div');
 
-    $this->assertEqual(PAGE_BREAK_AVOID, $div->getCSSProperty(CSS_PAGE_BREAK_INSIDE));
+    $this->assertEqual(PAGE_BREAK_AVOID,
+        $div->get_css_property(CSS_PAGE_BREAK_INSIDE));
   }
 }
 
-?>

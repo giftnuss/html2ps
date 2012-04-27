@@ -2,7 +2,6 @@
 
 error_reporting(E_ALL);
 ini_set("display_errors","1");
-@set_time_limit(10000);
 
 define('SIMPLETEST_DIR', '../../lib/simpletest/');
 require_once(SIMPLETEST_DIR.'unit_tester.php');
@@ -16,12 +15,12 @@ require_once('fetcher.memory.php');
 require_once('generic.test.php');
 
 $test = new TestSuite('All tests');
+$reporter = new TextReporter(); // HtmlReporter();
 $testfiles = glob('test.*.php');
 
 foreach ($testfiles as $testfile) {
-//  $test->addTestFile($testfile);
+  $test->addFile($testfile);
 };
-$test->addFile('test.white-space.php');
-$test->run(new HtmlReporter());
+// $test->addFile('test.white-space.php');
+$test->run(new $reporter);
 
-?>

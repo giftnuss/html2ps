@@ -22,9 +22,9 @@ class TestBorderLeft extends GenericTest
     $this->assertEqual($color->g, 0);
     $this->assertEqual($color->b, 0);
 
-    $element =& $tree->get_element_by_id('div2');
-    $border =& $element->getCSSProperty(CSS_BORDER);
-    $top =& $border->get_top();
+    $element = $tree->get_element_by_id('div2');
+    $border = $element->get_css_property(CSS_BORDER);
+    $top = $border->get_top();
     $this->assertEqual($top->get_style(), BS_NONE);
     $bottom =& $border->get_bottom();
     $this->assertEqual($bottom->get_style(), BS_NONE);
