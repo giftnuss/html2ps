@@ -496,7 +496,7 @@ class Pipeline
   {
     if (isset($this->_counters[$counter])) {
       return $this->_counters[$counter];
-    };
+    }
 
     /**
      * CSS  2.1:   Counters  that  are   not  in  the  scope   of  any
@@ -968,9 +968,14 @@ class Pipeline
     $this->destination = $destination;
   }
 
-  function set_output_driver(&$output_driver)
+  function set_output_driver(OutputDriver $output_driver)
   {
     $this->output_driver = $output_driver;
+  }
+
+  function get_output_driver()
+  {
+    return $this->output_driver;
   }
 
   function fetch($data_id)
@@ -1078,11 +1083,6 @@ class Pipeline
 
   function get_base_url() {
     return $this->_base_url[0];
-  }
-
-  function get_output_driver()
-  {
-    return $this->output_driver;
   }
 
   function guess_url($src)
