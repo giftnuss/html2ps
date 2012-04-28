@@ -24,7 +24,7 @@ class CSSBackgroundColor extends CSSSubFieldProperty
   // Note: we cannot use parse_color_declaration here directly, as at won't process composite 'background' values
   // containing, say, both background image url and background color; on the other side,
   // parse_color_declaration slow down if we'll put this composite-value processing there
-  public static function parse($value)
+  function parse($value)
   {
     // We should not split terms at whitespaces immediately preceeded by ( or , symbols, as
     // it would break "rgb( xxx, yyy, zzz)" notation

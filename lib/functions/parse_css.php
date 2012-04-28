@@ -1,6 +1,6 @@
 <?php
 
-function parse_css_font_size()
+function parse_css_font_size($value)
 {
     if ($value == 'inherit') {
       return CSS_PROPERTY_INHERIT;

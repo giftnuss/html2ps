@@ -48,7 +48,7 @@ class CSSBackground extends CSSPropertyHandler
     $background = new Background(CSSBackgroundColor::parse($value),
                                  CSSBackgroundImage::parse($value, $pipeline),
                                  CSSBackgroundRepeat::parse($value),
-                                 CSSBackgroundPosition::parse($value),
+                                 null, /* hope this is temporary */
                                  CSSBackgroundAttachment::parse($value));
 
     return $background;

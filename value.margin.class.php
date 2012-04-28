@@ -8,7 +8,8 @@ class MarginSideValue {
   var $percentage;
   var $_units;
 
-  function calc($base, $base_font_size = 0) {
+  function calc($base, $base_font_size = 0)
+  {
     if (!is_null($this->percentage)) {
       return $base * $this->percentage / 100;
     } else {
@@ -16,7 +17,8 @@ class MarginSideValue {
     };
   }
 
-  function calcPercentage($base) {
+  function calcPercentage($base)
+  {
     if (is_null($this->percentage)) { 
       return; 
     };
@@ -24,7 +26,7 @@ class MarginSideValue {
     $this->value = $base * $this->percentage / 100;
   }
 
-  function &copy() {
+  function copy() {
     $value = new MarginSideValue;
     $value->value      = $this->value;
     $value->auto       = $this->auto;
@@ -39,8 +41,9 @@ class MarginSideValue {
       !$this->auto &&
       !$this->percentage;
   }
-
-  function init($data) {
+  
+  public static function create($data)
+  {
     $len = strlen($data);
     $is_percentage = false;
     if ($len > 0) {
@@ -56,6 +59,11 @@ class MarginSideValue {
     return $value;
   }
 
+  function init($data)
+  {
+    return self::create($data);
+  }
+
   function units2pt($base) {
     if (is_null($this->percentage)) {
       $this->value = $this->_units->toPt($base);
@@ -63,13 +71,15 @@ class MarginSideValue {
   }
 }
 
-class MarginValue extends CSSValue {
+class MarginValue extends CSSValue
+{
   var $top;
   var $bottom;
   var $left;
   var $right;
 
-  function doInherit(&$state) {
+  function doInherit(&$state)
+  {
     if ($this->top === CSS_PROPERTY_INHERIT) {
       $value = $state->getInheritedProperty(CSS_MARGIN_TOP);
       $this->top = $value->copy();
@@ -91,7 +101,7 @@ class MarginValue extends CSSValue {
     };
   }
 
-  function &copy() {
+  function copy() {
     $value = new MarginValue;
     $value->top    = ($this->top    === CSS_PROPERTY_INHERIT) ? CSS_PROPERTY_INHERIT : $this->top->copy();
     $value->bottom = ($this->bottom === CSS_PROPERTY_INHERIT) ? CSS_PROPERTY_INHERIT : $this->bottom->copy();
@@ -100,13 +110,19 @@ class MarginValue extends CSSValue {
     return $value;
   }
 
-  function init($data) {
+  public static function create($data)
+  {
     $value = new MarginValue;
-    $value->top    = MarginSideValue::init($data[0]);
-    $value->right  = MarginSideValue::init($data[1]);
-    $value->bottom = MarginSideValue::init($data[2]);
-    $value->left   = MarginSideValue::init($data[3]);
+    $value->top    = MarginSideValue::create($data[0]);
+    $value->right  = MarginSideValue::create($data[1]);
+    $value->bottom = MarginSideValue::create($data[2]);
+    $value->left   = MarginSideValue::create($data[3]);
     return $value;
+  }
+
+  function init($data)
+  {
+    return self::create($data);
   }
 
   function is_default() {

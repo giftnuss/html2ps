@@ -52,7 +52,7 @@ class CSSMargin extends CSSPropertyHandler
       return CSS_PROPERTY_INHERIT; 
     };
 
-    $value = MarginValue::init($this->parse_in($value));
+    $value = MarginValue::create($this->parse_in($value));
     return $value;
   }
 
@@ -128,8 +128,10 @@ class CSSMarginBottom extends CSSSubFieldProperty
 {
   function parse($value) 
   { 
-    if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
-    return MarginSideValue::init($value); 
+    if ($value === 'inherit') {
+      return CSS_PROPERTY_INHERIT;
+    }
+    return MarginSideValue::create($value); 
   }
 
   function get_property_code() 

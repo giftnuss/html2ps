@@ -52,16 +52,18 @@ class CSSPadding extends CSSPropertyHandler
     };
 
     $values = $this->parse_in($string);
-    $padding = PaddingValue::init($values);
+    $padding = PaddingValue::create($values);
 
     return $padding;
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_PADDING;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'padding';
   }
 }
@@ -86,7 +88,7 @@ class CSSPaddingRight extends CSSSubFieldProperty
 {
   function parse($value) { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
-    $result = PaddingSideValue::init($value);     
+    $result = PaddingSideValue::create($value);     
     return $result;
   }
 
@@ -101,9 +103,12 @@ class CSSPaddingRight extends CSSSubFieldProperty
 
 class CSSPaddingLeft extends CSSSubFieldProperty
 {
-  function parse($value) { 
-    if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
-    return PaddingSideValue::init($value); 
+  function parse($value)
+  { 
+    if ($value === 'inherit') {
+      return CSS_PROPERTY_INHERIT;
+    }
+    return PaddingSideValue::create($value); 
   }
 
   function get_property_code() {
