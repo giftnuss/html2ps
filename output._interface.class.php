@@ -1,7 +1,8 @@
 <?php
 // $Header: /cvsroot/html2ps/output._interface.class.php,v 1.8 2007/01/09 20:13:48 Konstantin Exp $
 
-class OutputDriver {
+class OutputDriver
+{
   function add_link($x, $y, $w, $h, $target) { }
   function add_local_link($left, $top, $width, $height, $anchor) { }
   function circle($x, $y, $r) { }
@@ -70,4 +71,3 @@ class OutputDriver {
   function stringwidth($string, $name, $encoding, $size) { }
   function stroke() { }
 }
-?>

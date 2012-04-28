@@ -5,7 +5,12 @@ require_once(HTML2PS_DIR.'pdf.fpdf.php');
 require_once(HTML2PS_DIR.'pdf.fpdf.makefont.php');
 // require_once(HTML2PS_DIR.'fpdf/font/makefont/makefont.php');
 
-class OutputDriverFPDF extends OutputDriverGenericPDF
+class
+  OutputDriverFPDF
+extends
+  OutputDriverGenericPDF
+//implements - name clash with base class
+//  OutputDriver
 {
   var $pdf;
   var $locallinks;
@@ -432,4 +437,3 @@ class OutputDriverFPDF extends OutputDriverGenericPDF
     return $filename;
   }
 }
-?>

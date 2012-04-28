@@ -51,7 +51,7 @@ implements
     if (!is_null($media)) {
       // Setup media size and margins
       $pipeline->get_page_media(1, $media);
-      $pipeline->output_driver->update_media($media);
+      $pipeline->get_output_driver()->update_media($media);
       $pipeline->_setupScales($media);
     }
 
