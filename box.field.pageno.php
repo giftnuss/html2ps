@@ -1,10 +1,14 @@
 <?php
-class BoxTextFieldPageNo extends TextBoxString {
-  function BoxTextFieldPageNo() {
-    $this->TextBoxString('', 'iso-8859-1');
+
+class BoxTextFieldPageNo extends TextBoxString 
+{
+  function __construct() 
+  {
+    parent::__construct('', 'iso-8859-1');
   }
 
-  function from_box(&$box) {
+  function from_box(&$box) 
+  {
     $field = new BoxTextFieldPageNo;
 
     $field->copy_style($box);

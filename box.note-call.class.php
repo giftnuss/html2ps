@@ -8,19 +8,22 @@ require_once(HTML2PS_DIR.'box.generic.inline.php');
  * without font properties defined/used. Currently, it is solved by
  * adding CSS_FONT and CSS_LETTER_SPACING to GenericFormattedBox::readCSS
  */
-class BoxNoteCall extends GenericInlineBox {
+class BoxNoteCall extends GenericInlineBox 
+{
   var $_note_number;
   var $_note_content;
   var $_note_marker_box;
   var $_note_call_box;
 
-  function offset($dx, $dy) {
+  function offset($dx, $dy) 
+  {
     parent::offset($dx, $dy);
     $this->_note_call_box->offset($dx, $dy);
   }
 
-  function BoxNoteCall(&$content, &$pipeline) {
-    $this->GenericInlineBox();
+  function __construct(&$content, Pipeline $pipeline) 
+  {
+    parent::__construct();
 
     $this->_note_content =& $content;
 

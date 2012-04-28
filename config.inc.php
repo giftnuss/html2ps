@@ -163,4 +163,3 @@ define('OVERLINE_POSITION', 1);
 define('UNDERLINE_POSITION', 0.1);
 define('LINE_THROUGH_POSITION', 0.4);
 
-?>

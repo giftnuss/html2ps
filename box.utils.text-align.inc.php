@@ -1,11 +1,13 @@
 <?php
 // $Header: /cvsroot/html2ps/box.utils.text-align.inc.php,v 1.13 2007/01/09 20:13:48 Konstantin Exp $
 
-function ta_left(&$box, &$context, $lastline) {
+function ta_left(&$box, &$context, $lastline) 
+{
   // Do nothing; text is left-aligned by default
 }
 
-function ta_center(&$box, &$context, $lastline) {
+function ta_center(&$box, &$context, $lastline) 
+{
   $delta = $box->_line_length_delta($context) / 2;
 
   $size = count($box->_line);
@@ -19,7 +21,8 @@ function ta_center(&$box, &$context, $lastline) {
   };
 }
 
-function ta_right(&$box, &$context, $lastline) {
+function ta_right(&$box, &$context, $lastline) 
+{
   $delta = $box->_line_length_delta($context);
 
   $size = count($box->_line);
@@ -33,7 +36,8 @@ function ta_right(&$box, &$context, $lastline) {
   };
 }
 
-function ta_justify(&$box, &$context, $lastline) {
+function ta_justify(&$box, &$context, $lastline) 
+{
   // last line is never justified
   if ($lastline) { 
     return; 
@@ -100,4 +104,4 @@ function ta_justify(&$box, &$context, $lastline) {
   // The very first box is not offset in this case, so we don't need to 
   // call offset_wrapped to compensate this.
 }
-?>
+

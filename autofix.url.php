@@ -1,10 +1,9 @@
 <?php
 
-class AutofixUrl {
-  function AutofixUrl() {
-  }
-
-  function apply($url) {
+class AutofixUrl 
+{
+  function apply($url) 
+  {
     $parts = @parse_url($url);
     if ($parts === FALSE) {
       return null;
@@ -74,4 +73,3 @@ class AutofixUrl {
   }
 }
 
-?>
