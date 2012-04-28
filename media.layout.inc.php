@@ -60,11 +60,13 @@ class Media
     return $this->is_landscape ? $this->size['width']  : $this->size['height']; 
   }
 
-  function real_width() {
+  function real_width() 
+  {
     return $this->width() - $this->margins['left'] - $this->margins['right'];
   }
   
-  function real_height() { 
+  function real_height() 
+  { 
     return $this->height() - $this->margins['bottom'] - $this->margins['top'];
   }
 
@@ -78,15 +80,18 @@ class Media
   }
 
   // TODO: validity checking
-  function set_margins($margins) {
+  function set_margins($margins) 
+  {
     $this->margins = $margins;
   }
 
-  function set_pixels($pixels) {
+  function set_pixels($pixels) 
+  {
     $this->pixels = $pixels;
   }
 
-  function set_width($width) {
+  function set_width($width) 
+  {
     $this->size['width'] = $width;
   }
  
@@ -113,16 +118,19 @@ class Media
     return $this->pixels / ($this->size['width'] - $this->margins['left'] - $this->margins['right']);
   }
 
-  function to_bbox() {
+  function to_bbox() 
+  {
     return '0 0 '.ceil(mm2pt($this->size['width'])).' '.ceil(mm2pt($this->size['height']));
   }
 
-  function to_ps_landscape() {
+  function to_ps_landscape() 
+  {
     if (!$this->is_landscape) { return "/initpage {} def"; };
     return "/initpage {90 rotate 0 pageheight neg translate} def";
   }
 
-  function to_ps() {
+  function to_ps() 
+  {
     return 
       // Note that /pagewidth and /pageheight should contain page size on the "client"
       // coordinate system for correct rendering, so the will swap place in landscape mode,
@@ -141,4 +149,3 @@ class Media
   }
 }
 
-?>
