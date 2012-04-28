@@ -13,7 +13,8 @@ class CSSPropertyDeclaration
     $this->_important = false;
   }
 
-  function get_value() {
+  function get_value()
+  {
     return $this->_value;
   }
 
@@ -64,9 +65,9 @@ class CSSPropertyDeclaration
     $declaration->_code = $this->_code;
 
     if (is_object($this->_value)) {
-      $declaration->_value =& $this->_value->copy();
+      $declaration->_value = $this->_value->copy();
     } else {
-      $declaration->_value =& $this->_value;
+      $declaration->_value = $this->_value;
     };
 
     $declaration->_important = $this->_important;
@@ -80,4 +81,3 @@ class CSSPropertyDeclaration
   }
 }
 
-?>

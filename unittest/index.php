@@ -17,7 +17,9 @@ $reporter = new TextReporter(); // HtmlReporter();
 $testfiles = glob('test.*.php');
 
 foreach ($testfiles as $testfile) {
+  echo $testfile,"\n";
   $test->addFile($testfile);
+  break;
 }
 
 //$test->addFile('test.white-space.php');

@@ -18,7 +18,7 @@ $GLOBALS['g_colors'] = array(
   "navy"    => array(0,0,128),
   "blue"    => array(0,0,255),
   "teal"    => array(0,128,128),
-  "aqua"    => array(0,255,255), 
+  "aqua"    => array(0,255,255),
 
   // Widely-used non-stadard color names
   "aliceblue"            => array(240,248,255),
@@ -182,7 +182,7 @@ function _parse_color_declaration($decl, &$success) {
     return array($r,$g,$b);
   };
 
-  // We've already checked every non-hexadecimal forms; now only color declarations starting 
+  // We've already checked every non-hexadecimal forms; now only color declarations starting
   // with # left; nevertheless, sometimes designers forget to put #-sign before the
   // color declaration. Thus, we'll add sharp sign automatically if it is missing
   //
@@ -211,7 +211,7 @@ function _parse_color_declaration($decl, &$success) {
     $arrr = unpack("C",pack("H2",$matches[1].$matches[1]));
     $arrg = unpack("C",pack("H2",$matches[2].$matches[2]));
     $arrb = unpack("C",pack("H2",$matches[3].$matches[3]));
-    
+
     // Note that array indices returned by unpack differ in different versions of PHP. Unfortunately
     // we unable to directly access values - compatibility is an issue...
 
@@ -227,8 +227,8 @@ function _parse_color_declaration($decl, &$success) {
   return array(-1,-1,-1);
 }
 
-function is_transparent($color) { 
-  return $color[0] < 0; 
+function is_transparent($color)
+{
+  return $color[0] < 0;
 }
 
-?>

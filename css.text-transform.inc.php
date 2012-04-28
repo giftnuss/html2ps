@@ -6,9 +6,11 @@ define('CSS_TEXT_TRANSFORM_CAPITALIZE',1);
 define('CSS_TEXT_TRANSFORM_UPPERCASE' ,2);
 define('CSS_TEXT_TRANSFORM_LOWERCASE' ,3);
 
-class CSSTextTransform extends CSSPropertyStringSet {
-  function CSSTextTransform() { 
-    $this->CSSPropertyStringSet(false, 
+class CSSTextTransform extends CSSPropertyStringSet
+{
+  function __construct()
+  { 
+    parent::__construct(false, 
                                 true,
                                 array('inherit'    => CSS_PROPERTY_INHERIT,
                                       'none'       => CSS_TEXT_TRANSFORM_NONE,
@@ -17,19 +19,22 @@ class CSSTextTransform extends CSSPropertyStringSet {
                                       'lowercase'  => CSS_TEXT_TRANSFORM_LOWERCASE)); 
   }
 
-  function default_value() { 
+  function default_value()
+  { 
     return CSS_TEXT_TRANSFORM_NONE; 
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_TEXT_TRANSFORM;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'text-transform';
   }
 }
 
 CSS::register_css_property(new CSSTextTransform);
 
-?>
+

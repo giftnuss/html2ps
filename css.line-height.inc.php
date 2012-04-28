@@ -7,23 +7,26 @@ require_once(HTML2PS_DIR.'value.line-height.class.php');
  * We'll treat 'line-height' as a subproperty of 'font', as it can be set using 
  * 'font' value
  */
-class CSSLineHeight extends CSSSubFieldProperty {
+class CSSLineHeight extends CSSSubFieldProperty
+{
   var $_defaultValue;
 
-  function CSSLineHeight(&$owner, $field) {
-    $this->CSSSubFieldProperty($owner, $field);
-
+  function __construct(&$owner, $field)
+  {
+    parent::__construct($owner, $field);
     $this->_defaultValue = new LineHeight_Relative(1.1);
   }
 
-  function default_value() {
+  function default_value()
+  {
     return $this->_defaultValue;
   }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
-    };
+    }
 
     // <Number>
     // The used value of the property is this number multiplied by the element's font size. 

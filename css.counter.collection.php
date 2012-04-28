@@ -1,17 +1,21 @@
 <?php
 
-class CSSCounterCollection {
+class CSSCounterCollection
+{
   var $_counters;
 
-  function CSSCounterCollection() {
+  function __construct()
+  {
     $this->_counters = array();
   }
 
-  function add(&$counter) {
+  function add(&$counter)
+  {
     $this->_counters[$counter->get_name()] =& $counter;
   }
 
-  function &get($name) {
+  function &get($name)
+  {
     if (!isset($this->_counters[$name])) {
       $null = null;
       return $null;
@@ -21,4 +25,3 @@ class CSSCounterCollection {
   }
 }
 
-?>

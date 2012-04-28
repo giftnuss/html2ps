@@ -9,7 +9,8 @@
 // note that there's not sence in applying pseudoelement to any chained selector except the last
 // (the deepest descendant)
 // 
-function css_find_pseudoelement($selector) {
+function css_find_pseudoelement($selector)
+{
   $selector_type = selector_get_type($selector);
   switch ($selector_type) {
   case SELECTOR_PSEUDOELEMENT_BEFORE:
@@ -28,7 +29,8 @@ function css_find_pseudoelement($selector) {
   }
 }
 
-function _fix_tag_display($default_display, &$state, &$pipeline) {
+function _fix_tag_display($default_display, &$state, &$pipeline)
+{
   // In some cases 'display' CSS property should be ignored for element-generated boxes
   // Here we will use the $default_display stored above
   // Note that "display: none" should _never_ be changed
@@ -55,7 +57,8 @@ function _fix_tag_display($default_display, &$state, &$pipeline) {
   };
 }
 
-function is_percentage($value) { 
+function is_percentage($value)
+{ 
   return $value{strlen($value)-1} == "%"; 
 }
 
@@ -139,4 +142,3 @@ function css_remove_value_quotes($value) {
   return $value;
 }
 
-?>

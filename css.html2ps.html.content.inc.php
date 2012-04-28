@@ -3,12 +3,15 @@
 
 require_once(HTML2PS_DIR.'value.content.php');
 
-class CSSHTML2PSHTMLContent extends CSSPropertyHandler {
-  function CSSHTML2PSHTMLContent() { 
-    $this->CSSPropertyHandler(false, false); 
+class CSSHTML2PSHTMLContent extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(false, false); 
   }
 
-  function &default_value() { 
+  function &default_value()
+  { 
     $data = new ValueContent();
     return $data;
   }
@@ -18,7 +21,8 @@ class CSSHTML2PSHTMLContent extends CSSPropertyHandler {
   //
   // TODO: process values other than <string>
   //
-  function &parse($value) {
+  function &parse($value)
+  {
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
@@ -27,15 +31,16 @@ class CSSHTML2PSHTMLContent extends CSSPropertyHandler {
     return $value_obj;
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_HTML2PS_HTML_CONTENT;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return '-html2ps-html-content';
   }
 }
 
 CSS::register_css_property(new CSSHTML2PSHTMLContent);
 
-?>

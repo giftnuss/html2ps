@@ -1,35 +1,48 @@
 <?php
 // $Header: /cvsroot/html2ps/css.display.inc.php,v 1.21 2006/09/07 18:38:13 Konstantin Exp $
 
-class CSSDisplay extends CSSPropertyHandler {
-  function CSSDisplay() { $this->CSSPropertyHandler(false, false); }
+class CSSDisplay extends CSSPropertyHandler
+{
+  function __construct()
+  {
+    parent::__construct(false, false);
+  }
 
-  function get_parent() { 
+  function get_parent()
+  { 
     if (isset($this->_stack[1])) {
       return $this->_stack[1][0]; 
-    } else {
+    }
+    else {
       return 'block';
     };
   }
 
-  function default_value() { return "inline"; }
+  function default_value()
+  {
+    return "inline";
+  }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_DISPLAY;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'display';
   }
 
-  function parse($value) { 
+  function parse($value)
+  { 
     return trim(strtolower($value));
   }
 }
 
 CSS::register_css_property(new CSSDisplay);
 
-function is_inline_element($display) {
+function is_inline_element($display)
+{
   return 
     $display == "inline" ||
     $display == "inline-table" ||
@@ -43,4 +56,4 @@ function is_inline_element($display) {
     $display == "-radio" ||
     $display == "-select";
 }
-?>
+

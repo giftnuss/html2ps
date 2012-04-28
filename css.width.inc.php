@@ -4,44 +4,50 @@
 require_once(HTML2PS_DIR.'css.min-width.inc.php');
 require_once(HTML2PS_DIR.'css.property.sub.class.php');
 
-class CSSCompositeWidth extends CSSPropertyHandler {
-  function CSSCompositeWidth() {
-    $this->CSSPropertyHandler(false, false); 
+class CSSCompositeWidth extends CSSPropertyHandler
+{
+  function __construct()
+  {
+    parent::__construct(false, false); 
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_HTML2PS_COMPOSITE_WIDTH;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return '-html2ps-composite-width';
   }
 
-  function default_value() {
+  function default_value()
+  {
     return new WCNone();
   }
 }
 
-class CSSWidth extends CSSSubProperty {
-  function CSSWidth($owner) { 
-    $this->CSSSubProperty($owner);
-  }
-
-  function set_value(&$owner_value, &$value) {
+class CSSWidth extends CSSSubProperty
+{
+  function set_value(&$owner_value, &$value)
+  {
     $min = $owner_value->_min_width;
     $owner_value = $value->copy();
     $owner_value->_min_width = $min;
   }
 
-  function &get_value(&$owner_value) {
+  function &get_value(&$owner_value)
+  {
     return $owner_value;
   }
 
-  function default_value() { 
+  function default_value()
+  { 
     return new WCNone; 
   }
 
-  function parse($value) { 
+  function parse($value)
+  { 
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
@@ -77,4 +83,3 @@ CSS::register_css_property($width);
 CSS::register_css_property(new CSSWidth($width));
 CSS::register_css_property(new CSSMinWidth($width, '_min_width'));
 
-?>

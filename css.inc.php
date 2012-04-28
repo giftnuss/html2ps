@@ -7,7 +7,7 @@ class CSS
   var $_mapping;
   var $_defaultState;
   var $_defaultStateFlags;
-  
+
   public function __construct()
   {
     $this->_handlers = array();
@@ -32,7 +32,7 @@ class CSS
 
     return $this->_defaultState;
   }
-  
+
   public function getDefaultStateFlags()
   {
     return $this->_getDefaultStateFlags();
@@ -51,7 +51,7 @@ class CSS
 
     return $this->_defaultStateFlags;
   }
-  
+
   public function getHandlers()
   {
     return $this->_handlers;
@@ -96,7 +96,7 @@ class CSS
     return $__g_css_handler_set;
   }
 
-  function getDefaultValue($property)
+  public static function getDefaultValue($property)
   {
     $css = CSS::get();
     $handler = $css->_get_handler($property);
@@ -128,8 +128,8 @@ class CSS
 
   function _name2code($key)
   {
-    if (!isset($this->_mapping[$key])) { 
-      return null; 
+    if (!isset($this->_mapping[$key])) {
+      return null;
     };
 
     return $this->_mapping[$key];
@@ -168,8 +168,8 @@ class CSS
 
   function is_identifier($string)
   {
-    return preg_match(sprintf('/%s/', 
-                              CSS::get_identifier_regexp()), 
+    return preg_match(sprintf('/%s/',
+                              CSS::get_identifier_regexp()),
                       $string);
   }
 
@@ -178,7 +178,7 @@ class CSS
     if (preg_match(sprintf('/^(%s)\s*(.*)$/s', CSS_STRING1_REGEXP), $string, $matches)) {
       $value = $matches[1];
       $rest = $matches[2];
-     
+
       $value = CSS::remove_backslash_at_newline($value);
 
       return array($value, $rest);

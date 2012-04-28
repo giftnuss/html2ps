@@ -1,13 +1,13 @@
 <?php
 
-class CSSPropertyCollection 
+class CSSPropertyCollection
 {
   var $_properties;
   var $_positions;
   var $_priorities;
   var $_max_priority;
 
-  function __construct() 
+  function __construct()
   {
     $this->_properties = array();
     $this->_positions  = array();
@@ -15,24 +15,24 @@ class CSSPropertyCollection
     $this->_max_priority = 0;
   }
 
-  function apply(&$state) 
+  function apply(&$state)
   {
     $properties = $this->getPropertiesRaw();
     foreach ($properties as $property) {
       $key   = $property->get_code();
       $value = $property->get_value();
-      
-      $handler =& CSS::get_handler($key);
+
+      $handler = CSS::get_handler($key);
       $handler->replace($value, $state);
     };
   }
 
-  function &copy() 
+  function &copy()
   {
     $collection = new CSSPropertyCollection();
-    
+
     for ($i = 0, $size = count($this->_properties); $i < $size; $i++) {
-      $property =& $this->_properties[$i];
+      $property = $this->_properties[$i];
       $collection->_properties[] = $property->copy();
     };
 
@@ -43,7 +43,7 @@ class CSSPropertyCollection
     return $collection;
   }
 
-  function add_property($property) 
+  function add_property($property)
   {
     $this->_max_priority ++;
 
@@ -53,7 +53,7 @@ class CSSPropertyCollection
      * Important properties shoud not be overridden with non-important ones
      */
     if ($this->is_important($code) &&
-        !$property->is_important()) { 
+        !$property->is_important()) {
       return;
     };
 
@@ -67,15 +67,18 @@ class CSSPropertyCollection
     };
   }
 
-  function contains($code) {
+  function contains($code)
+  {
     return isset($this->_positions[$code]);
   }
 
-  function getMaxPriority() {
+  function getMaxPriority()
+  {
     return $this->_max_priority;
   }
 
-  function getPropertiesSortedByPriority() {
+  function getPropertiesSortedByPriority()
+  {
     $properties = $this->_properties;
     $priorities = $this->_priorities;
 
@@ -84,18 +87,20 @@ class CSSPropertyCollection
     return $properties;
   }
 
-  function getPropertiesRaw() {
+  function getPropertiesRaw()
+  {
     return $this->_properties;
   }
 
-  function is_important($code) { 
-    if (!isset($this->_positions[$code])) { 
-      return false; 
+  function is_important($code)
+  {
+    if (!isset($this->_positions[$code])) {
+      return false;
     };
     return $this->_properties[$this->_positions[$code]]->is_important();
   }
 
-  function get_property_value($code) 
+  function get_property_value($code)
   {
     if (!isset($this->_positions[$code])) {
       $null = null;
@@ -111,7 +116,8 @@ class CSSPropertyCollection
     return $property->get_value();
   }
 
-  function set_property_value($code, $value) {
+  function set_property_value($code, $value)
+  {
     $this->_properties[$this->_positions[$code]]->set_value($value);
   }
 

@@ -58,12 +58,15 @@ require_once(HTML2PS_DIR.'value.content.php');
  *    CSS 2.1,  it is  not possible to  refer to attribute  values for
  *    other elements than the subject of the selector.
  */
-class CSSContent extends CSSPropertyHandler {
-  function CSSContent() { 
-    $this->CSSPropertyHandler(false, false); 
+class CSSContent extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(false, false); 
   }
 
-  function &default_value() { 
+  function &default_value()
+  { 
     $data = new ValueContent();
     return $data;
   }

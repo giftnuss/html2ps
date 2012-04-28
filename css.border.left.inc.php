@@ -1,7 +1,8 @@
 <?php
 // $Header: /cvsroot/html2ps/css.border.left.inc.php,v 1.1 2006/09/07 18:38:13 Konstantin Exp $
 
-class CSSBorderLeft extends CSSSubFieldProperty {
+class CSSBorderLeft extends CSSSubFieldProperty
+{
   function get_property_code() {
     return CSS_BORDER_LEFT;
   }
@@ -20,4 +21,3 @@ class CSSBorderLeft extends CSSSubFieldProperty {
   }
 }
 
-?>

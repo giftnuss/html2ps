@@ -10,26 +10,34 @@ define('VA_BASELINE'   ,5);
 define('VA_TEXT_TOP'   ,6);
 define('VA_TEXT_BOTTOM',7);
 
-class VerticalAlignSuper { 
-  function apply_cell(&$cell, $row_height, $row_baseline) {
+class VerticalAlignSuper
+{ 
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {
     return; // Do nothing
   }
 }
 
-class VerticalAlignSub   { 
-  function apply_cell(&$cell, $row_height, $row_baseline) {
+class VerticalAlignSub
+{ 
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {
     return; // Do nothing
   }
 }
 
-class VerticalAlignTop { 
-  function apply_cell(&$cell, $row_height, $row_baseline) {
+class VerticalAlignTop
+{ 
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {
     return; // Do nothing
   }
 }
 
-class VerticalAlignMiddle {
-  function apply_cell(&$cell, $row_height, $row_baseline) {    
+class VerticalAlignMiddle
+{
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {    
     $delta = max(0, ($row_height - $cell->get_real_full_height()) / 2);
 
     $old_top = $cell->get_top();
@@ -38,8 +46,10 @@ class VerticalAlignMiddle {
   }
 }
 
-class VerticalAlignBottom {
-  function apply_cell(&$cell, $row_height, $row_baseline) {
+class VerticalAlignBottom
+{
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {
     $delta = ($row_height - $cell->get_real_full_height());
 
     $old_top = $cell->get_top();
@@ -48,8 +58,10 @@ class VerticalAlignBottom {
   }
 }
 
-class VerticalAlignBaseline {
-  function apply_cell(&$cell, $row_height, $row_baseline) {
+class VerticalAlignBaseline
+{
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {
     $delta = ($row_baseline - $cell->get_cell_baseline());
 
     $old_top = $cell->get_top();
@@ -58,14 +70,17 @@ class VerticalAlignBaseline {
   }
 }
 
-class VerticalAlignTextTop {
+class VerticalAlignTextTop
+{
   function apply_cell(&$cell, $row_height, $row_baseline) {
     return; // Do nothing
   }
 }
 
-class VerticalAlignTextBottom {
-  function apply_cell(&$cell, $row_height, $row_baseline) {
+class VerticalAlignTextBottom
+{
+  function apply_cell(&$cell, $row_height, $row_baseline)
+  {
     $delta = ($row_baseline - $cell->get_cell_baseline());
 
     $old_top = $cell->get_top();
@@ -74,14 +89,17 @@ class VerticalAlignTextBottom {
   }
 }
 
-class CSSVerticalAlign extends CSSPropertyHandler {
-  function CSSVerticalAlign() { 
+class CSSVerticalAlign extends CSSPropertyHandler
+{
+  function __construct()
+  { 
     // Note that in general, parameters 'true' and 'false' are non meaningful in out case,
     // as we anyway override 'inherit' and 'inherit_text' in this class.
-    $this->CSSPropertyHandler(true, true); 
+    parent::__construct(true, true); 
   }
 
-  function inherit($old_state, &$new_state) { 
+  function inherit($old_state, &$new_state)
+  { 
     // Determine parent 'display' value
     $parent_display = $old_state[CSS_DISPLAY];
 
@@ -101,7 +119,8 @@ class CSSVerticalAlign extends CSSPropertyHandler {
     return;
   }
   
-  function inherit_text($old_state, &$new_state) { 
+  function inherit_text($old_state, &$new_state)
+  { 
     // Determine parent 'display' value
     $parent_display = $old_state[CSS_DISPLAY];
 
@@ -111,7 +130,8 @@ class CSSVerticalAlign extends CSSPropertyHandler {
 
   function default_value() { return VA_BASELINE; }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
@@ -168,4 +188,3 @@ class CSSVerticalAlign extends CSSPropertyHandler {
 
 CSS::register_css_property(new CSSVerticalAlign);
 
-?>

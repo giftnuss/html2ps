@@ -60,7 +60,7 @@ class LineBox
 
     $fake_state = new CSSState(CSS::get());
     $fake_state->pushState();
-    
+
     $fake = null;
     $fake_box = new BlockBox($fake);
     $fake_box->readCSS($fake_state);
@@ -77,7 +77,7 @@ class LineBox
     // Setup fake box border and background
     $fake_box->setCSSProperty(CSS_BACKGROUND, $box->get_css_property(CSS_BACKGROUND));
     $fake_box->setCSSProperty(CSS_BORDER, $box->get_css_property(CSS_BORDER));
-    
+
     return $fake_box;
   }
 }
@@ -100,8 +100,8 @@ class InlineBox extends GenericInlineBox
     // Create contents of this inline box
     if ($root->node_type() == XML_TEXT_NODE) {
       $css_state =& $pipeline->get_current_css_state();
-      $box = InlineBox::create_from_text($root->content, 
-                                         $css_state->get_property(CSS_WHITE_SPACE), 
+      $box = InlineBox::create_from_text($root->content,
+                                         $css_state->get_property(CSS_WHITE_SPACE),
                                          $pipeline);
       return $box;
     } else {
@@ -119,8 +119,8 @@ class InlineBox extends GenericInlineBox
         $child = $child->next_sibling();
       };
 
-      // Add fake whitespace box with zero size for the anchor spans 
-      // We need this, as "reflow" functions will automatically remove empty inline boxes from the 
+      // Add fake whitespace box with zero size for the anchor spans
+      // We need this, as "reflow" functions will automatically remove empty inline boxes from the
       // document tree
       //
       if ($box->is_null()) {
@@ -130,7 +130,7 @@ class InlineBox extends GenericInlineBox
         $whitespace = WhitespaceBox::create($pipeline);
         $whitespace->readCSS($css_state);
 
-        $box->add_child($whitespace);        
+        $box->add_child($whitespace);
 
         $css_state->popState();
       };
@@ -144,14 +144,14 @@ class InlineBox extends GenericInlineBox
     $box = new InlineBox();
     $box->readCSS($pipeline->get_current_css_state());
 
-    // Apply/inherit text-related CSS properties 
+    // Apply/inherit text-related CSS properties
     $css_state =& $pipeline->get_current_css_state();
     $css_state->pushDefaultTextState();
 
     require_once(HTML2PS_DIR.'inline.content.builder.factory.php');
     $inline_content_builder =& InlineContentBuilderFactory::get($white_space);
     $inline_content_builder->build($box, $text, $pipeline);
-    
+
     // Clear the CSS stack
     $css_state->popState();
 
@@ -170,8 +170,8 @@ class InlineBox extends GenericInlineBox
   // Inherited from GenericFormattedBox
 
   function process_word($raw_content, &$pipeline) {
-    if ($raw_content === '') { 
-      return false; 
+    if ($raw_content === '') {
+      return false;
     }
 
     $ptr      = 0;
@@ -204,11 +204,11 @@ class InlineBox extends GenericInlineBox
           /**
            * No mapping to default encoding vectors found for this character
            */
-          
+
           /**
            * Add last word
            */
-          if ($word !== '') { 
+          if ($word !== '') {
             $text_box->add_subword($word, $encoding, $hyphens);
           };
 
@@ -217,22 +217,22 @@ class InlineBox extends GenericInlineBox
            */
           $custom_char = $manager_encoding->add_custom_char(utf8_to_code($char));
           $text_box->add_subword($custom_char, $manager_encoding->get_current_custom_encoding_name(), $hyphens);
-          
+
           $word = '';
         } else {
           if (isset($mapping[$encoding])) {
             $word .= $mapping[$encoding];
           } else {
-            // This condition prevents empty text boxes from appearing; say, if word starts with a national 
-            // character, an () - text box with no letters will be generated, in rare case causing a random line 
+            // This condition prevents empty text boxes from appearing; say, if word starts with a national
+            // character, an () - text box with no letters will be generated, in rare case causing a random line
             // wraps, if container is narrow
             if ($word !== '') {
               $text_box->add_subword($word, $encoding, $hyphens);
             };
-            
+
             reset($mapping);
             list($encoding, $add) = each($mapping);
-            
+
             $word = $mapping[$encoding];
             $hyphens = array();
           };
@@ -286,11 +286,11 @@ class InlineBox extends GenericInlineBox
     return true;
   }
 
-  // Initialize next line box inside this inline 
+  // Initialize next line box inside this inline
   //
-  // Adds the next element to _lines array inside the current object and initializes it with the 
+  // Adds the next element to _lines array inside the current object and initializes it with the
   // $box parameters
-  // 
+  //
   // @param $box child box which will be first in this line box
   // @param $line_no number of line box
   //
@@ -299,8 +299,8 @@ class InlineBox extends GenericInlineBox
     $this->_lines[$line_no] = $line_box;
   }
 
-  // Extends the existing line box to include the given child 
-  // OR starts new line box, if current child is to the left of the box right edge 
+  // Extends the existing line box to include the given child
+  // OR starts new line box, if current child is to the left of the box right edge
   // (which should not happen white the line box is filled)
   //
   // @param $box child box which will be first in this line box
@@ -310,7 +310,7 @@ class InlineBox extends GenericInlineBox
     if (!isset($this->_lines[$line_no])) {
       // New line box started
       $this->init_line($box, $line_no);
-      
+
       return $line_no;
     };
 
@@ -345,7 +345,7 @@ class InlineBox extends GenericInlineBox
 
     return count($this->_lines);
   }
-  
+
   function reflow_static(&$parent, &$context) {
     GenericFormattedBox::reflow($parent, $context);
 
@@ -376,14 +376,14 @@ class InlineBox extends GenericInlineBox
 
       // Add current element into _parent_ line box and reflow it
       $child->reflow($parent, $context);
-     
-      // In general, if inline box centained whitespace box only, 
+
+      // In general, if inline box centained whitespace box only,
       // it could be removed during reflow function call;
       // let's check it and skip to next child
-      // 
+      //
       // if no children left AT ALL (so this box is empty), just exit
-      
-      // Track the real height of the inline box; it will be used by other functions 
+
+      // Track the real height of the inline box; it will be used by other functions
       // (say, functions calculating content height)
 
       $this->extend_height($child->get_bottom_margin());
@@ -412,7 +412,7 @@ class InlineBox extends GenericInlineBox
         if (is_a($child,'InlineBox')) {
           $line_no = $this->merge_line($child, $line_no);
         } else {
-          $line_no = $this->extend_line($child, $line_no);        
+          $line_no = $this->extend_line($child, $line_no);
         };
       };
     };
@@ -421,30 +421,37 @@ class InlineBox extends GenericInlineBox
   function reflow_whitespace(&$linebox_started, &$previous_whitespace) {
     /**
      * Anchors could have no content at all (like <a name="test"></a>).
-     * We should not remove such anchors, as this will break internal links 
+     * We should not remove such anchors, as this will break internal links
      * in the document.
      */
     $dest = $this->get_css_property(CSS_HTML2PS_LINK_DESTINATION);
-    if (!is_null($dest)) { 
-      return; 
+    if (!is_null($dest)) {
+      return;
     };
 
     $size = count($this->content);
     for ($i=0; $i<$size; $i++) {
       $child =& $this->content[$i];
-      $child->reflow_whitespace($linebox_started, $previous_whitespace);      
+      $child->reflow_whitespace($linebox_started, $previous_whitespace);
     };
 
     if ($this->is_null()) {
-      $this->parent->remove($this);
-    };
+      if(isset($this->parent)) {
+        $this->parent->remove($this);
+      }
+      else {
+          throw new TodoError();
+      }
+    }
   }
 
-  function get_extra_line_left() { 
+  function get_extra_line_left()
+  {
     return $this->get_extra_left() + ($this->parent ? $this->parent->get_extra_line_left() : 0);
   }
 
-  function get_extra_line_right() { 
+  function get_extra_line_right()
+  {
     return $this->get_extra_right() + ($this->parent ? $this->parent->get_extra_line_right() : 0);
   }
 
@@ -452,7 +459,8 @@ class InlineBox extends GenericInlineBox
    * As "nowrap" properties applied to block-level boxes only, we may use simplified version of
    * 'get_min_width' here
    */
-  function get_min_width(&$context) {
+  function get_min_width(&$context)
+  {
     if (isset($this->_cache[CACHE_MIN_WIDTH])) {
       return $this->_cache[CACHE_MIN_WIDTH];
     }
@@ -462,8 +470,8 @@ class InlineBox extends GenericInlineBox
     /**
      * If box does not have any content, its minimal width is determined by extra horizontal space
      */
-    if ($content_size == 0) { 
-      return $this->_get_hor_extra(); 
+    if ($content_size == 0) {
+      return $this->_get_hor_extra();
     };
 
     $minw = $this->content[0]->get_min_width($context);

@@ -1,4 +1,5 @@
 <?php
+
 // The background-position value is an array containing two array for X and Y position correspondingly
 // each coordinate-position array, in its turn containes two values:
 // first, the numeric value of percentage or units
@@ -11,21 +12,25 @@ define('TEXT_REGEXP',"\b(?:top|bottom|left|right|center)\b");
 define('BG_POSITION_SUBVALUE_TYPE_HORZ',1);
 define('BG_POSITION_SUBVALUE_TYPE_VERT',2);
 
-class CSSBackgroundPosition extends CSSSubFieldProperty {
-  function get_property_code() {
+class CSSBackgroundPosition extends CSSSubFieldProperty
+{
+  function get_property_code()
+  {
     return CSS_BACKGROUND_POSITION;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'background-position';
   }
 
-  function default_value() {
-    return new BackgroundPosition(0,true,
-                                  0,true);
+  public function default_value()
+  {
+    return new BackgroundPosition(0,true,0,true);
   }
 
-  function build_subvalue($value) {
+  function build_subvalue($value)
+  {
     if ($value === "left" ||
         $value === "top") {
       return array(0, true);
@@ -42,17 +47,20 @@ class CSSBackgroundPosition extends CSSSubFieldProperty {
 
     if (substr($value, strlen($value)-1,1) === "%") {
       return array((int)$value, true);
-    } else {
+    }
+    else {
       return array($value, false);
-    };
+    }
   }
 
-  function build_value($x, $y) {
-    return array(CSSBackgroundPosition::build_subvalue($x),
-                 CSSBackgroundPosition::build_subvalue($y));
+  function build_value($x, $y)
+  {
+    return array($this->build_subvalue($x),
+                 $this->build_subvalue($y));
   }
 
-  function detect_type($value) {
+  function detect_type($value)
+  {
     if ($value === "left" || $value === "right") { return BG_POSITION_SUBVALUE_TYPE_HORZ; };
     if ($value === "top" || $value === "bottom") { return BG_POSITION_SUBVALUE_TYPE_VERT; };
     return null;
@@ -60,26 +68,27 @@ class CSSBackgroundPosition extends CSSSubFieldProperty {
 
   // See CSS 2.1 'background-position' for description of possible values
   //
-  function parse_in($value) {
+  public function parse_in($value)
+  {
     if (preg_match("/(".LENGTH_REGEXP."|".PERCENTAGE_REGEXP."|".TEXT_REGEXP."|\b0\b)\s+(".LENGTH_REGEXP."|".PERCENTAGE_REGEXP."|".TEXT_REGEXP."|\b0\b)/", $value, $matches)) {
       $x = $matches[1];
       $y = $matches[2];
 
-      $type_x = CSSBackgroundPosition::detect_type($x);
-      $type_y = CSSBackgroundPosition::detect_type($y);
+      $type_x = $this->detect_type($x);
+      $type_y = $this->detect_type($y);
 
       if (is_null($type_x) && is_null($type_y)) {
-        return CSSBackgroundPosition::build_value($x,$y);
+        return $this->build_value($x,$y);
       };
 
-      if ($type_x == BG_POSITION_SUBVALUE_TYPE_HORZ || 
+      if ($type_x == BG_POSITION_SUBVALUE_TYPE_HORZ ||
           $type_y == BG_POSITION_SUBVALUE_TYPE_VERT) {
-        return CSSBackgroundPosition::build_value($x,$y);
+        return $this->build_value($x,$y);
       };
 
-      return CSSBackgroundPosition::build_value($y,$x);
+      return $this->build_value($y,$x);
     };
-    
+
     // These values should be processed separately at lastt
     if (preg_match("/\b(top)\b/",$value))    { return array(array(50, true),  array(0, true)); };
     if (preg_match("/\b(center)\b/",$value)) { return array(array(50, true),  array(50, true)); };
@@ -89,20 +98,21 @@ class CSSBackgroundPosition extends CSSSubFieldProperty {
 
     if (preg_match("/".LENGTH_REGEXP."|".PERCENTAGE_REGEXP."/", $value, $matches)) {
       $x = $matches[0];
-      return CSSBackgroundPosition::build_value($x,"50%");
+      return $this->build_value($x,"50%");
     };
 
     return null;
   }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
 
-    $value = CSSBackgroundPosition::parse_in($value);
+    $value = $this->parse_in($value);
     return new BackgroundPosition($value[0][0], $value[0][1],
                                   $value[1][0], $value[1][1]);
   }
 }
-?>
+

@@ -1,11 +1,13 @@
 <?php
 
-class CSSPropertyHandler {
+class CSSPropertyHandler
+{
   var $_inheritable;
   var $_inheritable_text;
 
-  function css($value, &$pipeline) { 
-    $css_state =& $pipeline->get_current_css_state();
+  function css($value, Pipeline $pipeline)
+  { 
+    $css_state = $pipeline->get_current_css_state();
 
     if ($this->applicable($css_state)) {
       $this->replace($this->parse($value, $pipeline), $css_state); 
@@ -20,7 +22,8 @@ class CSSPropertyHandler {
     $state->set_propertyDefaultFlag($this->get_property_code(), false);
   }
 
-  function CSSPropertyHandler($inheritable, $inheritable_text) { 
+  function __construct($inheritable, $inheritable_text)
+  { 
     $this->_inheritable = $inheritable;
     $this->_inheritable_text = $inheritable_text;
   }

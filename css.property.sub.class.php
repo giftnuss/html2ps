@@ -1,10 +1,12 @@
 <?php
 
-class CSSSubProperty extends CSSPropertyHandler {
+class CSSSubProperty extends CSSPropertyHandler
+{
   var $_owner;
 
-  function CSSSubProperty(&$owner) {
-    $this->_owner =& $owner;
+  function __construct(&$owner)
+  {
+    $this->_owner = $owner;
   }
 
   function &get(&$state) {
@@ -14,21 +16,24 @@ class CSSSubProperty extends CSSPropertyHandler {
     return $subvalue;
   }
 
-  function is_subproperty() { 
-    return true; 
+  function is_subproperty() {
+    return true;
   }
 
-  function &owner() { 
-    return $this->_owner; 
-  }
- 
-  function default_value() { 
+  function &owner()
+  {
+    return $this->_owner;
   }
 
-  function inherit($old_state, &$new_state) { 
+  public function default_value()
+  {
+    return null;
   }
 
-  function inherit_text($old_state, &$new_state) { 
+  function inherit($old_state, &$new_state) {
+  }
+
+  function inherit_text($old_state, &$new_state) {
   }
 
   function replace_array($value, &$state_array) {
@@ -49,7 +54,7 @@ class CSSSubProperty extends CSSPropertyHandler {
     $state_array[$owner->get_property_code()] = $owner_value;
   }
 
-  function replace($value, &$state) { 
+  function replace($value, &$state) {
     $owner =& $this->owner();
     $owner_value = $owner->get($state->getState());
 

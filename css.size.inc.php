@@ -1,8 +1,9 @@
 <?php
 
-class CSSSize extends CSSPropertyHandler {
-  function CSSSize() { 
-    $this->CSSPropertyHandler(false, false); 
+class CSSSize extends CSSPropertyHandler
+{
+  function __construct() { 
+    parent::__construct(false, false); 
   }
 
   function default_value() { 

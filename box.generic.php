@@ -40,7 +40,7 @@ class GenericBox
     $this->uid = $GLOBALS['g_box_uid'];
 
     $this->_id = null;
-  } 
+  }
 
   function destroy()
   {
@@ -96,16 +96,16 @@ class GenericBox
 
   function show_postponed(&$driver) {
     $this->show($driver);
-  } 
+  }
 
   function copy_style(&$box) {
-    // TODO: object references 
+    // TODO: object references
     $this->_css = $box->_css;
   }
 
   /**
    * Optimization: _readCSSLength is usually called several times
-   * while initializing box object. $base_font_size cound be calculated 
+   * while initializing box object. $base_font_size cound be calculated
    * only once and stored in a static variable.
    */
   function _readCSSLengths($state, $property_list) {
@@ -115,14 +115,14 @@ class GenericBox
     };
 
     foreach ($property_list as $property) {
-      $value =& $state->get_property($property);
+      $value = $state->get_property($property);
 
       if ($value === CSS_PROPERTY_INHERIT) {
-        $value =& $state->getInheritedProperty($property);
+        $value = $state->getInheritedProperty($property);
       };
 
       if (is_object($value)) {
-        $value =& $value->copy();
+        $value = $value->copy();
         $value->doInherit($state);
         $value->units2pt($this->_cached_base_font_size);
       };
@@ -180,7 +180,7 @@ class GenericBox
 
     $this->_readCSSLengths($state,
                            array(CSS_VERTICAL_ALIGN));
-    
+
     // '-html2ps-link-destination'
     global $g_config;
     if ($g_config["renderlinks"]) {
@@ -219,7 +219,7 @@ class GenericBox
     }
 
     // Set current text color
-    // Note that text color is used not only for text drawing (for example, list item markers 
+    // Note that text color is used not only for text drawing (for example, list item markers
     // are drawn with text color)
     $color = $this->get_css_property(CSS_COLOR);
     $color->apply($driver);
@@ -254,37 +254,37 @@ class GenericBox
     $this->put_top($parent->_current_y - $this->get_extra_top());
   }
 
-  function put_left($value) { 
-    $this->_left = $value; 
+  function put_left($value) {
+    $this->_left = $value;
   }
 
-  function put_top($value)  { 
-    $this->_top = $value + $this->getBaselineOffset(); 
+  function put_top($value)  {
+    $this->_top = $value + $this->getBaselineOffset();
   }
 
   /**
    * Get Y coordinate of the top content area edge
    */
-  function get_top() { 
-    return 
-      $this->_top - 
-      $this->getBaselineOffset(); 
+  function get_top() {
+    return
+      $this->_top -
+      $this->getBaselineOffset();
   }
 
-  function get_right() { 
-    return $this->get_left() + $this->get_width(); 
+  function get_right() {
+    return $this->get_left() + $this->get_width();
   }
 
-  function get_left() { 
-    return $this->_left; 
+  function get_left() {
+    return $this->_left;
   }
 
-  function get_bottom() { 
+  function get_bottom() {
     return $this->get_top() - $this->get_height();
   }
 
-  function getBaselineOffset() { 
-    return $this->baseline - $this->default_baseline; 
+  function getBaselineOffset() {
+    return $this->baseline - $this->default_baseline;
   }
 
   function &make_anchor(&$media, $link_destination, $page_heights) {
@@ -299,26 +299,26 @@ class GenericBox
     /**
      * Now let's calculate the coordinates on this particular page
      *
-     * X coordinate calculation is pretty straightforward (and, actually, unused, as it would be 
+     * X coordinate calculation is pretty straightforward (and, actually, unused, as it would be
      * a bad idea to scroll PDF horiaontally).
      */
     $x = $this->get_left();
 
     /**
-     * Y coordinate should be calculated relatively to the bottom page edge 
-     */     
+     * Y coordinate should be calculated relatively to the bottom page edge
+     */
     $y = ($this->get_top() - $bottom) + (mm2pt($media->real_height()) - $page_heights[$page_index-1]) + mm2pt($media->margins['bottom']);
 
-    $anchor = new Anchor($link_destination, 
-                          $page_index, 
-                          $x, 
+    $anchor = new Anchor($link_destination,
+                          $page_index,
+                          $x,
                           $y);
     return $anchor;
   }
 
   function reflow_anchors(&$driver, &$anchors, $page_heights) {
-    if ($this->is_null()) { 
-      return; 
+    if ($this->is_null()) {
+      return;
     };
 
     $link_destination = $this->get_css_property(CSS_HTML2PS_LINK_DESTINATION);
@@ -331,14 +331,14 @@ class GenericBox
 
   function reflow_inline() { }
 
-  function out_of_flow() { 
-    return false; 
+  function out_of_flow() {
+    return false;
   }
 
   function get_bottom_margin() { return $this->get_bottom(); }
 
-  function get_top_margin() { 
-    return $this->get_top(); 
+  function get_top_margin() {
+    return $this->get_top();
   }
 
   function get_full_height() { return $this->get_height(); }
@@ -352,7 +352,7 @@ class GenericBox
     return $this->height;
   }
 
-  function get_baseline() { 
+  function get_baseline() {
     return $this->baseline;
   }
 
@@ -366,8 +366,8 @@ class GenericBox
    * Note that linebox is started by any non-whitespace inline element; all whitespace elements before
    * that moment should be ignored.
    *
-   * @param boolean $linebox_started Flag indicating that a new line box have just started and it already contains 
-   * some inline elements 
+   * @param boolean $linebox_started Flag indicating that a new line box have just started and it already contains
+   * some inline elements
    * @param boolean $previous_whitespace Flag indicating that a previous inline element was an whitespace element.
    */
   function reflow_whitespace(&$linebox_started, &$previous_whitespace) {
@@ -392,9 +392,9 @@ class GenericBox
 
   // CSS 2.1:
   // 9.2.1 Block-level elements and block boxes
-  // Block-level elements are those elements of the source document that are formatted visually as blocks 
-  // (e.g., paragraphs). Several values of the 'display' property make an element block-level: 
-  // 'block', 'list-item', 'compact' and 'run-in' (part of the time; see compact and run-in boxes), and 'table'. 
+  // Block-level elements are those elements of the source document that are formatted visually as blocks
+  // (e.g., paragraphs). Several values of the 'display' property make an element block-level:
+  // 'block', 'list-item', 'compact' and 'run-in' (part of the time; see compact and run-in boxes), and 'table'.
   //
   function isBlockLevel() {
     return false;
@@ -405,7 +405,7 @@ class GenericBox
       return false;
     };
 
-    return 
+    return
       $this->parent->get_css_property(CSS_POSITION) == POSITION_ABSOLUTE ||
       $this->parent->hasAbsolutePositionedParent();
   }
@@ -415,7 +415,7 @@ class GenericBox
       return false;
     };
 
-    return 
+    return
       $this->parent->get_css_property(CSS_POSITION) == POSITION_FIXED ||
       $this->parent->hasFixedPositionedParent();
   }
@@ -436,8 +436,8 @@ class GenericBox
         $this->get_css_property(CSS_POSITION) <> POSITION_RELATIVE) {
       return true;
     };
-        
-    if (is_null($this->parent)) { 
+
+    if (is_null($this->parent)) {
       return true;
     };
 

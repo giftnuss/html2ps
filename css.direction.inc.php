@@ -4,9 +4,10 @@
 define('DIRECTION_LTR', 1);
 define('DIRECTION_RTF', 1);
 
-class CSSDirection extends CSSPropertyStringSet {
-  function CSSDirection() { 
-    $this->CSSPropertyStringSet(true, 
+class CSSDirection extends CSSPropertyStringSet
+{
+  function __construct() { 
+    parent::__construct(true, 
                                 true,
                                 array('lrt' => DIRECTION_LTR,
                                       'rtl' => DIRECTION_RTF)); 

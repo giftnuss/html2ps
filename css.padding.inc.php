@@ -2,17 +2,23 @@
 
 require_once(HTML2PS_DIR.'value.padding.class.php');
 
-class CSSPadding extends CSSPropertyHandler {
+class CSSPadding extends CSSPropertyHandler
+{
   var $default_value;
 
-  function CSSPadding() { 
+  function __construct()
+  { 
+    parent::__construct(false, false); 
     $this->default_value = $this->parse("0");
-    $this->CSSPropertyHandler(false, false); 
   }
 
-  function default_value() { return $this->default_value->copy(); }
+  function default_value()
+  {
+    return $this->default_value->copy();
+  }
 
-  function parse_in($value) {
+  function parse_in($value)
+  {
     $values = preg_split('/\s+/', trim($value));
     switch (count($values)) {
     case 1:
@@ -39,7 +45,8 @@ class CSSPadding extends CSSPropertyHandler {
     };
   }
 
-  function parse($string) {
+  function parse($string)
+  {
     if ($string === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
@@ -59,7 +66,8 @@ class CSSPadding extends CSSPropertyHandler {
   }
 }
    
-class CSSPaddingTop extends CSSSubFieldProperty {
+class CSSPaddingTop extends CSSSubFieldProperty
+{
   function parse($value) { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     return PaddingSideValue::init($value); 
@@ -74,7 +82,8 @@ class CSSPaddingTop extends CSSSubFieldProperty {
   }
 }
 
-class CSSPaddingRight extends CSSSubFieldProperty {
+class CSSPaddingRight extends CSSSubFieldProperty
+{
   function parse($value) { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     $result = PaddingSideValue::init($value);     
@@ -90,7 +99,8 @@ class CSSPaddingRight extends CSSSubFieldProperty {
   }
 }
 
-class CSSPaddingLeft extends CSSSubFieldProperty {
+class CSSPaddingLeft extends CSSSubFieldProperty
+{
   function parse($value) { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     return PaddingSideValue::init($value); 
@@ -105,7 +115,8 @@ class CSSPaddingLeft extends CSSSubFieldProperty {
   }
 }
 
-class CSSPaddingBottom extends CSSSubFieldProperty {
+class CSSPaddingBottom extends CSSSubFieldProperty
+{
   function parse($value) { 
     if ($value === 'inherit') { 
       return CSS_PROPERTY_INHERIT; 

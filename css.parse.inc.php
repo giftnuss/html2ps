@@ -202,35 +202,3 @@ function parse_css_selectors($raw_selectors) {
   return $selectors;
 }
 
-// function &parse_css_property($property, &$pipeline) { 
-//   if (preg_match("/^(.*?)\s*:\s*(.*)/",$property, $matches)) {
-//     $name = strtolower(trim($matches[1]));
-//     $code = CSS::name2code($name);
-//     if (is_null($code)) { 
-//       error_log(sprintf("Unsupported CSS property: '%s'", $name));
-//       $null = null;
-//       return $null;
-//     };
-
-//     $collection = new CSSPropertyCollection();
-//     $collection->add_property(CSSPropertyDeclaration::create($code, trim($matches[2]), $pipeline));
-//     return $collection;
-//   } elseif (preg_match("/@import\s+\"(.*)\";/",$property, $matches)) {
-//     // @import "<url>"
-//     $collection =& css_import(trim($matches[1]), $pipeline);
-//     return $collection;
-//   } elseif (preg_match("/@import\s+url\((.*)\);/",$property, $matches)) {
-//     // @import url()
-//     $collection =& css_import(trim($matches[1]), $pipeline);
-//     return $collection;
-//   } elseif (preg_match("/@import\s+(.*);/",$property, $matches)) {
-//     // @import <url>
-//     $collection =& css_import(trim($matches[1]), $pipeline);
-//     return $collection;
-//   } else {
-//     $collection = new CSSPropertyCollection();
-//     return $collection;
-//   };
-// }
-
-?>

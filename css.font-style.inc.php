@@ -1,32 +1,26 @@
 <?php
 
-class CSSFontStyle extends CSSSubFieldProperty {
-  function default_value() {
+class CSSFontStyle extends CSSSubFieldProperty
+{
+  public function default_value()
+  {
     return FS_NORMAL;
   }
 
-  function parse($value) {
-    $value = trim(strtolower($value));
-    switch ($value) {
-    case 'inherit':
-      return CSS_PROPERTY_INHERIT;
-    case 'normal':
-      return FS_NORMAL;
-    case 'italic':
-      return FS_ITALIC;
-    case 'oblique':
-      return FS_OBLIQUE;
-    };
+  public function parse($value)
+  {
+    return parse_css_font_style($value);
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_FONT_STYLE;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'font-style';
   }
 
 }
 
-?>

@@ -1,11 +1,16 @@
 <?php
 
-class CSSPseudoLinkTarget extends CSSPropertyHandler {
-  function CSSPseudoLinkTarget() { $this->CSSPropertyHandler(true, true); }
+class CSSPseudoLinkTarget extends CSSPropertyHandler
+{
+  function __construct()
+  {
+    parent::__construct(true, true);
+  }
 
   function default_value() { return ""; }
 
-  function is_external_link($value) {
+  function is_external_link($value)
+  {
     return (strlen($value) > 0 && $value{0} != "#");
   }
 

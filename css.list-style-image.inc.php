@@ -1,25 +1,28 @@
 <?php
 // $Header: /cvsroot/html2ps/css.list-style-image.inc.php,v 1.6 2006/09/07 18:38:14 Konstantin Exp $
 
-class CSSListStyleImage extends CSSSubFieldProperty {
+class CSSListStyleImage extends CSSSubFieldProperty
+{
   /**
    * CSS 2.1: default value for list-style-image is none
    */
-  function default_value() { 
-    return new ListStyleImage(null, null); 
+  function default_value()
+  {
+    return new ListStyleImage(null, null);
   }
 
-  function parse($value, &$pipeline) {
+  public static function parse($value, Pipeline $pipeline)
+  {
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
 
     global $g_config;
     if (!$g_config['renderimages']) {
-      return CSSListStyleImage::default_value();
+      return $this->default_value();
     };
 
-    if (preg_match('/url\(([^)]+)\)/',$value, $matches)) { 
+    if (preg_match('/url\(([^)]+)\)/',$value, $matches)) {
       $url = $matches[1];
 
       $full_url = $pipeline->guess_url(css_remove_value_quotes($url));
@@ -30,7 +33,7 @@ class CSSListStyleImage extends CSSSubFieldProperty {
     /**
      * 'none' value and all unrecognized values
      */
-    return CSSListStyleImage::default_value();
+    return $this->default_value();
   }
 
   function get_property_code() {
@@ -42,4 +45,3 @@ class CSSListStyleImage extends CSSSubFieldProperty {
   }
 }
 
-?>

@@ -3,11 +3,13 @@
 
 require_once(HTML2PS_DIR.'value.max-height.php');
 
-class CSSMaxHeight extends CSSPropertyHandler {
+class CSSMaxHeight extends CSSPropertyHandler
+{
   var $_defaultValue;
 
-  function CSSMaxHeight() { 
-    $this->CSSPropertyHandler(true, false); 
+  function __construct()
+  { 
+    parent::__construct(true, false); 
     $this->_defaultValue = ValueMaxHeight::fromString("auto");
   }
 

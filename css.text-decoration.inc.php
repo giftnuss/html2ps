@@ -15,9 +15,10 @@
  * 'inline-block' descendants.
  */
 
-class CSSTextDecoration extends CSSPropertyHandler {
-  function CSSTextDecoration() { 
-    $this->CSSPropertyHandler(true, true); 
+class CSSTextDecoration extends CSSPropertyHandler
+{
+  function __construct() { 
+    parent::__construct(true, true); 
   }
 
   function default_value() { 
@@ -49,4 +50,3 @@ class CSSTextDecoration extends CSSPropertyHandler {
 
 CSS::register_css_property(new CSSTextDecoration);
 
-?>

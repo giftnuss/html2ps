@@ -6,9 +6,11 @@ define('CLEAR_LEFT',1);
 define('CLEAR_RIGHT',2);
 define('CLEAR_BOTH',3);
 
-class CSSClear extends CSSPropertyStringSet {
-  function CSSClear() { 
-    $this->CSSPropertyStringSet(false, 
+class CSSClear extends CSSPropertyStringSet
+{
+  function __construct()
+  { 
+    parent::__construct(false, 
                                 false,
                                 array('inherit' => CSS_PROPERTY_INHERIT,
                                       'left'    => CLEAR_LEFT,
@@ -17,19 +19,21 @@ class CSSClear extends CSSPropertyStringSet {
                                       'none'    => CLEAR_NONE)); 
   }
 
-  function default_value() { 
+  function default_value()
+  { 
     return CLEAR_NONE; 
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_CLEAR;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'clear';
   }
 }
 
 CSS::register_css_property(new CSSClear);
 
-?>

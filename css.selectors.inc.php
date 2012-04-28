@@ -219,6 +219,5 @@ function css_selector_specificity($selector) {
 //
 function selector_get_type($selector) {
   return $selector[0];
-};
+}
 
-?>

@@ -13,11 +13,13 @@ define('LST_UPPER_ROMAN',7);
 define('LST_LOWER_LATIN',8);
 define('LST_UPPER_LATIN',9);
 
-class CSSListStyleType extends CSSSubFieldProperty {
+class CSSListStyleType extends CSSSubFieldProperty
+{
   // CSS 2.1: default value for list-style-type is 'disc'
   function default_value() { return LST_DISC; }
 
-  function parse($value) {
+  function parse($value)
+  {
     if (preg_match('/\bnone\b/',$value))    { return LST_NONE; };
     if (preg_match('/\bdisc\b/',$value))    { return LST_DISC; };
     if (preg_match('/\bcircle\b/',$value))  { return LST_CIRCLE; };
@@ -46,7 +48,8 @@ class CSSListStyleType extends CSSSubFieldProperty {
     return null;
   }
 
-  function format_number($type,$num) {
+  function format_number($type,$num)
+  {
     // NOTE: according to CSS 2.1 specs 12.6.2, "This specification does not define how alphabetic systems wrap 
     // at the end of the alphabet. For instance, after 26 list items, 'lower-latin' rendering is undefined. 
     // Therefore, for long lists, we recommend that authors specify true numbers.".
@@ -75,13 +78,14 @@ class CSSListStyleType extends CSSSubFieldProperty {
     }
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_LIST_STYLE_TYPE;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'list-style-type';
   }
 }
 
-?>

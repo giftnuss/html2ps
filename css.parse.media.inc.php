@@ -1,5 +1,7 @@
 <?php
-function is_allowed_media($media_list) {
+
+function is_allowed_media($media_list)
+{
   // Now we've got the list of media this style can be applied to;
   // check if at least one of this media types is being used by the script
   //
@@ -14,10 +16,10 @@ function is_allowed_media($media_list) {
   $allowed_media = array_map('strtolower', $allowed_media);
 
   foreach ($media_list as $media) {
-    $allowed_found |= (array_search($media, $allowed_media) !== false);
-  };
-  
-  return $allowed_found;
+    if(in_array($media, $allowed_media)) {
+      return true;
+    }
+  }
+  return false;
 }
 
-?>

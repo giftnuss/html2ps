@@ -183,4 +183,3 @@ define('CSS_FUNCTION_REGEXP', '(?:'.CSS_IDENT_REGEXP.'\()');
 define('CSS_STRING1_REGEXP', '\"(?:[^\n\r\f\\"]|\\\\'.CSS_NL_REGEXP.'|'.CSS_ESCAPE_REGEXP.')*\"');
 define('CSS_STRING2_REGEXP', '\\'."'".'(?:[^\n\r\f\\'."'".']|\\\\'.CSS_NL_REGEXP.'|'.CSS_ESCAPE_REGEXP.')*\\'."'");
 
-?>

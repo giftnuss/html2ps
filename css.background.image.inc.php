@@ -14,11 +14,11 @@ class CSSBackgroundImage extends CSSSubFieldProperty
   }
 
   function default_value()
-  { 
-    return new BackgroundImage(null, null); 
+  {
+    return new BackgroundImage(null, null);
   }
 
-  public static function parse($value, &$pipeline)
+  public static function parse($value, Pipeline $pipeline)
   {
     global $g_config;
     if (!$g_config['renderimages']) {
@@ -28,7 +28,7 @@ class CSSBackgroundImage extends CSSSubFieldProperty
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     }
-    
+
     // 'url' value
     if (preg_match("/url\((.*[^\\\\]?)\)/is",$value,$matches)) {
       $url = $matches[1];
@@ -43,4 +43,3 @@ class CSSBackgroundImage extends CSSSubFieldProperty
   }
 }
 
-?>

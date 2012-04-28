@@ -3,12 +3,13 @@
 
 require_once(HTML2PS_DIR.'value.border.width.class.php');
 
-class CSSBorderWidth extends CSSSubProperty {
+class CSSBorderWidth extends CSSSubProperty
+{
   var $_defaultValue;
 
-  function CSSBorderWidth(&$owner) {
-    $this->CSSSubProperty($owner);
-
+  function __construct(&$owner)
+  {
+    parent::__construct($owner);
     $this->_defaultValue = new BorderWidth(Value::fromData(0, UNIT_PT),
                                            Value::fromData(0, UNIT_PT),
                                            Value::fromData(0, UNIT_PT),
@@ -30,9 +31,9 @@ class CSSBorderWidth extends CSSSubProperty {
   }
 
   function get_value(&$owner_value) {
-    return new BorderWidth($owner_value->top->width, 
-                           $owner_value->right->width, 
-                           $owner_value->bottom->width, 
+    return new BorderWidth($owner_value->top->width,
+                           $owner_value->right->width,
+                           $owner_value->bottom->width,
                            $owner_value->left->width);
   }
 
@@ -89,7 +90,7 @@ class CSSBorderWidth extends CSSSubProperty {
       return new BorderWidth($v1, $v2, $v3, $v4);
     default:
       return $this->default_value();
-    };   
+    };
   }
 }
 

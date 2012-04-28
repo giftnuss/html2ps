@@ -24,9 +24,11 @@ require_once(HTML2PS_DIR.'value.bottom.php');
  * this property is an offset from the padding edge of that element.
  */
 
-class CSSBottom extends CSSPropertyHandler {
-  function CSSBottom() { 
-    $this->CSSPropertyHandler(false, false); 
+class CSSBottom extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(false, false); 
     $this->_autoValue = ValueBottom::fromString('auto');
   }
 

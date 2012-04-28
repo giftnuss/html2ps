@@ -3,25 +3,28 @@
 
 require_once(HTML2PS_DIR.'value.background.php');
 
-class CSSBackground extends CSSPropertyHandler {
+class CSSBackground extends CSSPropertyHandler
+{
   var $default_value;
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_BACKGROUND;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'background';
   }
 
-  function CSSBackground() {
+  function __construct()
+  {
+    parent::__construct(true, false);
     $this->default_value = new Background(CSSBackgroundColor::default_value(),
                                           CSSBackgroundImage::default_value(),
                                           CSSBackgroundRepeat::default_value(),
                                           CSSBackgroundPosition::default_value(),
                                           CSSBackgroundAttachment::default_value());
-
-    $this->CSSPropertyHandler(true, false);
   }
 
   function inherit($state, &$new_state) { 
@@ -61,4 +64,3 @@ CSS::register_css_property(new CSSBackgroundRepeat($bg, '_repeat'));
 CSS::register_css_property(new CSSBackgroundPosition($bg, '_position'));
 CSS::register_css_property(new CSSBackgroundAttachment($bg, '_attachment'));
 
-?>

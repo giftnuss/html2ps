@@ -5,29 +5,34 @@ require_once(HTML2PS_DIR.'value.left.php');
 
 class CSSLeft extends CSSPropertyHandler
 {
-  function CSSLeft()
+  function __construct()
   { 
     parent::__construct(false, false); 
     $this->_autoValue = ValueLeft::fromString('auto');
   }
 
-  function _getAutoValue() {
+  function _getAutoValue()
+  {
     return $this->_autoValue->copy();
   }
 
-  function default_value() { 
+  function default_value()
+  { 
     return $this->_getAutoValue();
   }
 
-  function parse($value) { 
+  function parse($value)
+  { 
     return ValueLeft::fromString($value);
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_LEFT;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'left';
   }
 }

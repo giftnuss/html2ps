@@ -1,11 +1,14 @@
 <?php
 
-class CSSFontFamily extends CSSSubFieldProperty {
-  function default_value() {
+class CSSFontFamily extends CSSSubFieldProperty
+{
+  function default_value()
+  {
     return 'times';
   }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value == 'inherit') {
       return CSS_PROPERTY_INHERIT;
     }

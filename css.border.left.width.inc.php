@@ -1,32 +1,35 @@
 <?php
 // $Header: /cvsroot/html2ps/css.border.left.width.inc.php,v 1.2 2007/02/04 17:08:18 Konstantin Exp $
 
-class CSSBorderLeftWidth extends CSSSubProperty {
-  function CSSBorderLeftWidth(&$owner) {
-    $this->CSSSubProperty($owner);
-  }
-
-  function set_value(&$owner_value, &$value) {
+class CSSBorderLeftWidth extends CSSSubProperty
+{
+  function set_value(&$owner_value, &$value)
+  {
     if ($value != CSS_PROPERTY_INHERIT) {
       $owner_value->left->width = $value->copy();
-    } else {
+    }
+    else {
       $owner_value->left->width = $value;
     };
   }
 
-  function get_value(&$owner_value) {
+  function get_value(&$owner_value)
+  {
     return $owner_value->left->width;
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_BORDER_LEFT_WIDTH;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'border-left-width';
   }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value == 'inherit') {
       return CSS_PROPERTY_INHERIT;
     }
@@ -37,4 +40,3 @@ class CSSBorderLeftWidth extends CSSSubProperty {
   }
 }
 
-?>

@@ -3,12 +3,15 @@
 /**
  * @abstract
  */
-class BoxPageMargin extends GenericContainerBox {
+class BoxPageMargin extends GenericContainerBox
+{
   /**
-   * @param $at_rule CSSAtRuleMarginBox At-rule object describing margin box to be created
+   * @param $at_rule CSSAtRuleMarginBox At-rule object describing
+   *     margin box to be created
    * @return Object Object of concrete BoxPageMargin descendant type
    */
-  function &create(&$pipeline, $at_rule) {
+  public static function create(Pipeline $pipeline, $at_rule)
+  {
     switch ($at_rule->getSelector()) {
     case CSS_MARGIN_BOX_SELECTOR_TOP:
       $box = new BoxPageMarginTop($pipeline, $at_rule);
@@ -71,27 +74,26 @@ class BoxPageMargin extends GenericContainerBox {
     return $box;
   }
 
-  function __construct(Pipeline $pipeline, $at_rule) {
+  function __construct(Pipeline $pipeline, $at_rule)
+  {
+    parent::__construct();
+
     $state =& $pipeline->get_current_css_state();
     $state->pushDefaultState();
-
     $root = null;
     $at_rule->css->apply($root, $state, $pipeline);
-
-    parent::__construct();
     $this->readCSS($state);
-
     $state->pushDefaultstate();
 
     /**
-     * Check whether 'content' or '-html2ps-html-content' properties had been defined 
+     * Check whether 'content' or '-html2ps-html-content' properties had been defined
      * (if both properties are defined, -html2ps-html-content takes precedence)
      */
     $raw_html_content =& $at_rule->get_css_property(CSS_HTML2PS_HTML_CONTENT);
     $html_content = $raw_html_content->render($pipeline->get_counters());
 
     if ($html_content !== '') {
-      // We should wrap html_content in DIV tag, 
+      // We should wrap html_content in DIV tag,
       // as we treat only the very first box of the resulting DOM tree as margin box content
 
       $html_content = html2xhtml("<div>".$html_content."</div>");
@@ -122,12 +124,12 @@ class BoxPageMargin extends GenericContainerBox {
     $this->_position($media, $boxes, $context);
 
     $this->setCSSProperty(CSS_WIDTH, new WCConstant($this->get_width()));
-    $this->put_height_constraint(new HCConstraint(array($this->height, false), 
-                                                  null, 
+    $this->put_height_constraint(new HCConstraint(array($this->height, false),
+                                                  null,
                                                   null));
 
     $this->reflow_content($context);
-    
+
     /**
      * Apply vertical-align (behave like table cell)
      */
@@ -136,7 +138,7 @@ class BoxPageMargin extends GenericContainerBox {
     $va->apply_cell($this,$this->get_full_height(),0);
   }
 
-  function show(&$driver) {    
+  function show(&$driver) {
     $this->offset(0, $driver->offset);
     $this->show_fixed($driver);
   }
@@ -147,7 +149,7 @@ class BoxPageMargin extends GenericContainerBox {
     $left_width   = $left->get_max_width($context);
     $center_width = $center->get_max_width($context);
     $right_width  = $right->get_max_width($context);
-    
+
     $calculated_left_width   = 0;
     $calculated_center_width = 0;
     $calculated_right_width  = 0;
@@ -174,7 +176,7 @@ class BoxPageMargin extends GenericContainerBox {
       $calculated_right_width  = $full_width - $calculated_left_width;
     };
 
-    return array($calculated_left_width, 
+    return array($calculated_left_width,
                  $calculated_center_width,
                  $calculated_right_width);
   }
@@ -183,7 +185,7 @@ class BoxPageMargin extends GenericContainerBox {
 class BoxPageMarginTop extends BoxPageMargin {
   function _position($media, $boxes, $context) {
     $this->put_left($this->get_extra_left() + 0);
-    $this->put_top(-$this->get_extra_top() +mm2pt($media->height()));    
+    $this->put_top(-$this->get_extra_top() +mm2pt($media->height()));
 
     $this->put_full_width(mm2pt($media->width()));
     $this->put_full_height(mm2pt($media->margins['top']));
@@ -196,7 +198,7 @@ class BoxPageMarginTop extends BoxPageMargin {
 class BoxPageMarginTopLeftCorner extends BoxPageMargin {
   function _position($media, $boxes, $context) {
     $this->put_left($this->get_extra_left() + 0);
-    $this->put_top(-$this->get_extra_top() +mm2pt($media->height()));    
+    $this->put_top(-$this->get_extra_top() +mm2pt($media->height()));
 
     $this->put_full_width(mm2pt($media->margins['left']));
     $this->put_full_height(mm2pt($media->margins['top']));
@@ -263,7 +265,7 @@ class BoxPageMarginTopRight extends BoxPageMargin {
 class BoxPageMarginTopRightCorner extends BoxPageMargin {
   function _position($media, $boxes, $context) {
     $this->put_left($this->get_extra_left() + mm2pt($media->width() - $media->margins['right']));
-    $this->put_top(-$this->get_extra_top() +mm2pt($media->height()));    
+    $this->put_top(-$this->get_extra_top() +mm2pt($media->height()));
 
     $this->put_full_width(mm2pt($media->margins['right']));
     $this->put_full_height(mm2pt($media->margins['top']));
@@ -343,7 +345,7 @@ class BoxPageMarginBottomRight extends BoxPageMargin {
 class BoxPageMarginBottomRightCorner extends BoxPageMargin {
   function _position($media, $boxes, $context) {
     $this->put_left($this->get_extra_left() + mm2pt($media->width() - $media->margins['right']));
-    $this->put_top(-$this->get_extra_top() +mm2pt($media->margins['bottom']));    
+    $this->put_top(-$this->get_extra_top() +mm2pt($media->margins['bottom']));
 
     $this->put_full_width(mm2pt($media->margins['right']));
     $this->put_full_height(mm2pt($media->margins['top']));
@@ -356,7 +358,7 @@ class BoxPageMarginBottomRightCorner extends BoxPageMargin {
 class BoxPageMarginBottom extends BoxPageMargin {
   function _position($media, $boxes, $context) {
     $this->put_left($this->get_extra_left() + 0);
-    $this->put_top(-$this->get_extra_top() +mm2pt($media->margins['bottom']));    
+    $this->put_top(-$this->get_extra_top() +mm2pt($media->margins['bottom']));
 
     $this->put_full_width(mm2pt($media->width()));
     $this->put_full_height(mm2pt($media->margins['bottom']));

@@ -26,7 +26,8 @@ require_once(HTML2PS_DIR.'encoding.dingbats.inc.php');
 require_once(HTML2PS_DIR.'encoding.symbol.inc.php');
 
 // TODO: this works for PS encoding names only
-class ManagerEncoding {
+class ManagerEncoding
+{
   var $_encodings = array();
 
   /**
@@ -36,7 +37,8 @@ class ManagerEncoding {
 
   var $_utf8_mapping;
 
-  function ManagerEncoding() {
+  function __construct()
+  {
     $this->new_custom_encoding_vector();
   }
 
@@ -53,7 +55,8 @@ class ManagerEncoding {
    *
    * @return char index of this character in custom encoding vector
    */
-  function add_custom_char($char) {
+  function add_custom_char($char)
+  {
     // Check if current  encoding vector is full; if  it is, we should
     // add a new one.
     if ($this->is_custom_encoding_full()) {
@@ -76,7 +79,8 @@ class ManagerEncoding {
     return chr($index);
   }
 
-  function generate_mapping($mapping_file) {
+  function generate_mapping($mapping_file)
+  {
     global $g_utf8_converters;
 
     $this->_utf8_mapping = array();
@@ -92,12 +96,14 @@ class ManagerEncoding {
     fclose($file);
   }
 
-  function &get() {
+  public static function get()
+  {
     global $g_manager_encodings;
     return $g_manager_encodings;
   }
 
-  function get_canonized_encoding_name($encoding) {
+  function get_canonized_encoding_name($encoding)
+  {
     global $g_encoding_aliases;
 
     if (isset($g_encoding_aliases[$encoding])) {
@@ -107,24 +113,27 @@ class ManagerEncoding {
     return $encoding;
   }
 
-  function get_current_custom_encoding_name() {
+  function get_current_custom_encoding_name()
+  {
     return $this->get_custom_encoding_name($this->get_custom_vector_index());
   }
 
-  function get_custom_encoding_name($index) {
-    return sprintf('custom%d', 
-                   $index);
+  function get_custom_encoding_name($index)
+  {
+    return sprintf('custom%d', $index);
   }
 
-  function get_custom_vector_index() {
+  function get_custom_vector_index()
+  {
     return $this->_custom_vector_index;
   }
 
-  function get_encoding_glyphs($encoding) {
+  function get_encoding_glyphs($encoding)
+  {
     $vector = $this->get_encoding_vector($encoding);
-    if (is_null($vector)) { 
+    if (is_null($vector)) {
       error_log(sprintf("Cannot get encoding vector for encoding '%s'", $encoding));
-      return null; 
+      return null;
     };
     return $this->vector_to_glyphs($vector);
   }
@@ -137,10 +146,11 @@ class ManagerEncoding {
    *
    * @return Array encoding vector; null if this encoding is not known to the script
    */
-  function get_encoding_vector($encoding) {
+  function get_encoding_vector($encoding)
+  {
     $encoding = $this->get_canonized_encoding_name($encoding);
 
-    global $g_utf8_converters;   
+    global $g_utf8_converters;
     if (isset($g_utf8_converters[$encoding])) {
       $vector = $g_utf8_converters[$encoding][0];
     } elseif (isset($this->_encodings[$encoding])) {
@@ -158,7 +168,8 @@ class ManagerEncoding {
     return $vector;
   }
 
-  function get_glyph_to_code_mapping($encoding) {
+  function get_glyph_to_code_mapping($encoding)
+  {
     $vector = $this->get_encoding_vector($encoding);
 
     $result = array();
@@ -171,18 +182,20 @@ class ManagerEncoding {
     return $result;
   }
 
-  function get_mapping($char) {
+  function get_mapping($char)
+  {
     if (!isset($this->_utf8_mapping)) {
       $this->load_mapping(CACHE_DIR . 'utf8.mappings.dat');
     };
 
-    if (!isset($this->_utf8_mapping[$char])) { 
-      return null; 
+    if (!isset($this->_utf8_mapping[$char])) {
+      return null;
     };
     return $this->_utf8_mapping[$char];
   }
 
-  function get_next_utf8_char($raw_content, &$ptr) {
+  public static function get_next_utf8_char($raw_content, &$ptr)
+  {
     if ((ord($raw_content[$ptr]) & 0xF0) == 0xF0) {
       $charlen = 4;
     } elseif ((ord($raw_content[$ptr]) & 0xE0) == 0xE0) {
@@ -192,14 +205,15 @@ class ManagerEncoding {
     } else {
       $charlen = 1;
     };
-    
+
     $char = substr($raw_content,$ptr,$charlen);
     $ptr += $charlen;
 
     return $char;
   }
 
-  function get_ps_encoding_vector($encoding) {
+  function get_ps_encoding_vector($encoding)
+  {
     $vector = $this->get_encoding_vector($encoding);
 
     $result = "/".$encoding." [ \n";
@@ -218,20 +232,24 @@ class ManagerEncoding {
     return $result;
   }
 
-  function is_custom_encoding($encoding) {
+  public static function is_custom_encoding($encoding)
+  {
     return preg_match('/^custom\d+$/', $encoding);
   }
 
-  function is_custom_encoding_full() {
+  function is_custom_encoding_full()
+  {
     return count($this->_encodings[$this->get_current_custom_encoding_name()]) >= 256;
   }
 
-  function load_mapping($mapping_file) {
+  function load_mapping($mapping_file)
+  {
     if (!is_readable($mapping_file)) {
       $this->generate_mapping($mapping_file);
-    } else {
+    }
+    else {
       $this->_utf8_mapping = unserialize(file_get_contents($mapping_file));
-    };
+    }
   }
 
   /**
@@ -241,18 +259,19 @@ class ManagerEncoding {
    * Custom encoding vectors have names 'customX' when X stand for the
    * encoding index.
    */
-  function new_custom_encoding_vector() {
+  function new_custom_encoding_vector()
+  {
     $initial_vector = array();
     for ($i = 0; $i <= 32; $i++) {
       $initial_vector[chr($i)] = chr($i);
     };
-    $this->register_encoding(sprintf('custom%d', 
+    $this->register_encoding(sprintf('custom%d',
                                      $this->next_custom_vector_index()),
                              $initial_vector);
   }
-  
+
   /**
-   * Returns index for the next custom encoding 
+   * Returns index for the next custom encoding
    */
   function next_custom_vector_index() {
     return ++$this->_custom_vector_index;
@@ -264,7 +283,7 @@ class ManagerEncoding {
 
   function to_utf8($word, $encoding) {
     $vector = $this->get_encoding_vector($encoding);
-    
+
     $converted = '';
     for ($i=0, $size=strlen($word); $i < $size; $i++) {
       $converted .= code_to_utf8($vector[$word{$i}]);
@@ -276,7 +295,7 @@ class ManagerEncoding {
   function vector_to_glyphs($vector) {
     $result = array();
 
-    foreach ($vector as $code => $ucs2) {      
+    foreach ($vector as $code => $ucs2) {
       if (isset($GLOBALS['g_unicode_glyphs'][$ucs2])) {
         $result[$code] = $GLOBALS['g_unicode_glyphs'][$ucs2];
       } elseif ($ucs2 == 0xFFFF) {

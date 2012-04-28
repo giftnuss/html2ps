@@ -3,9 +3,11 @@
 
 require_once(HTML2PS_DIR.'value.right.php');
 
-class CSSRight extends CSSPropertyHandler {
-  function CSSRight() { 
-    $this->CSSPropertyHandler(false, false); 
+class CSSRight extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(false, false); 
     $this->_autoValue = ValueRight::fromString('auto');
   }
 
@@ -32,4 +34,3 @@ class CSSRight extends CSSPropertyHandler {
 
 CSS::register_css_property(new CSSRight);
 
-?>

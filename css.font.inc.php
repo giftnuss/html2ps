@@ -18,7 +18,8 @@ define('FONT_VALUE_WEIGHT',1);
 define('FONT_VALUE_SIZE',2);
 define('FONT_VALUE_FAMILY',3);
 
-function detect_font_value_type($value) {
+function detect_font_value_type($value)
+{
   if (preg_match("/^normal|italic|oblique$/",$value)) { return FONT_VALUE_STYLE; }
   if (preg_match("/^normal|bold|bolder|lighter|[1-9]00$/",$value)) { return FONT_VALUE_WEIGHT; }
 
@@ -33,33 +34,36 @@ function detect_font_value_type($value) {
 
 // ----
 
-class CSSFont extends CSSPropertyHandler {
+class CSSFont extends CSSPropertyHandler
+{
   var $_defaultValue;
 
-  function CSSFont() {
-    $this->CSSPropertyHandler(true, true);
-
+  function __construct()
+  {
+    parent::__construct(true, true);
     $this->_defaultValue = null;
   }
 
-  function default_value() {
+  function default_value()
+  {
     if (is_null($this->_defaultValue)) {
       $this->_defaultValue = new ValueFont;
 
       $size_handler = CSS::get_handler(CSS_FONT_SIZE);
       $default_size = $size_handler->default_value();
-      
+
       $this->_defaultValue->size   = $default_size->copy();
       $this->_defaultValue->weight = CSSFontWeight::default_value();
       $this->_defaultValue->style  = CSSFontStyle::default_value();
       $this->_defaultValue->family = CSSFontFamily::default_value();
       $this->_defaultValue->line_height = CSS::getDefaultValue(CSS_LINE_HEIGHT);
-    };
+    }
 
     return $this->_defaultValue;
   }
-  
-  function parse($value) {   
+
+  function parse($value)
+  {
     $font = CSS::getDefaultValue(CSS_FONT);
 
     if ($value === 'inherit') {
@@ -70,19 +74,19 @@ class CSSFont extends CSSPropertyHandler {
       $font->line_height = CSS_PROPERTY_INHERIT;
 
       return $font;
-    };
+    }
 
 
     // according to CSS 2.1 standard,
     // value of 'font' CSS property can be represented as follows:
-    //   [ <'font-style'> || <'font-variant'> || <'font-weight'> ]? <'font-size'> [ / <'line-height'> ]? <'font-family'> ] | 
+    //   [ <'font-style'> || <'font-variant'> || <'font-weight'> ]? <'font-size'> [ / <'line-height'> ]? <'font-family'> ] |
     //   caption | icon | menu | message-box | small-caption | status-bar | inherit
 
     // Note that font-family value, unlike other values, can contain spaces (in this case it should be quoted)
     // Breaking value by spaces, we'll break such multi-word families.
 
-    // Replace all white space sequences with only one space; 
-    // Remove spaces after commas; it will allow us 
+    // Replace all white space sequences with only one space;
+    // Remove spaces after commas; it will allow us
     // to split value correctly using look-backward expressions
     $value = preg_replace("/\s+/"," ",$value);
     $value = preg_replace("/,\s+/",",",$value);
@@ -103,7 +107,7 @@ class CSSFont extends CSSPropertyHandler {
 
       if ($family_running) {
         $subvalues[$family_start] .= " " . $subvalues[$i];
-      
+
         // Remove this subvalues from the subvalue list at all
         array_splice($subvalues, $i, 1);
 
@@ -111,7 +115,7 @@ class CSSFont extends CSSPropertyHandler {
         $i--;
       }
 
-      // Check if current subvalue contains beginning of multi-word family name 
+      // Check if current subvalue contains beginning of multi-word family name
       // We can detect it by searching for single or double quote without pair
       if ($family_running && $family_double_quote && !preg_match('/^[^"]*("[^"]*")*[^"]*$/',$current_value)) {
         $family_running = false;
@@ -128,21 +132,21 @@ class CSSFont extends CSSPropertyHandler {
       }
     };
 
-    // Now process subvalues one-by-one. 
+    // Now process subvalues one-by-one.
     foreach ($subvalues as $subvalue) {
       $subvalue = trim(strtolower($subvalue));
       $subvalue_type = detect_font_value_type($subvalue);
 
       switch ($subvalue_type) {
       case FONT_VALUE_STYLE:
-        $font->style = CSSFontStyle::parse($subvalue);
+        $font->style = parse_css_font_style($subvalue);
         break;
       case FONT_VALUE_WEIGHT:
-        $font->weight = CSSFontWeight::parse($subvalue);
+        $font->weight = parse_css_font_weight($subvalue);
         break;
       case FONT_VALUE_SIZE:
         $size_subvalues = explode('/', $subvalue);
-        $font->size = CSSFontSize::parse($size_subvalues[0]);
+        $font->size = parse_css_font_size($size_subvalues[0]);
         if (isset($size_subvalues[1])) {
           $handler =& CSS::get_handler(CSS_LINE_HEIGHT);
           $font->line_height = $handler->parse($size_subvalues[1]);
@@ -183,4 +187,3 @@ CSS::register_css_property(new CSSFontWeight($font, 'weight'));
 CSS::register_css_property(new CSSFontFamily($font, 'family'));
 CSS::register_css_property(new CSSLineHeight($font, 'line_height'));
 
-?>

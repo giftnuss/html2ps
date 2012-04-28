@@ -17,14 +17,14 @@ class InlineContentBuilderNormal extends InlineContentBuilder
 
     // Whitespace-only text nodes sill result on only one whitespace box
     if (trim($content) === '') {
-      $whitespace =& WhitespaceBox::create($pipeline);
+      $whitespace = WhitespaceBox::create($pipeline);
       $box->add_child($whitespace);
       return;
     }
 
     // Add leading whispace box, if content stars with a space
     if (preg_match('/ /u', substr($content,0,1))) {
-      $whitespace =& WhitespaceBox::create($pipeline);
+      $whitespace = WhitespaceBox::create($pipeline);
       $box->add_child($whitespace);
     }
 
@@ -43,11 +43,11 @@ class InlineContentBuilderNormal extends InlineContentBuilder
       $is_last_word = ($pos == $size);
 
       // Whitespace boxes should be added
-      // 1) between words 
+      // 1) between words
       // 2) after the last word IF there was a space at the content end
-      if (!$is_last_word || 
+      if (!$is_last_word ||
           $last_whitespace) {
-        $whitespace =& WhitespaceBox::create($pipeline);
+        $whitespace = WhitespaceBox::create($pipeline);
         $box->add_child($whitespace);
       };
     };

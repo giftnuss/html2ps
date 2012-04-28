@@ -3,16 +3,20 @@
 
 require_once(HTML2PS_DIR.'value.text-indent.class.php');
 
-class CSSTextIndent extends CSSPropertyHandler {
-  function CSSTextIndent() { 
-    $this->CSSPropertyHandler(true, true); 
+class CSSTextIndent extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(true, true); 
   }
 
-  function default_value() { 
+  function default_value()
+  { 
     return new TextIndentValuePDF(array(0,false)); 
   }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value === 'inherit') {
       return CSS_PROPERTY_INHERIT;
     };
@@ -35,4 +39,4 @@ class CSSTextIndent extends CSSPropertyHandler {
 
 CSS::register_css_property(new CSSTextIndent());
 
-?>
+

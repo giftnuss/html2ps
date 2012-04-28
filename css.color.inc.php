@@ -1,9 +1,11 @@
 <?php
 // $Header: /cvsroot/html2ps/css.color.inc.php,v 1.13 2007/01/24 18:55:51 Konstantin Exp $
 
-class CSSColor extends CSSPropertyHandler {
-  function CSSColor() { 
-    $this->CSSPropertyHandler(true, true); 
+class CSSColor extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(true, true); 
   }
 
   function default_value() { 
@@ -29,4 +31,3 @@ class CSSColor extends CSSPropertyHandler {
 
 CSS::register_css_property(new CSSColor);
 
-?>

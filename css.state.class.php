@@ -7,7 +7,7 @@ class CSSState
   var $_handlerSet;
   var $_baseFontSize;
 
-  function CSSState(CSS $handlerSet)
+  function __construct(CSS $handlerSet)
   {
     $this->_handlerSet = $handlerSet;
     $this->_state =  array($this->_getDefaultState());
@@ -30,34 +30,39 @@ class CSSState
     return $this->_handlerSet->getDefaultStateFlags();
   }
 
-  function replaceParsed($property_data, $property_list) {
+  function replaceParsed($property_data, $property_list)
+  {
     foreach ($property_list as $property) {
       $this->set_property($property, $property_data->get_css_property($property));
     };
   }
 
-  function popState() {
+  function popState()
+  {
     array_shift($this->_state);
     array_shift($this->_stateDefaultFlags);
     array_shift($this->_baseFontSize);
   }
 
-  function getStoredState(&$base_font_size, &$state, &$state_default_flags) {
+  function getStoredState(&$base_font_size, &$state, &$state_default_flags)
+  {
     $base_font_size      = array_shift($this->_baseFontSize);
     $state               = array_shift($this->_state);
     $state_default_flags = array_shift($this->_stateDefaultFlags);
   }
 
-  function pushStoredState($base_font_size, $state, $state_default_flags) {
+  function pushStoredState($base_font_size, $state, $state_default_flags)
+  {
     array_unshift($this->_baseFontSize,      $base_font_size);
     array_unshift($this->_state,             $state);
     array_unshift($this->_stateDefaultFlags, $state_default_flags);
   }
 
-  function pushState() {
+  function pushState()
+  {
     $base_size = $this->getBaseFontSize();
     /**
-     * Only computed font-size values are inherited; this means that 
+     * Only computed font-size values are inherited; this means that
      * base font size value should not be recalculated if font-size was not set explicitly
      */
     if ($this->get_propertyDefaultFlag(CSS_FONT_SIZE)) {
@@ -71,7 +76,8 @@ class CSSState
     array_unshift($this->_stateDefaultFlags, $this->_getDefaultStateFlags());
   }
 
-  function pushDefaultState() {
+  function pushDefaultState()
+  {
     $this->pushState();
     $this->_state[0] = $this->_getDefaultState();
 
@@ -82,7 +88,8 @@ class CSSState
     };
   }
 
-  function pushDefaultTextState() {
+  function pushDefaultTextState()
+  {
     $state = $this->getState();
 
     $this->pushState();
@@ -95,15 +102,18 @@ class CSSState
     }
   }
 
-  function &getStateDefaultFlags() {
+  function getStateDefaultFlags()
+  {
     return $this->_stateDefaultFlags[0];
   }
 
-  function &getState() {
+  function getState()
+  {
     return $this->_state[0];
   }
 
-  function &getInheritedProperty($code) {
+  function getInheritedProperty($code)
+  {
     $handler =& CSS::get_handler($code);
 
     $size = count($this->_state);
@@ -120,14 +130,15 @@ class CSSState
       if ($code == CSS_FONT_SIZE) {
         $value =& Value::fromData(1, UNIT_EM);
         return $value;
-      };
-    };
+      }
+    }
 
     $null = null;
     return $null;
   }
 
-  function get_propertyOnLevel($code, $level) {
+  function get_propertyOnLevel($code, $level)
+  {
     return $this->_state[$level][$code];
   }
 
@@ -135,11 +146,12 @@ class CSSState
    * Optimization notice: this function is called very often,
    * so even a slight overhead for the 'getState() and CSS::get_handler
    * accumulates in a significiant processing delay.
-   * 
+   *
    * getState was replaced with direct $this->_state[0] access,
    * get_handler call results are cached in static var
    */
-  function &get_property($code) {
+  function get_property($code)
+  {
     static $cache = array();
     if (!isset($cache[$code])) {
       $cache[$code] =& CSS::get_handler($code);
@@ -148,15 +160,18 @@ class CSSState
     return $value;
   }
 
-  function get_propertyDefaultFlag($code) {
+  function get_propertyDefaultFlag($code)
+  {
     return $this->_stateDefaultFlags[0][$code];
   }
 
-  function set_property_on_level($code, $level, $value) {
+  function set_property_on_level($code, $level, $value)
+  {
     $this->_state[$level][$code] = $value;
   }
 
-  function set_propertyDefault($code, $value) {
+  function set_propertyDefault($code, $value)
+  {
     $state =& $this->getState();
     $state[$code] = $value;
   }
@@ -176,7 +191,8 @@ class CSSState
     $cache[$code]->clearDefaultFlags($this);
   }
 
-  function set_propertyDefaultFlag($code, $value) {
+  function set_propertyDefaultFlag($code, $value)
+  {
     $state_flags =& $this->getStateDefaultFlags();
     $state_flags[$code] = $value;
   }
@@ -186,4 +202,3 @@ class CSSState
   }
 }
 
-?>

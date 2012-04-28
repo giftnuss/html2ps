@@ -1,9 +1,11 @@
 <?php
 // $Header: /cvsroot/html2ps/css.pseudo.listcounter.inc.php,v 1.4 2006/09/07 18:38:14 Konstantin Exp $
 
-class CSSPseudoListCounter extends CSSPropertyHandler {
-  function CSSPseudoListCounter() { 
-    $this->CSSPropertyHandler(true, false); 
+class CSSPseudoListCounter extends CSSPropertyHandler
+{
+  function __construct()
+  { 
+    parent::__construct(true, false); 
   }
 
   function default_value() { 
@@ -25,4 +27,3 @@ class CSSPseudoListCounter extends CSSPropertyHandler {
 
 CSS::register_css_property(new CSSPseudoListCounter);
 
-?>

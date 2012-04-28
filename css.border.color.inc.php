@@ -3,11 +3,13 @@
 
 require_once(HTML2PS_DIR.'value.border.color.class.php');
 
-class CSSBorderColor extends CSSSubProperty {
+class CSSBorderColor extends CSSSubProperty
+{
   var $_defaultValue;
 
-  function CSSBorderColor(&$owner) {
-    $this->CSSSubProperty($owner);
+  function __construct(&$owner)
+  {
+    parent::__construct($owner);
 
     $this->_defaultValue = new BorderColor(new Color(array(0,0,0), true),
                                            new Color(array(0,0,0), true),
@@ -15,40 +17,47 @@ class CSSBorderColor extends CSSSubProperty {
                                            new Color(array(0,0,0), true));
   }
 
-  function set_value(&$owner_value, &$value) {
+  function set_value(&$owner_value, &$value)
+  {
     if ($value != CSS_PROPERTY_INHERIT) {
       $owner_value->top->setColor($value->top);
       $owner_value->right->setColor($value->right);
       $owner_value->bottom->setColor($value->bottom);
       $owner_value->left->setColor($value->left);
-    } else {
+    }
+    else {
       $owner_value->top->setColor(CSS_PROPERTY_INHERIT);
       $owner_value->right->setColor(CSS_PROPERTY_INHERIT);
       $owner_value->bottom->setColor(CSS_PROPERTY_INHERIT);
       $owner_value->left->setColor(CSS_PROPERTY_INHERIT);
-    };
+    }
   }
 
-  function get_value(&$owner_value) {
-    return new BorderColor($owner_value->top->color, 
-                           $owner_value->right->color, 
-                           $owner_value->bottom->color, 
+  function get_value(&$owner_value)
+  {
+    return new BorderColor($owner_value->top->color,
+                           $owner_value->right->color,
+                           $owner_value->bottom->color,
                            $owner_value->left->color);
   }
 
-  function get_property_code() {
+  function get_property_code()
+  {
     return CSS_BORDER_COLOR;
   }
 
-  function get_property_name() {
+  function get_property_name()
+  {
     return 'border-color';
   }
 
-  function default_value() {
+  function default_value()
+  {
     return $this->_defaultValue;
   }
-  
-  function parse_in($value) {
+
+  function parse_in($value)
+  {
     $values = preg_split("/(?<![,(\s])\s+/ ",$value);
 
     switch (count($values)) {
@@ -72,21 +81,21 @@ class CSSBorderColor extends CSSSubProperty {
       return array($v1, $v2, $v3, $v4);
     default:
       return $this->default_value();
-    };   
+    };
   }
 
-  function parse($value) {
+  function parse($value)
+  {
     if ($value == 'inherit') {
       return CSS_PROPERTY_INHERIT;
     }
 
     $colors = $this->parse_in($value);
 
-    return new BorderColor($colors[0], 
+    return new BorderColor($colors[0],
                            $colors[1],
                            $colors[2],
                            $colors[3]);
   }
 }
 
-?>
