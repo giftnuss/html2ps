@@ -13,7 +13,8 @@ class CSSRuleset
     $this->_lastId      = 0;
   }
 
-  function parse_style_node($root, &$pipeline) {
+  function parse_style_node($root, Pipeline $pipeline)
+  {
     // Check if this style node have 'media' attribute 
     // and if we're using this media;
     //
@@ -42,18 +43,24 @@ class CSSRuleset
       $GLOBALS['g_stylesheet_title'] = $root->get_attribute("title");
     };
 
-    if (!$root->has_attribute("title") || $root->get_attribute("title") === $GLOBALS['g_stylesheet_title']) {
+    if (!$root->has_attribute("title") ||
+        $root->get_attribute("title") === $GLOBALS['g_stylesheet_title']) {
       /**
        * Check if current node is empty (then, we don't need to parse its contents)
        */
       $content = trim($root->get_content());
+      if(preg_match('/^\\<!\\[CDATA\\[(.*)]]>$/si',$content,$matches)) {
+        $content = trim($matches[1]);
+      }
+
       if ($content != "") {
         $this->parse_css($content, $pipeline);
-      };
-    };
+      }
+    }
   }
 
-  function scan_styles($root, &$pipeline) {
+  function scan_styles($root, Pipeline $pipeline)
+  {
     switch ($root->node_type()) {
     case XML_ELEMENT_NODE:
       $tagname = strtolower($root->tagname());
