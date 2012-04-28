@@ -1,8 +1,10 @@
 <?php
 // $Header: /cvsroot/html2ps/box.legend.php,v 1.14 2006/07/09 09:07:44 Konstantin Exp $
 
-class LegendBox extends GenericContainerBox {
-  function &create(&$root, &$pipeline) {
+class LegendBox extends GenericContainerBox 
+{
+  public static function create(&$root, Pipeline $pipeline) 
+  {
     $box = new LegendBox($root);
     $box->readCSS($pipeline->get_current_css_state());
     $box->create_content($root, $pipeline);
@@ -10,16 +12,16 @@ class LegendBox extends GenericContainerBox {
     return $box;
   }
 
-  function LegendBox(&$root) {
-    // Call parent constructor
-    $this->GenericContainerBox();
-
+  function __construct(&$root) 
+  {
+    parent::__construct();
     $this->_current_x = 0;
     $this->_current_y = 0;
   }
 
   // Flow-control
-  function reflow(&$parent, &$context) {
+  function reflow(&$parent, &$context) 
+  {
     GenericFormattedBox::reflow($parent, $context);
 
     // Determine upper-left _content_ corner position of current box 
@@ -49,9 +51,10 @@ class LegendBox extends GenericContainerBox {
     $parent->extend_height($this->get_bottom_margin());
   }
 
-  function show(&$driver) {
+  function show(&$driver) 
+  {
     // draw generic box
     return GenericContainerBox::show($driver);
   }
 }
-?>
+

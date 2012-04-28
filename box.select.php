@@ -9,9 +9,7 @@ class SelectBox extends InlineControlBox
 
   function __construct($name, $value, $options)
   {
-    // Call parent constructor
-    $this->InlineBox();
-
+    parent::__construct();
     $this->_name    = $name;
     $this->_value   = $value;
     $this->_options = $options;

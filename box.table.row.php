@@ -1,12 +1,14 @@
 <?php
 // $Header: /cvsroot/html2ps/box.table.row.php,v 1.29 2007/01/24 18:55:45 Konstantin Exp $
 
-class TableRowBox extends GenericContainerBox {
+class TableRowBox extends GenericContainerBox 
+{
   var $rows;
   var $colspans;
   var $rowspans;
 
-  function &create(&$root, &$pipeline) {
+  public static function create(&$root, Pipeline $pipeline) 
+  {
     $box = new TableRowBox();
     $box->readCSS($pipeline->get_current_css_state());
 
@@ -21,15 +23,11 @@ class TableRowBox extends GenericContainerBox {
     return $box;
   }
 
-  function add_child(&$item) {
+  function add_child(&$item) 
+  {
     if ($item->isCell()) {
       GenericContainerBox::add_child($item);
     };
-  }
-
-  function TableRowBox() {
-    // Call parent constructor
-    $this->GenericContainerBox();
   }
 
   // Normalize colspans by adding fake cells after the "colspanned" cell
@@ -39,7 +37,8 @@ class TableRowBox extends GenericContainerBox {
   // first contains "1"
   // second and third are completely empty
   // fourth contains "2"
-  function normalize(&$pipeline) {
+  function normalize(&$pipeline) 
+  {
     for ($i=0, $size = count($this->content); $i < $size; $i++) {
       for ($j=1; $j<$this->content[$i]->colspan; $j++) {
         $this->add_fake_cell_after($i, $pipeline);
@@ -50,21 +49,25 @@ class TableRowBox extends GenericContainerBox {
     };
   }
 
-  function add_fake_cell_after($index, &$pipeline) {
+  function add_fake_cell_after($index, &$pipeline) 
+  {
     array_splice($this->content, $index+1, 0, array(FakeTableCellBox::create($pipeline)));
   }
 
-  function add_fake_cell_before($index, &$pipeline) {
+  function add_fake_cell_before($index, &$pipeline) 
+  {
     array_splice($this->content, $index, 0, array(FakeTableCellBox::create($pipeline)));
   }
 
-  function append_fake_cell(&$pipeline) {
+  function append_fake_cell(&$pipeline) 
+  {
     $this->content[] = FakeTableCellBox::create($pipeline);
   }
 
   // Table specific
 
-  function table_resize_row($height, $top) {
+  function table_resize_row($height, $top) 
+  {
     // Do cell vertical-align
     // Calculate row baseline 
 
@@ -91,7 +94,8 @@ class TableRowBox extends GenericContainerBox {
     }
   }
 
-  function get_row_baseline() {
+  function get_row_baseline() 
+  {
     $baseline = 0;
     for ($i=0, $size = count($this->content); $i<$size; $i++) {
       $cell = $this->content[$i];
@@ -102,7 +106,8 @@ class TableRowBox extends GenericContainerBox {
     return $baseline;
   }
 
-  function get_colspans($row_index) {
+  function get_colspans($row_index) 
+  {
     $colspans = array();
 
     for ($i=0, $size = count($this->content); $i<$size; $i++) {
@@ -120,7 +125,8 @@ class TableRowBox extends GenericContainerBox {
     return $colspans;
   }
 
-  function get_rowspans($row_index) {
+  function get_rowspans($row_index) 
+  {
     $spans = array();
 
     for ($i=0; $i<count($this->content); $i++) {
@@ -137,7 +143,8 @@ class TableRowBox extends GenericContainerBox {
   }
 
   // Column widths
-  function get_table_columns_max_widths(&$context) {
+  function get_table_columns_max_widths(&$context) 
+  {
     $widths = array();
     for ($i=0; $i<count($this->content); $i++) {
       // For now, colspans are treated as zero-width; they affect 
@@ -152,7 +159,8 @@ class TableRowBox extends GenericContainerBox {
     return $widths;
   }
 
-  function get_table_columns_min_widths(&$context) {
+  function get_table_columns_min_widths(&$context) 
+  {
     $widths = array();
     for ($i=0; $i<count($this->content); $i++) {
       // For now, colspans are treated as zero-width; they affect 
@@ -167,7 +175,8 @@ class TableRowBox extends GenericContainerBox {
     return $widths;
   }
 
-  function row_height() {
+  function row_height() 
+  {
     // Calculate height of each cell contained in this row
     $height = 0;
     for ($i=0; $i<count($this->content); $i++) {
@@ -185,7 +194,8 @@ class TableRowBox extends GenericContainerBox {
    * is a "fake" box and will never have reasonable size and/or position in the layout,
    * we should prevent this
    */
-  function show(&$viewport) {
+  function show(&$viewport) 
+  {
     // draw content
     $size = count($this->content);
 
@@ -213,8 +223,9 @@ class TableRowBox extends GenericContainerBox {
     return true;
   }
 
-  function isTableRow() {
+  function isTableRow() 
+  {
     return true;
   }
 }
-?>
+

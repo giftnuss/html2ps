@@ -1,7 +1,9 @@
 <?php
 
-class TestNoteCall extends UnitTestCase {
-  function runPipeline($html) {
+class TestNoteCall extends UnitTestCase 
+{
+  function runPipeline($html) 
+  {
     $pipeline = PipelineFactory::create_default_pipeline("", "");
     $pipeline->configure(array('scalepoints' => false));
 
@@ -11,11 +13,12 @@ class TestNoteCall extends UnitTestCase {
 
     parse_config_file('../html2ps.config');
     $media = Media::predefined("A5");
-    $pipeline->_prepare($media);
+    $pipeline->prepare($media);
     return $pipeline->_layout_item("", $media, 0, $context, $positioned_filter);
   }
 
-  function testNoteCallWidthClean() {
+  function testNoteCallWidthClean() 
+  {
     $tree = $this->runPipeline('
 <html><head><style>
 .footnote {

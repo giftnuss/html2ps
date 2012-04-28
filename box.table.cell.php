@@ -12,8 +12,7 @@ class TableCellBox extends GenericContainerBox
 
   function __construct()
   {
-    // Call parent constructor
-    $this->GenericContainerBox();
+    parent::__construct();
 
     $this->_suppress_first = false;
     $this->_suppress_last  = false;

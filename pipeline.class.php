@@ -1273,13 +1273,14 @@ class Pipeline
     return $this->_dispatcher;
   }
 
-  function get_current_page_name() {
+  function get_current_page_name() 
+  {
     return $this->_current_page_name;
   }
 
-  function set_current_page_name($name) {
+  function set_current_page_name($name) 
+  {
     $this->_current_page_name = $name;
   }
 }
 
-?>

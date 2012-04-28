@@ -1,8 +1,10 @@
 <?php
 // $Header: /cvsroot/html2ps/box.iframe.php,v 1.14 2006/12/18 19:44:21 Konstantin Exp $
 
-class IFrameBox extends InlineBlockBox {
-  function &create(&$root, &$pipeline) {
+class IFrameBox extends InlineBlockBox 
+{
+  public static function create(&$root, Pipeline $pipeline)
+  {
     $box = new IFrameBox($root, $pipeline);
     $box->readCSS($pipeline->get_current_css_state());
     return $box;
@@ -10,16 +12,19 @@ class IFrameBox extends InlineBlockBox {
 
   // Note that IFRAME width is NOT determined by its content, thus we need to override 'get_min_width' and
   // 'get_max_width'; they should return the constrained frame width.
-  function get_min_width(&$context) { 
+  function get_min_width(&$context) 
+  { 
     return $this->get_max_width($context);
   } 
 
-  function get_max_width(&$context) {
+  function get_max_width(&$context) 
+  {
     return $this->get_width();
   }
 
-  function IFrameBox(&$root, $pipeline) {
-    $this->InlineBlockBox();
+  function __construct(&$root, Pipeline $pipeline) 
+  {
+    parent::__construct();
 
     // If NO src attribute specified, just return.
     if (!$root->has_attribute('src') || 
@@ -73,4 +78,4 @@ class IFrameBox extends InlineBlockBox {
   }
 }
 
-?>
+

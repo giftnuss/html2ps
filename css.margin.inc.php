@@ -2,19 +2,23 @@
 
 require_once(HTML2PS_DIR.'value.margin.class.php');
 
-class CSSMargin extends CSSPropertyHandler {
+class CSSMargin extends CSSPropertyHandler
+{
   var $default_value;
 
-  function CSSMargin() { 
+  function __construct() 
+  { 
+    parent::__construct(false, false);
     $this->default_value = $this->parse("0");
-    $this->CSSPropertyHandler(false, false); 
   }
 
-  function default_value() { 
+  function default_value() 
+  {
     return $this->default_value->copy(); 
   }
 
-  function parse_in($value) {
+  function parse_in($value) 
+  {
     $values = preg_split('/\s+/', trim($value));
 
     switch (count($values)) {
@@ -42,7 +46,8 @@ class CSSMargin extends CSSPropertyHandler {
     };
   }
 
-  function parse($value) {
+  function parse($value) 
+  {
     if ($value === 'inherit') { 
       return CSS_PROPERTY_INHERIT; 
     };
@@ -51,71 +56,89 @@ class CSSMargin extends CSSPropertyHandler {
     return $value;
   }
 
-  function get_property_code() {
+  function get_property_code() 
+  {
     return CSS_MARGIN;
   }
 
-  function get_property_name() {
+  function get_property_name() 
+  {
     return 'margin';
   }
 }
    
-class CSSMarginTop extends CSSSubFieldProperty {
-  function parse($value) { 
+class CSSMarginTop extends CSSSubFieldProperty 
+{
+  function parse($value) 
+  { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     return MarginSideValue::init($value); 
   }
 
-  function get_property_code() {
+  function get_property_code() 
+  {
     return CSS_MARGIN_TOP;
   }
 
-  function get_property_name() {
+  function get_property_name() 
+  {
     return 'margin-top';
   }
 }
 
-class CSSMarginRight extends CSSSubFieldProperty {
-  function parse($value) { 
+class CSSMarginRight extends CSSSubFieldProperty 
+{
+  function parse($value) 
+  { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     return MarginSideValue::init($value); 
   }
 
-  function get_property_code() {
+  function get_property_code() 
+  {
     return CSS_MARGIN_RIGHT;
   }
 
-  function get_property_name() {
+  function get_property_name() 
+  {
     return 'margin-right';
   }
 }
 
-class CSSMarginLeft extends CSSSubFieldProperty {
-  function parse($value) { 
+class CSSMarginLeft extends CSSSubFieldProperty 
+{
+  function parse($value) 
+  { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     return MarginSideValue::init($value); 
   }
 
-  function get_property_code() {
+  function get_property_code() 
+  {
     return CSS_MARGIN_LEFT;
   }
 
-  function get_property_name() {
+  function get_property_name() 
+  {
     return 'margin-left';
   }
 }
 
-class CSSMarginBottom extends CSSSubFieldProperty {
-  function parse($value) { 
+class CSSMarginBottom extends CSSSubFieldProperty 
+{
+  function parse($value) 
+  { 
     if ($value === 'inherit') { return CSS_PROPERTY_INHERIT; };
     return MarginSideValue::init($value); 
   }
 
-  function get_property_code() {
+  function get_property_code() 
+  {
     return CSS_MARGIN_BOTTOM;
   }
 
-  function get_property_name() {
+  function get_property_name() 
+  {
     return 'margin-bottom';
   }
 }
@@ -127,4 +150,4 @@ CSS::register_css_property(new CSSMarginRight($mh, 'right'));
 CSS::register_css_property(new CSSMarginTop($mh, 'top'));
 CSS::register_css_property(new CSSMarginBottom($mh, 'bottom'));
 
-?>
+

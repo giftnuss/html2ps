@@ -1,28 +1,33 @@
 <?php
 // $Header: /cvsroot/html2ps/css.color.inc.php,v 1.13 2007/01/24 18:55:51 Konstantin Exp $
 
-class CSSPage extends CSSPropertyHandler {
-  function CSSPage() { 
-    $this->CSSPropertyHandler(true, true); 
+class CSSPage extends CSSPropertyHandler 
+{
+  function __construct() 
+  { 
+    parent::__construct(true, true); 
   }
 
-  function default_value() { 
+  function default_value() 
+  { 
     return 'auto'; 
   }
 
-  function parse($value) {
+  function parse($value) 
+  {
     return $value;
   }
 
-  function get_property_code() {
+  function get_property_code() 
+  {
     return CSS_PAGE;
   }
 
-  function get_property_name() {
+  function get_property_name() 
+  {
     return 'page';
   }
 }
 
 CSS::register_css_property(new CSSPage());
 
-?>

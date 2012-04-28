@@ -9,22 +9,20 @@
  *
  * @link http://www.w3.org/TR/CSS21/visuren.html#value-def-inline-block CSS 2.1 description of 'display: inline-block'
  */
-class InlineBlockBox extends GenericContainerBox {
+class InlineBlockBox extends GenericContainerBox 
+{
   /** 
    * Create new 'inline-block' element; add content from the parsed HTML tree automatically.
    *
    * @see InlineBlockBox::InlineBlockBox()
    * @see GenericContainerBox::create_content()
    */
-  function &create(&$root, &$pipeline) {
+  public static function &create(&$root, Pipeline $pipeline) 
+  {
     $box = new InlineBlockBox();
     $box->readCSS($pipeline->get_current_css_state());
     $box->create_content($root, $pipeline);
     return $box;
-  }
-
-  function InlineBlockBox() {
-    $this->GenericContainerBox();
   }
 
   /**
@@ -44,7 +42,8 @@ class InlineBlockBox extends GenericContainerBox {
    *
    * @todo check whether percentage values should be really ignored during relative positioning
    */
-  function reflow(&$parent, &$context) {
+  function reflow(&$parent, &$context) 
+  {
     /**
      * Note that we may not worry about 'position: absolute' and 'position: fixed', 
      * as, according to CSS 2.1 paragraph 9.7, these values of 'position' 
@@ -92,7 +91,8 @@ class InlineBlockBox extends GenericContainerBox {
    * @todo re-check this layout routine; it seems that 'inline-block' boxes have 
    * their width calculated incorrectly
    */
-  function reflow_static(&$parent, &$context) {
+  function reflow_static(&$parent, &$context) 
+  {
     GenericFormattedBox::reflow($parent, $context);
 
     /**
@@ -150,4 +150,4 @@ class InlineBlockBox extends GenericContainerBox {
     $parent->_current_x = $this->get_right_margin();
   }
 }
-?>
+

@@ -7,7 +7,7 @@ class TestCSSParseAtRules extends GenericTest {
 
     $this->assertEqual($new_css_content, 'body { background-color: green; } #test { border: none; }');
 
-    $color =& $pipeline->_page_at_rules[CSS_PAGE_SELECTOR_ALL][0]->css->getPropertyValue(CSS_BACKGROUND_COLOR);
+    $color =& $pipeline->_page_at_rules[CSS_PAGE_SELECTOR_ALL][0]->css->get_property_value(CSS_BACKGROUND_COLOR);
     $this->assertNotNull($color);
     $this->assertEqual($color->r, 1);
     $this->assertEqual($color->g, 0);
@@ -20,7 +20,7 @@ class TestCSSParseAtRules extends GenericTest {
 
     $this->assertEqual($new_css_content, 'body { background-color: green; } #test { border: none; }');
 
-    $color =& $pipeline->_page_at_rules[CSS_PAGE_SELECTOR_ALL][0]->margin_boxes[CSS_MARGIN_BOX_SELECTOR_TOP_LEFT]->css->body->getPropertyValue(CSS_BACKGROUND_COLOR);
+    $color =& $pipeline->_page_at_rules[CSS_PAGE_SELECTOR_ALL][0]->margin_boxes[CSS_MARGIN_BOX_SELECTOR_TOP_LEFT]->css->body->get_property_value(CSS_BACKGROUND_COLOR);
     $this->assertNotNull($color);
     $this->assertEqual($color->r, 0);
     $this->assertEqual($color->g, 1);
@@ -33,7 +33,7 @@ class TestCSSParseAtRules extends GenericTest {
 
     $this->assertEqual($new_css_content, 'body { background-color: green; } #test { border: none; }');
 
-    $content =& $pipeline->_page_at_rules[CSS_PAGE_SELECTOR_ALL][0]->margin_boxes[CSS_MARGIN_BOX_SELECTOR_TOP_LEFT]->css->body->getPropertyValue(CSS_CONTENT);
+    $content =& $pipeline->_page_at_rules[CSS_PAGE_SELECTOR_ALL][0]->margin_boxes[CSS_MARGIN_BOX_SELECTOR_TOP_LEFT]->css->body->get_property_value(CSS_CONTENT);
     $this->assertNotNull($content);
     $this->assertEqual($content->render(new CSSCounterCollection()), "TEXT");
   }
