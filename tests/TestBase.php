@@ -21,3 +21,14 @@ function setup_include_path($pathdirs)
         set_include_path(join(PATH_SEPARATOR,$comp));
     }
 }
+
+function make_doc($html)
+{
+    require_once('pipeline.class.php');
+    require_once('pipeline.factory.class.php');
+    require_once('unittest/generic.test.php');
+    require_once('unittest/fetcher.memory.php');
+
+    $test = new GenericTest();
+    return $test->runPipeline($html);
+}

@@ -327,7 +327,10 @@ class GenericBox
     };
   }
 
-  function reflow(&$parent, &$context) {}
+  function reflow(&$parent, &$context)
+  {
+    
+  }
 
   function reflow_inline() { }
 

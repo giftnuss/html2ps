@@ -5,7 +5,7 @@ class DOMTree
   var $domelement;
   var $content;
   
-  function DOMTree($domelement)
+  function __construct($domelement)
   {
     $this->domelement = $domelement;
     $this->content = $domelement->textContent;
@@ -28,8 +28,12 @@ class DOMTree
   }
 
   public static function from_DOMDocument($domdocument)
-  { 
-    $tree = new DOMTree($domdocument->documentElement); 
+  {
+    $doc = $domdocument->documentElement;
+    if(!$doc) {
+      throw new DomError("DOMDocument contains no documentElement.");
+    }    
+    $tree = new DOMTree($doc);
     return $tree;
   }
 

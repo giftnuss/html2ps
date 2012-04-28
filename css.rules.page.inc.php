@@ -191,7 +191,8 @@ class CSSAtRuleMarginBox
     $this->css->add_property($property);
   }
 
-  function &get_css_property($code) {
+  function get_css_property($code)
+  {
     return $this->css->get_property($code);
   }
 }

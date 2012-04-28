@@ -2,8 +2,10 @@
 
 require_once(HTML2PS_DIR.'filter.post.positioned.class.php');
 
-class LayoutEngineDefault extends LayoutEngine {
-  function process(&$box, &$media, &$driver, &$context) {
+class LayoutEngineDefault extends LayoutEngine
+{
+  function process(&$box, &$media, &$driver, &$context)
+  {
     // Calculate the size of text boxes
     if (is_null($box->reflow_text($driver))) {
       error_log("LayoutEngineDefault::process: reflow_text call failed");
@@ -45,9 +47,9 @@ class LayoutEngineDefault extends LayoutEngine {
     $viewport->width  = mm2pt($media->width()  - $media->margins['left'] - $media->margins['right']);
     $viewport->height = mm2pt($media->height() - $media->margins['top'] - $media->margins['bottom']);
 
-    $fake_parent = null;
+    // using plain null looks not like good idea (sk)
+    $fake_parent = new NullBox();
     $context->push_viewport($viewport);
-
     $box->reflow($fake_parent, $context);
 
     // Make the top-level box competely fill the last page

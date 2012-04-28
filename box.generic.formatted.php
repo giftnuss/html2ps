@@ -17,7 +17,8 @@ class GenericFormattedBox extends GenericBox
     $this->parent = null;
   }
 
-  function _get_collapsable_top_margin_internal() {
+  function _get_collapsable_top_margin_internal()
+  {
     $positive_margin = 0;
     $negative_margin = 0;
 
@@ -854,12 +855,16 @@ class GenericFormattedBox extends GenericBox
     return $this->get_height() + $this->get_padding_top() + $this->get_padding_bottom();
   }
 
-  function put_height($value) {
-    if ($this->_height_constraint->applicable($this)) {
+  function put_height($value)
+  {
+    // irgendwann sollte jede BOX das können?
+    if (isset($this->_height_constraint) &&
+        $this->_height_constraint->applicable($this)) {
       $this->height = $this->_height_constraint->apply($value, $this);
-    } else {
+    }
+    else {
       $this->height = $value;
-    };
+    }
   }
 
   function put_full_height($value) {
@@ -1041,4 +1046,3 @@ class GenericFormattedBox extends GenericBox
                   $vertical_offset);
   }
 }
-?>

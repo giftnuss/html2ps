@@ -44,13 +44,16 @@ implements
      */
     $css = $pipeline->get_current_css();
     $css->scan_styles($dom_tree, $pipeline);
-
+    
+    // cdata ??
+    // print_r($css);
+    
     if (!is_null($media)) {
       // Setup media size and margins
       $pipeline->get_page_media(1, $media);
       $pipeline->output_driver->update_media($media);
       $pipeline->_setupScales($media);
-    };
+    }
 
     $body = traverse_dom_tree_pdf($dom_tree);
     $box = create_pdf_box($body, $pipeline);   

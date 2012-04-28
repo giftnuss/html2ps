@@ -3,7 +3,8 @@ class GenericInlineBox extends GenericContainerBox
 {
   // @todo this code is duplicated in box.block.php
   //
-  function reflow(&$parent, &$context) {
+  function reflow($parent, $context)
+  {
     switch ($this->get_css_property(CSS_POSITION)) {
     case POSITION_STATIC:
       return $this->reflow_static($parent, $context);
@@ -106,4 +107,4 @@ class GenericInlineBox extends GenericContainerBox
     return $first->get_descender();
   }
 }
-?>
+

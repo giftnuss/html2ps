@@ -291,6 +291,7 @@ require_once HTML2PS_DIR . 'fetcher.url.class.php';
 require_once HTML2PS_DIR . 'value.generic.percentage.php';
 
 require_once HTML2PS_DIR . 'lib/functions/parse_css.php';
+require_once HTML2PS_DIR . 'lib/functions/xml_dump.php';
 
 require_once HTML2PS_DIR . 'lib/exceptions/Error.php';
 require_once HTML2PS_DIR . 'lib/exceptions/AppError.php';
@@ -836,7 +837,7 @@ class Pipeline
     if (is_null($box)) {
       error_log(sprintf(_('Could not fetch: %s'), (string)$data_id));
       return true;
-    };
+    }
 
     $this->_show_item($box, $offset, $context, $media, $postponed_filter);
 
@@ -1192,17 +1193,15 @@ class Pipeline
 
     $data = $this->fetch($data_id);
     if (is_null($data)) {
-      $dummy = null;
-      return $dummy;
-    };
-
+      return null;
+    }
     // Run raw data filters
     for ($i = 0; $i < count($this->data_filters); $i++) {
       $data = $this->data_filters[$i]->process($data);
     };
 
     // Parse the raw data
-    $box =& $this->parser->process($data->get_content(), $this, $media);
+    $box = $this->parser->process($data->get_content(), $this, $media);
 
     $this->_dispatcher->fire('after-parse', array('pipeline' => $this,
                                                   'document' => $box,

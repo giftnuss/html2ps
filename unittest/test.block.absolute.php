@@ -1,7 +1,9 @@
 <?php
 
-class TestBlockAbsolute extends GenericTest {
-  function TestBlockAbsolute1() {
+class TestBlockAbsolute extends GenericTest
+{
+  function TestBlockAbsolute1()
+  {
     $tree = $this->runPipeline('
 <style type="text/css">
 body {
@@ -22,4 +24,3 @@ body {
   }
 }
 
-?>

@@ -257,11 +257,13 @@ class InlineBox extends GenericInlineBox
     return $this->_show($driver);
   }
 
-  function show_postponed(&$driver) {
+  function show_postponed(&$driver)
+  {
     return $this->_show($driver);
   }
 
-  function _show(&$driver) {
+  function _show(&$driver)
+  {
     // Show line boxes background and borders
     $size = $this->get_line_box_count();
     for ($i=0; $i<$size; $i++) {
@@ -294,7 +296,8 @@ class InlineBox extends GenericInlineBox
   // @param $box child box which will be first in this line box
   // @param $line_no number of line box
   //
-  function init_line(&$box, &$line_no) {
+  function init_line(&$box, &$line_no)
+  {
     $line_box = LineBox::create($box);
     $this->_lines[$line_no] = $line_box;
   }
@@ -306,7 +309,8 @@ class InlineBox extends GenericInlineBox
   // @param $box child box which will be first in this line box
   // @param $line_no number of line box
   //
-  function extend_line(&$box, $line_no) {
+  function extend_line(&$box, $line_no)
+  {
     if (!isset($this->_lines[$line_no])) {
       // New line box started
       $this->init_line($box, $line_no);
@@ -326,7 +330,8 @@ class InlineBox extends GenericInlineBox
     return $line_no;
   }
 
-  function merge_line(&$box, $line_no) {
+  function merge_line(&$box, $line_no)
+  {
     $start_line = 0;
 
     if ($line_no > 0 && count($box->_lines) > 0) {
@@ -346,7 +351,12 @@ class InlineBox extends GenericInlineBox
     return count($this->_lines);
   }
 
-  function reflow_static(&$parent, &$context) {
+  function reflow_static(&$parent, &$context)
+  {
+    if(!$parent) {
+      throw new TodoError();
+    }
+    
     GenericFormattedBox::reflow($parent, $context);
 
     // Note that inline boxes (actually SPANS)
@@ -400,7 +410,8 @@ class InlineBox extends GenericInlineBox
     };
   }
 
-  function reflow_inline() {
+  function reflow_inline()
+  {
     $line_no = 0;
 
     $size = count($this->content);
@@ -411,14 +422,16 @@ class InlineBox extends GenericInlineBox
       if (!$child->is_null()) {
         if (is_a($child,'InlineBox')) {
           $line_no = $this->merge_line($child, $line_no);
-        } else {
+        }
+        else {
           $line_no = $this->extend_line($child, $line_no);
-        };
-      };
-    };
+        }
+      }
+    }
   }
 
-  function reflow_whitespace(&$linebox_started, &$previous_whitespace) {
+  function reflow_whitespace($linebox_started, $previous_whitespace)
+  {
     /**
      * Anchors could have no content at all (like <a name="test"></a>).
      * We should not remove such anchors, as this will break internal links
@@ -440,7 +453,7 @@ class InlineBox extends GenericInlineBox
         $this->parent->remove($this);
       }
       else {
-          throw new TodoError();
+        return;
       }
     }
   }
@@ -496,7 +509,8 @@ class InlineBox extends GenericInlineBox
     return $this->get_max_width($context, $limit);
   }
 
-  function offset($dx, $dy) {
+  function offset($dx, $dy)
+  {
     $size = count($this->_lines);
     for ($i=0; $i<$size; $i++) {
       $this->_lines[$i]->offset($dx, $dy);
@@ -507,13 +521,14 @@ class InlineBox extends GenericInlineBox
   /**
    * Deprecated
    */
-  function getLineBoxCount() {
+  function getLineBoxCount()
+  {
     return $this->get_line_box_count();
   }
 
-  function &getLineBox($index) {
+  function getLineBox($index)
+  {
     return $this->get_line_box($index);
   }
-};
+}
 
-?>

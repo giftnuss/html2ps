@@ -19,9 +19,7 @@ class TreeBuilder
        throw new ParserError("Invalid parser mode '$mode'.");
     }
     if(!$dom_loaded) {
-      throw new DomError("DOMDocument parser error: "
-
-      );
+      throw new DomError("DOMDocument parser error.");
     }
     return DOMTree::from_DOMDocument($doc);
   }

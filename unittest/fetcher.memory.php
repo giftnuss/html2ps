@@ -15,7 +15,8 @@ class MyFetcherMemory implements Fetcher
   {
     if (!$url) {
       return new FetchedDataURL($this->content, array(), "");
-    } else {
+    }
+    else {
       // remove the "file:///" protocol
       if (substr($url,0,8)=='file:///') {
         $url=substr($url,8);
@@ -37,4 +38,3 @@ class MyFetcherMemory implements Fetcher
   }
 }
 
-?>
