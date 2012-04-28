@@ -71,14 +71,14 @@ class BoxPageMargin extends GenericContainerBox {
     return $box;
   }
 
-  function BoxPageMargin(&$pipeline, $at_rule) {
+  function __construct(Pipeline $pipeline, $at_rule) {
     $state =& $pipeline->get_current_css_state();
     $state->pushDefaultState();
 
     $root = null;
     $at_rule->css->apply($root, $state, $pipeline);
 
-    $this->GenericContainerBox();
+    parent::__construct();
     $this->readCSS($state);
 
     $state->pushDefaultstate();

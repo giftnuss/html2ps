@@ -87,7 +87,7 @@ LARGE
     $locations = PageBreakLocator::_getBreakLocations($tree);
     $this->assertEqual(count($locations), 5);
 
-    $page_heights = PageBreakLocator::getPages($tree, 
+    $page_heights = PageBreakLocator::get_pages($tree, 
                                                mm2pt($media->real_height()), 
                                                mm2pt($media->height() - $media->margins['top']));
 

@@ -11,11 +11,13 @@ class CSSPageSelector
     $this->set_type($type);
   }
 
-  function get_type() {
+  function get_type() 
+  {
     return $this->_type;
   }
 
-  function set_type($type) {
+  function set_type($type) 
+  {
     $this->_type = $type;
   }
 }
@@ -24,7 +26,7 @@ class CSSPageSelectorAll extends CSSPageSelector
 {
   function __construct()
   {
-    $this->CSSPageSelector(CSS_PAGE_SELECTOR_ALL);
+    parent::__construct(CSS_PAGE_SELECTOR_ALL);
   }
 }
 
@@ -34,7 +36,7 @@ class CSSPageSelectorNamed extends CSSPageSelector
 
   function __construct($name)
   {
-    $this->CSSPageSelector(CSS_PAGE_SELECTOR_NAMED);
+    parent::__construct(CSS_PAGE_SELECTOR_NAMED);
     $this->set_name($name);
   }
 
@@ -51,7 +53,7 @@ class CSSPageSelectorFirst extends CSSPageSelector
 {
   function __construct()
   {
-    $this->CSSPageSelector(CSS_PAGE_SELECTOR_FIRST);
+    parent::__construct(CSS_PAGE_SELECTOR_FIRST);
   }
 }
 
@@ -59,14 +61,15 @@ class CSSPageSelectorLeft extends CSSPageSelector
 {
   function __construct()
   {
-    $this->CSSPageSelector(CSS_PAGE_SELECTOR_LEFT);
+    parent::__construct(CSS_PAGE_SELECTOR_LEFT);
   }
 }
 
 class CSSPageSelectorRight extends CSSPageSelector
 {
-  function __construct() {
-    $this->CSSPageSelector(CSS_PAGE_SELECTOR_RIGHT);
+  function __construct() 
+  {
+    parent::__construct(CSS_PAGE_SELECTOR_RIGHT);
   }
 }
 

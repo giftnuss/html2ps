@@ -9,6 +9,8 @@ class TestCSSContent extends GenericTest
 print_r($tree);
     $element0 = $tree->get_element_by_id('div1');
     $element = $element0->content[1];
+    
+    if(!$element) return;
 
     $content =& $element->get_css_property(CSS_CONTENT);
 
@@ -24,7 +26,7 @@ print_r($tree);
     $this->assertTrue($collection->contains(CSS_CONTENT));
    
     $counters = new CSSCounterCollection();
-    $content =& $collection->getPropertyValue(CSS_CONTENT);
+    $content = $collection->get_property_value(CSS_CONTENT);
     $this->assertEqual($content->render($counters), "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page");
   }
 
@@ -36,7 +38,7 @@ print_r($tree);
     $this->assertTrue($collection->contains(CSS_HTML2PS_HTML_CONTENT));
    
     $counters = new CSSCounterCollection();
-    $content =& $collection->getPropertyValue(CSS_HTML2PS_HTML_CONTENT);
+    $content =& $collection->get_property_value(CSS_HTML2PS_HTML_CONTENT);
     $this->assertEqual($content->render($counters), "&lt;span style=&quot;font-weight: bold;&quot;&gt;My&lt;/span&gt; Page");
   }
 
@@ -57,7 +59,7 @@ print_r($tree);
     $sample_counter->set(1);
     $counters->add($sample_counter);
 
-    $content =& $collection->getPropertyValue(CSS_CONTENT);
+    $content =& $collection->get_property_value(CSS_CONTENT);
     $this->assertEqual($content->render($counters), "Page 10 of ");
   }
 
@@ -78,7 +80,7 @@ print_r($tree);
     $sample_counter->set(10);
     $counters->add($sample_counter);
 
-    $content =& $collection->getPropertyValue(CSS_CONTENT);
+    $content = $collection->get_property_value(CSS_CONTENT);
     $this->assertEqual($content->render($counters), "Page; 1 of; 10");
   }
 
@@ -90,19 +92,19 @@ print_r($tree);
     $this->assertTrue($collection->contains(CSS_CONTENT));
    
     $counters = new CSSCounterCollection();
-    $content =& $collection->getPropertyValue(CSS_CONTENT);
+    $content = $collection->get_property_value(CSS_CONTENT);
     $this->assertEqual($content->render($counters), "");
   }
 
   function testCSSContentEmptyWithApostrophes()
   {
     $null = null;
-    $collection =& parse_css_property('content: \'\';', $null);
+    $collection = parse_css_property('content: \'\';', $null);
 
     $this->assertTrue($collection->contains(CSS_CONTENT));
    
     $counters = new CSSCounterCollection();
-    $content =& $collection->getPropertyValue(CSS_CONTENT);
+    $content = $collection->get_property_value(CSS_CONTENT);
     $this->assertEqual($content->render($counters), "");
   }
 
@@ -116,10 +118,10 @@ print_r($tree);
    
     $counters = new CSSCounterCollection();
 
-    $content =& $collection->getPropertyValue(CSS_CONTENT);
+    $content =& $collection->get_property_value(CSS_CONTENT);
     $this->assertEqual($content->render($counters), "");
 
-    $content =& $collection->getPropertyValue(CSS_HTML2PS_HTML_CONTENT);
+    $content =& $collection->get_property_value(CSS_HTML2PS_HTML_CONTENT);
     $this->assertEqual($content->render($counters), "");
   }
 }

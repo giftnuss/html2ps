@@ -1,7 +1,8 @@
 <?php
 // $Header: /cvsroot/html2ps/css.rules.inc.php,v 1.10 2007/03/23 18:33:34 Konstantin Exp $
 
-class CSSRule {
+class CSSRule 
+{
   var $selector;
   var $body;
   var $baseurl;
@@ -10,17 +11,20 @@ class CSSRule {
   var $specificity;
   var $pseudoelement;
 
-  function apply(&$root, &$state, &$pipeline) {
+  function apply(&$root, &$state, Pipeline $pipeline) 
+  {
     $pipeline->push_base_url($this->baseurl);
     $this->body->apply($state);
     $pipeline->pop_base_url();
   }
 
-  function add_property($property) {
+  function add_property($property) 
+  {
     $this->body->add_property($property);
   }
 
-  function CSSRule($rule, &$pipeline) {
+  function __construct($rule, Pipeline $pipeline) 
+  {
     $this->selector = $rule[0];
     $this->body     = $rule[1]->copy();
     $this->baseurl  = $rule[2];
@@ -30,11 +34,13 @@ class CSSRule {
     $this->pseudoelement = css_find_pseudoelement($this->selector);
   }
 
-  function set_property($key, $value, &$pipeline) {
+  function set_property($key, $value, Pipeline $pipeline)
+  {
     $this->body->set_property_value($key, $value);
   }
 
-  function &get_property($key) {
+  function get_property($key) 
+  {
     return $this->body->get_property_value($key);
   }
 

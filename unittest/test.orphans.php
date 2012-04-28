@@ -30,7 +30,7 @@ LINE5
     /**
      * Calculate page heights
      */
-    $page_heights = PageBreakLocator::getPages($tree, 
+    $page_heights = PageBreakLocator::get_pages($tree, 
                                                mm2pt($media->real_height()), 
                                                mm2pt($media->height() - $media->margins['top']));
 
@@ -77,7 +77,7 @@ LINE5
     /**
      * Calculate page heights
      */
-    $page_heights = PageBreakLocator::getPages($tree, 
+    $page_heights = PageBreakLocator::get_pages($tree, 
                                                mm2pt($media->real_height()), 
                                                mm2pt($media->height() - $media->margins['top']));
 
@@ -124,7 +124,7 @@ LINE5
     /**
      * Calculate page heights
      */
-    $page_heights = PageBreakLocator::getPages($tree, 
+    $page_heights = PageBreakLocator::get_pages($tree, 
                                                mm2pt($media->real_height()), 
                                                mm2pt($media->height() - $media->margins['top']));
 

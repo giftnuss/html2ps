@@ -6,7 +6,7 @@ class TestPagebreakFixedHeight extends GenericTest {
                        array('top'=>0, 'bottom'=>0, 'left'=>0, 'right'=>0));
     $tree = $this->runPipeline(file_get_contents('test.pagebreak.fixed.height.1.html'), $media);
 
-    $page_heights = PageBreakLocator::getPages($tree, 
+    $page_heights = PageBreakLocator::get_pages($tree, 
                                                mm2pt($media->real_height()), 
                                                mm2pt($media->height() - $media->margins['top']));
 

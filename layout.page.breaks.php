@@ -2,25 +2,30 @@
 
 require_once(HTML2PS_DIR.'utils_units.php');
 
-function cmp_footnote_locations($a, $b) {
+function cmp_footnote_locations($a, $b) 
+{
   if ($a->get_location() == $b->get_location()) { return 0; };
   return ($a->get_location() > $b->get_location()) ? -1 : 1; 
 }
 
-class FootnoteLocation {
+class FootnoteLocation 
+{
   var $_location;
   var $_content_height;
 
-  function FootnoteLocation($location, $content_height) {
+  function __construct($location, $content_height) 
+  {
     $this->_location       = $location;
     $this->_content_height = $content_height;
   }
 
-  function get_location() {
+  function get_location() 
+  {
     return $this->_location;
   }
 
-  function get_content_height() {
+  function get_content_height() 
+  {
     return $this->_content_height;
   }
 }
@@ -30,16 +35,19 @@ function cmp_page_break_locations($a, $b) {
   return ($a->location > $b->location) ? -1 : 1; 
 }
 
-class PageBreakLocation {
+class PageBreakLocation 
+{
   var $location;
   var $penalty;
 
-  function PageBreakLocation($location, $penalty) {
+  function __construct($location, $penalty) 
+  {
     $this->location = round($location,2);
     $this->penalty  = $penalty;
   }
 
-  function get_footnotes_height($footnotes, $page_start, $location) {
+  function get_footnotes_height($footnotes, $page_start, $location) 
+  {
     $i = 0;
     $size = count($footnotes);
 
@@ -67,7 +75,8 @@ class PageBreakLocation {
     };
   }
 
-  function get_penalty($page_start, $max_page_height, $footnotes) {
+  function get_penalty($page_start, $max_page_height, $footnotes)
+  {
     $height_penalty = $this->get_page_break_height_penalty($page_start, 
                                                            $max_page_height - $this->get_footnotes_height($footnotes, 
                                                                                                           $page_start, 
@@ -81,7 +90,8 @@ class PageBreakLocation {
    * the  page  bottom.  This  function  calculates  a  'penalty'  for
    * breaking page at its current height.
    */
-  function get_page_break_height_penalty($page_start, $max_page_height) {
+  function get_page_break_height_penalty($page_start, $max_page_height)
+  {
     $current_height = $page_start - $this->location;
 
     if ($current_height > $max_page_height) {
@@ -128,8 +138,10 @@ class PageBreakLocation {
  * 1. In the vertical margin between block boxes. When a page break occurs here, the used values of the relevant 'margin-top' and 'margin-bottom' properties are set to '0'.
  * 2. Between line boxes inside a block box. 
  */
-class PageBreakLocator {
-  function get_break_locations(&$dom_tree) {
+class PageBreakLocator 
+{
+  function get_break_locations(&$dom_tree) 
+  {
     $locations_ungrouped = PageBreakLocator::get_pages_traverse($dom_tree, 0);
 
     /**
@@ -143,7 +155,8 @@ class PageBreakLocator {
     return PageBreakLocator::sort_locations($locations_ungrouped);
   }
 
-  function get_footnotes_traverse(&$box) {
+  function get_footnotes_traverse(&$box) 
+  {
     $footnotes = array();
 
     if (is_a($box, 'BoxNoteCall')) {
@@ -157,7 +170,8 @@ class PageBreakLocator {
     return $footnotes;
   }
 
-  function get_pages(&$dom_tree, $max_page_height, $first_page_top) {
+  function get_pages(&$dom_tree, $max_page_height, $first_page_top) 
+  {
     $current_page_top = $first_page_top;
     $heights = array();
 

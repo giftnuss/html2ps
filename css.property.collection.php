@@ -1,19 +1,22 @@
 <?php
 
-class CSSPropertyCollection {
+class CSSPropertyCollection 
+{
   var $_properties;
   var $_positions;
   var $_priorities;
   var $_max_priority;
 
-  function CSSPropertyCollection() {
+  function __construct() 
+  {
     $this->_properties = array();
     $this->_positions  = array();
     $this->_priorities = array();
     $this->_max_priority = 0;
   }
 
-  function apply(&$state) {
+  function apply(&$state) 
+  {
     $properties = $this->getPropertiesRaw();
     foreach ($properties as $property) {
       $key   = $property->get_code();
@@ -24,7 +27,8 @@ class CSSPropertyCollection {
     };
   }
 
-  function &copy() {
+  function &copy() 
+  {
     $collection = new CSSPropertyCollection();
     
     for ($i = 0, $size = count($this->_properties); $i < $size; $i++) {
@@ -39,7 +43,8 @@ class CSSPropertyCollection {
     return $collection;
   }
 
-  function add_property($property) {
+  function add_property($property) 
+  {
     $this->_max_priority ++;
 
     $code = $property->get_code();
@@ -90,7 +95,8 @@ class CSSPropertyCollection {
     return $this->_properties[$this->_positions[$code]]->is_important();
   }
 
-  function &get_property_value($code) {
+  function get_property_value($code) 
+  {
     if (!isset($this->_positions[$code])) {
       $null = null;
       return $null;

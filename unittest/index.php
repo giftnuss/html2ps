@@ -17,12 +17,12 @@ $reporter = new TextReporter(); // HtmlReporter();
 $testfiles = glob('test.*.php');
 
 foreach ($testfiles as $testfile) {
-  //$test->addFile($testfile);
-};
+  $test->addFile($testfile);
+}
 
 //$test->addFile('test.white-space.php');
 //$test->addFile('test.css.content.php');
-$test->addFile('test.input.text.php');
+//$test->addFile('test.input.text.php');
 
 $test->run(new $reporter);
 

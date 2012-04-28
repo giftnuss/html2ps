@@ -29,7 +29,8 @@ class ValueContentItem
                  'rest' => $string);
   }
 
-  function render(&$counters) {
+  function render(&$counters) 
+  {
     // abstract
   }
 }
@@ -38,7 +39,8 @@ class ValueContentItemString extends ValueContentItem
 {
   var $_value;
 
-  function &copy() {
+  function &copy() 
+  {
     $copy = new ValueContentItemString();
     $copy->set_value($this->get_value());
     return $copy;
@@ -61,7 +63,8 @@ class ValueContentItemString extends ValueContentItem
     return array('item' => &$null, 'rest' => $string);
   }
 
-  function render(&$counters) {
+  function render(&$counters) 
+  {
     return css_process_escapes($this->_value);
   }
 
@@ -80,12 +83,14 @@ class ValueContentItemUri extends ValueContentItem
     return $copy;
   }
 
-  function parse($string) {
+  function parse($string) 
+  {
     $null = null;
     return array('item' => &$null, 'rest' => $string);
   }
 
-  function render(&$counters) {
+  function render(&$counters) 
+  {
     return '';
   }
 }
@@ -94,21 +99,20 @@ class ValueContentItemCounter extends ValueContentItem
 {
   var $_name;
 
-  function ValueContentItemCounter() {
-    $this->ValueContentItem();
-  }
-
-  function &copy() {
+  function &copy() 
+  {
     $copy = new ValueContentItemCounter();
     $copy->set_name($this->get_name());
     return $copy;
   }
 
-  function get_name() {
+  function get_name() 
+  {
     return $this->_name;
   }
 
-  function parse($string) {
+  function parse($string) 
+  {
     if (preg_match('/^\s*counter\(('.CSS_IDENT_REGEXP.')\)\s*(.*)$/', $string, $matches)) {
       $value = $matches[1];
       $rest = $matches[2];
@@ -123,7 +127,8 @@ class ValueContentItemCounter extends ValueContentItem
     return array('item' => &$null, 'rest' => $string);
   }
 
-  function render(&$counters) {
+  function render(&$counters) 
+  {
     $counter =& $counters->get($this->get_name());
     if (is_null($counter)) {
       return '';
