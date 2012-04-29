@@ -1,46 +1,47 @@
 <?php
-// $Header: /cvsroot/html2ps/box.php,v 1.46 2007/05/06 18:49:29 Konstantin Exp $
+/**
+ * @author Konstantin
+ * @package box
+ * @brief the rendering model
+ */
 
-// This variable is used to track the reccurrent framesets
-// they can be produced by inaccurate or malicious HTML-coder 
-// or by some cookie- or referrer- based identification system
-//
+//! This variable is used to track the reccurrent framesets
+//! they can be produced by inaccurate or malicious HTML-coder
+//! or by some cookie- or referrer- based identification system
 $GLOBALS['g_frame_level'] = 0;
 
-// Called when frame node  is to be processed 
+/// Called when frame node  is to be processed
 function inc_frame_level()
 {
   global $g_frame_level;
   $g_frame_level ++;
 
   if ($g_frame_level > MAX_FRAME_NESTING_LEVEL) {
-    trigger_error('Frame nesting too deep',
-                  E_USER_ERROR);
-  };
+      throw new LimitsError('Frame nesting too deep (MAX_FRAME_NESTING_LEVEL).');
+  }
 }
 
-// Called when frame (and all nested frames, of course) processing have been completed
-//
+/// Called when frame (and all nested frames, of course) processing have
+/// been completed
 function dec_frame_level()
 {
   global $g_frame_level;
   $g_frame_level --;
 }
 
-// Calculate 'display' CSS property according to CSS 2.1 paragraph 9.7 
-// "Relationships between 'display', 'position', and 'float'" 
-// (The last table in that paragraph)
-//
-// @return flag indication of current box need a block box wrapper
-//
+/// Calculate 'display' CSS property according to CSS 2.1 paragraph 9.7
+/// "Relationships between 'display', 'position', and 'float'"
+/// (The last table in that paragraph)
+///
+/// @return flag indication of current box need a block box wrapper
 function _fix_display_position_float(&$css_state)
 {
   // Specified value -> Computed value
   // inline-table -> table
-  // inline, run-in, table-row-group, table-column, table-column-group, table-header-group, 
+  // inline, run-in, table-row-group, table-column, table-column-group, table-header-group,
   // table-footer-group, table-row, table-cell, table-caption, inline-block -> block
   // others-> same as specified
-  
+
   $display = $css_state->get_property(CSS_DISPLAY);
 
   switch ($display) {
@@ -62,7 +63,7 @@ function _fix_display_position_float(&$css_state)
     $css_state->set_property(CSS_DISPLAY, 'block');
     return false;
 
-    // There are display types that cannot be directly converted to block; in this case we need to create a "wrapper" floating 
+    // There are display types that cannot be directly converted to block; in this case we need to create a "wrapper" floating
     // or positioned block box and put our real box into it.
   case "-button":
   case "-button-submit":
@@ -92,13 +93,13 @@ function _fix_display_position_float(&$css_state)
 
 function create_pdf_box(&$root, Pipeline $pipeline)
 {
-  // we must to be sure that first element is object 
+  // we must to be sure that first element is object
   if (is_object($root)) {
     switch ($root->node_type()) {
     case XML_DOCUMENT_NODE:
       // TODO: some magic from traverse_dom_tree
       return create_document_box($root, $pipeline);
-    case XML_ELEMENT_NODE:   
+    case XML_ELEMENT_NODE:
       return create_node_box($root, $pipeline);
     case XML_TEXT_NODE:
       return create_text_box($root, $pipeline);
@@ -109,30 +110,31 @@ function create_pdf_box(&$root, Pipeline $pipeline)
     }
   } else {
     die("node object expected, none object resived (".__FILE__.":".__LINE__.")");
-  } 
+  }
 }
 
 function &create_document_box(&$root, &$pipeline) {
   return BlockBox::create($root, $pipeline);
 }
 
-function &create_node_box(&$root, &$pipeline) {
+function create_node_box(&$root, Pipeline $pipeline)
+{
   // Determine CSS proerty value for current child
-  $css_state =& $pipeline->get_current_css_state();
+  $css_state = $pipeline->get_current_css_state();
   $css_state->pushDefaultState();
 
   $default_css = $pipeline->get_default_css();
   $default_css->apply($root, $css_state, $pipeline);
 
   // Store the default 'display' value; we'll need it later when checking for impossible tag/display combination
-  $handler =& CSS::get_handler(CSS_DISPLAY);
+  $handler = CSS::get_handler(CSS_DISPLAY);
   $default_display = $handler->get($css_state->getState());
-    
+
   // Initially generated boxes do not require block wrappers
   // Block wrappers are required in following cases:
   // - float property is specified for non-block box which cannot be directly converted to block box
   //   (a button, for example)
-  // - display set to block for such box 
+  // - display set to block for such box
   $need_block_wrapper = false;
 
   // TODO: some inheritance magic
@@ -142,37 +144,37 @@ function &create_node_box(&$root, &$pipeline) {
   execute_attrs_before($root, $pipeline);
 
   // CSS stylesheet
-  $css =& $pipeline->get_current_css();
+  $css = $pipeline->get_current_css();
   $css->apply($root, $css_state, $pipeline);
 
   // values from 'style' attribute
-  if ($root->has_attribute("style")) { 
-    parse_style_attr($root, $css_state, $pipeline); 
+  if ($root->has_attribute("style")) {
+    parse_style_attr($root, $css_state, $pipeline);
   };
-    
+
   _fix_tag_display($default_display, $css_state, $pipeline);
 
   execute_attrs_after_styles($root, $pipeline);
 
   // CSS 2.1:
   // 9.7 Relationships between 'display', 'position', and 'float'
-  // The three properties that affect box generation and layout  
+  // The three properties that affect box generation and layout 
   // 'display', 'position', and 'float'  interact as follows:
-  // 1. If 'display' has the value 'none', then 'position' and 'float' do not apply. 
+  // 1. If 'display' has the value 'none', then 'position' and 'float' do not apply.
   //    In this case, the element generates no box.
   $position_handler = CSS::get_handler(CSS_POSITION);
   $float_handler = CSS::get_handler(CSS_FLOAT);
 
-  // 2. Otherwise, if 'position' has the value 'absolute' or 'fixed', the box is absolutely positioned, 
-  //    the computed value of 'float' is 'none', and display is set according to the table below. 
-  //    The position of the box will be determined by the 'top', 'right', 'bottom' and 'left' properties and 
+  // 2. Otherwise, if 'position' has the value 'absolute' or 'fixed', the box is absolutely positioned,
+  //    the computed value of 'float' is 'none', and display is set according to the table below.
+  //    The position of the box will be determined by the 'top', 'right', 'bottom' and 'left' properties and
   //    the box's containing block.
   $position = $css_state->get_property(CSS_POSITION);
   if ($position === CSS_PROPERTY_INHERIT) {
     $position = $css_state->getInheritedProperty(CSS_POSITION);
   };
 
-  if ($position === POSITION_ABSOLUTE || 
+  if ($position === POSITION_ABSOLUTE ||
       $position === POSITION_FIXED) {
     $float_handler->replace(FLOAT_NONE, $css_state);
     $need_block_wrapper |= _fix_display_position_float($css_state);
@@ -185,7 +187,7 @@ function &create_node_box(&$root, &$pipeline) {
     $need_block_wrapper |= _fix_display_position_float($css_state);
   };
 
-  // Process some special nodes, which should not get their 'display' values overwritten (unless 
+  // Process some special nodes, which should not get their 'display' values overwritten (unless
   // current display value is 'none'
   $current_display = $css_state->get_property(CSS_DISPLAY);
 
@@ -215,23 +217,23 @@ function &create_node_box(&$root, &$pipeline) {
     $box =& BlockBox::create($root, $pipeline);
     break;
   case '-break':
-    $box =& BRBox::create($pipeline); 
+    $box =& BRBox::create($pipeline);
     break;
   case '-body':
     $box =& BodyBox::create($root, $pipeline);
     break;
   case '-button':
     $box =& ButtonBox::create($root, $pipeline);
-    break;      
+    break;
   case '-button-reset':
     $box =& ButtonResetBox::create($root, $pipeline);
-    break;      
+    break;
   case '-button-submit':
     $box =& ButtonSubmitBox::create($root, $pipeline);
-    break;      
+    break;
   case '-button-image':
     $box =& ButtonImageBox::create($root, $pipeline);
-    break;      
+    break;
   case '-checkbox':
     $box =& CheckBox::create($root, $pipeline);
     break;
@@ -247,7 +249,7 @@ function &create_node_box(&$root, &$pipeline) {
     inc_frame_level();
     $box =& FramesetBox::create($root, $pipeline);
     dec_frame_level();
-    break;      
+    break;
   case '-iframe':
     inc_frame_level();
     $box =& IFrameBox::create($root, $pipeline);
@@ -257,7 +259,7 @@ function &create_node_box(&$root, &$pipeline) {
     $box =& TextAreaInputBox::create($root, $pipeline);
     break;
   case '-image':
-    $box =& IMGBox::create($root, $pipeline);      
+    $box =& IMGBox::create($root, $pipeline);
     break;
   case 'inline':
     $box =& InlineBox::create($root, $pipeline);
@@ -335,8 +337,8 @@ function &create_node_box(&$root, &$pipeline) {
   // AFTER the wrapper box have been created; BUT we should clear the following CSS properties
   // to avoid the fake wrapper box actually affect the layout:
   // - margin
-  // - border 
-  // - padding 
+  // - border
+  // - padding
   // - background
   //
   if ($need_block_wrapper) {
@@ -355,12 +357,12 @@ function &create_node_box(&$root, &$pipeline) {
     // 2. set the wrapped element's width constraint to 100%, otherwise it will be narrower than expected
     if ($wc->isFraction()) {
       $box->setCSSProperty(CSS_WIDTH, new WCFraction(1));
-    } 
+    }
 
     $handler =& CSS::get_handler(CSS_MARGIN);
     $box->setCSSProperty(CSS_MARGIN, $handler->default_value());
 
-    /** 
+    /**
      * Note:  default border does  not contain  any fontsize-dependent
      * values, so we may safely use zero as a base font size
      */
@@ -377,12 +379,12 @@ function &create_node_box(&$root, &$pipeline) {
 
     // Create "clean" block box
     $wrapper = new BlockBox();
-    $wrapper->readCSS($pipeline->get_current_css_state());    
+    $wrapper->readCSS($pipeline->get_current_css_state());
     $wrapper->add_child($box);
 
     // Remove CSS propery values from stack
     execute_attrs_after($root, $pipeline);
-    
+
     $css_state->popState();
 
     return $wrapper;
@@ -411,14 +413,14 @@ function &create_text_box(&$root, &$pipeline) {
   } else {
     $box = null;
   }
-  
+
   // Remove CSS property values from stack
   $css_state->popState();
-  
+
   return $box;
 }
 
-function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {     
+function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
   // Store initial values to CSS stack
   $css_state =& $pipeline->get_current_css_state();
   $css_state->pushDefaultState();
@@ -427,7 +429,7 @@ function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
   // Block wrappers are required in following cases:
   // - float property is specified for non-block box which cannot be directly converted to block box
   //   (a button, for example)
-  // - display set to block for such box 
+  // - display set to block for such box
   $need_block_wrapper = false;
 
   $css =& $pipeline->get_current_css();
@@ -441,23 +443,23 @@ function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
   };
   $content = $content_obj->render($pipeline->get_counters());
 
-  if ($content === '') { 
+  if ($content === '') {
     $css_state->popState();
 
     $dummy = null;
-    return $dummy; 
+    return $dummy;
   };
-  
+
   // CSS 2.1:
   // 9.7 Relationships between 'display', 'position', and 'float'
-  // The three properties that affect box generation and layout  
+  // The three properties that affect box generation and layout 
   // 'display', 'position', and 'float'  interact as follows:
-  // 1. If 'display' has the value 'none', then 'position' and 'float' do not apply. 
+  // 1. If 'display' has the value 'none', then 'position' and 'float' do not apply.
   //    In this case, the element generates no box.
-    
-  // 2. Otherwise, if 'position' has the value 'absolute' or 'fixed', the box is absolutely positioned, 
-  //    the computed value of 'float' is 'none', and display is set according to the table below. 
-  //    The position of the box will be determined by the 'top', 'right', 'bottom' and 'left' properties and 
+
+  // 2. Otherwise, if 'position' has the value 'absolute' or 'fixed', the box is absolutely positioned,
+  //    the computed value of 'float' is 'none', and display is set according to the table below.
+  //    The position of the box will be determined by the 'top', 'right', 'bottom' and 'left' properties and
   //    the box's containing block.
   $position_handler =& CSS::get_handler(CSS_POSITION);
   $float_handler    =& CSS::get_handler(CSS_FLOAT);
@@ -478,10 +480,10 @@ function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
   if ($float != FLOAT_NONE) {
     $need_block_wrapper |= _fix_display_position_float($css_state);
   };
-  
+
   // 4. Otherwise, if the element is the root element, 'display' is set according to the table below.
   // 5. Otherwise, the remaining 'display' property values apply as specified. (see _fix_display_position_float)
-  
+
   // Note that pseudoelements may get only standard display values
   $display_handler =& CSS::get_handler(CSS_DISPLAY);
   $display = $display_handler->get($css_state->getState());
@@ -492,7 +494,7 @@ function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
     break;
   case 'inline':
     $ws_handler =& CSS::get_handler(CSS_WHITE_SPACE);
-    $box =& InlineBox::create_from_text($content, 
+    $box =& InlineBox::create_from_text($content,
                                         $ws_handler->get($css_state->getState()),
                                         $pipeline);
     break;
@@ -505,29 +507,29 @@ function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
   // AFTER the wrapper box have been created; BUT we should clear the following CSS properties
   // to avoid the fake wrapper box actually affect the layout:
   // - margin
-  // - border 
-  // - padding 
+  // - border
+  // - padding
   // - background
   //
   if ($need_block_wrapper) {
     $handler =& CSS::get_handler(CSS_MARGIN);
     $handler->css("0",$pipeline);
-    
+
     pop_border();
     push_border(default_border());
-    
+
     pop_padding();
     push_padding(default_padding());
-    
+
     $handler =& CSS::get_handler(CSS_BACKGROUND);
     $handler->css('transparent',$pipeline);
-    
+
     // Create "clean" block box
     $wrapper = new BlockBox();
     $wrapper->readCSS($pipeline->get_current_css_state());
     $wrapper->add_child($box);
-        
-    $css_state->popState();   
+
+    $css_state->popState();
     return $wrapper;
   } else {
     $css_state->popState();
@@ -540,14 +542,14 @@ function is_inline(&$box) {
 
   $display = $box->get_css_property(CSS_DISPLAY);
 
-  return 
+  return
     $display === '-button' ||
     $display === '-button-reset' ||
     $display === '-button-submit' ||
     $display === '-button-image' ||
     $display === '-checkbox' ||
     $display === '-image' ||
-    $display === 'inline' || 
+    $display === 'inline' ||
     $display === 'inline-block' ||
     $display === 'none' ||
     $display === '-radio' ||
@@ -556,15 +558,10 @@ function is_inline(&$box) {
     $display === '-password';
 }
 
-function is_whitespace(&$box) {
-  return 
-    is_a($box, "WhitespaceBox") ||
-    is_a($box, "NullBox");
-}
 
 function is_container(&$box) {
-  return is_a($box, "GenericContainerBox") && 
-    !is_a($box, "GenericInlineBox") || 
+  return is_a($box, "GenericContainerBox") &&
+    !is_a($box, "GenericInlineBox") ||
     is_a($box, "InlineBox");
 }
 
@@ -575,4 +572,30 @@ function is_span(&$box) {
 function is_table_cell(&$box) {
   return is_a($box, "TableCellBox");
 }
-?>
+
+/**
+ * @brief Namespace for box util functions
+ * @package box
+ * @author Konstantin
+ * @author Sebastian
+ */
+class Box
+{
+    private static $uid = 0;
+    /**
+     * @brief simply generate an unique box identifier
+     */
+    public static function uid()
+    {
+        return ++self::$uid;
+    }
+    /**
+     * @brief is box used for representing whitespace
+     */
+    public static function is_whitespace(GenericBox $box)
+    {
+      return
+        ($box instanceof WhitespaceBox) ||
+        ($box instanceof NullBox);
+    }
+}
