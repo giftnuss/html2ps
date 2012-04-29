@@ -307,7 +307,7 @@ class GenericContainerBox extends GenericFormattedBox
   function &get_first() {
     $size = count($this->content);
     for ($i=0; $i<$size; $i++) {
-      if (!is_whitespace($this->content[$i]) && 
+      if (!Box::is_whitespace($this->content[$i]) && 
           !$this->content[$i]->is_null()) {
         return $this->content[$i];
       };
@@ -328,7 +328,7 @@ class GenericContainerBox extends GenericFormattedBox
   function &get_first_data() {
     $size = count($this->content);
     for ($i=0; $i<$size; $i++) {
-      if (!is_whitespace($this->content[$i]) && !$this->content[$i]->is_null()) {
+      if (!Box::is_whitespace($this->content[$i]) && !$this->content[$i]->is_null()) {
         if (is_container($this->content[$i])) {
           $data =& $this->content[$i]->get_first_data();
           if (!is_null($data)) { return $data; };
@@ -352,7 +352,7 @@ class GenericContainerBox extends GenericFormattedBox
   // @return reference to the last visible child of current box 
   function &get_last() {
     for ($i=count($this->content)-1; $i>=0; $i--) {
-      if (!is_whitespace($this->content[$i]) && !$this->content[$i]->is_null()) {
+      if (!Box::is_whitespace($this->content[$i]) && !$this->content[$i]->is_null()) {
         return $this->content[$i];
       };
     };
@@ -633,7 +633,7 @@ class GenericContainerBox extends GenericFormattedBox
 
     if ($size > 0) {
       $last_item =& $this->_line[$size-1];
-      if (is_whitespace($last_item)) {
+      if (Box::is_whitespace($last_item)) {
         $last_item->width = 0;
         $last_item->height = 0;
       };
@@ -836,7 +836,7 @@ class GenericContainerBox extends GenericFormattedBox
 
     // Scan line box
     for ($i=0; $i<$size; $i++) {
-      if (!is_whitespace($this->_line[$i]) && 
+      if (!Box::is_whitespace($this->_line[$i]) && 
           !$this->_line[$i]->is_null()) { return false; };
     }
 
@@ -1013,7 +1013,7 @@ class GenericContainerBox extends GenericFormattedBox
 
     $i = count($this->content)-1;
     $last = $this->content[$i];
-    while ($i >= 0 && is_whitespace($this->content[$i])) {
+    while ($i >= 0 && Box::is_whitespace($this->content[$i])) {
       $this->remove($this->content[$i]);
       
       $i --;
