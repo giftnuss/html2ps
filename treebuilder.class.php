@@ -1,14 +1,15 @@
 <?php
-// $Header: /cvsroot/html2ps/treebuilder.class.php,v 1.17 2007/05/06 18:49:29 Konstantin Exp $
-
-require_once(HTML2PS_DIR.'dom.php5.inc.php');
-
+/**
+ * @brief helper class building the generic document structure
+ * @author Konstantin
+ * @package DOM
+ */
 class TreeBuilder
 {
   public static function build($xmlstring,$mode = 'html')
   {
     if (empty($xmlstring)) {
-      throw new DomError("Can not buid tree with empty xml.");
+      throw new DomError("Can not build tree from empty xml.");
     }
 
     $doc = new DOMDocument();

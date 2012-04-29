@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @author Konstantin
+ * @package CSS
+ */
 class CSSState
 {
   var $_state;
@@ -114,7 +117,7 @@ class CSSState
 
   function getInheritedProperty($code)
   {
-    $handler =& CSS::get_handler($code);
+    $handler = CSS::get_handler($code);
 
     $size = count($this->_state);
     for ($i=0; $i<$size; $i++) {
@@ -128,13 +131,12 @@ class CSSState
       // '1em' instead,  forcing the script to  take parent calculated
       // value later
       if ($code == CSS_FONT_SIZE) {
-        $value =& Value::fromData(1, UNIT_EM);
+        $value = Value::fromData(1, UNIT_EM);
         return $value;
       }
     }
 
-    $null = null;
-    return $null;
+    return null;
   }
 
   function get_propertyOnLevel($code, $level)

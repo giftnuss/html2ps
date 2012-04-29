@@ -2,7 +2,7 @@
 
 require_once dirname(dirname(__FILE__)) . '/TestPipeline.php';
 
-plan(3);
+plan(6);
 
 $pipeline = new Pipeline();
 $pipeline->configure(array());
@@ -10,7 +10,7 @@ $pipeline->configure(array());
 isa_ok($pipeline->get_dispatcher(),'Dispatcher','default dispatcher class');
 
 ok(is_null($pipeline->get_current_css()),'no current css');
-$pipeline->push_css();
+$pipeline->reset_css();
 isa_ok($pipeline->get_current_css(),'CSSRuleset','add fressh css ruleset');
 
 $media = Media::predefined('test_media');
@@ -29,6 +29,13 @@ $html = <<<__HTML__
 __HTML__;
 
 $first = $parser->process($html,$pipeline,$media);
+isa_ok($first,'InlineBox','root is a InlineBox');
 
-print_r($first);
-#echo get_class($pipeline->get_dispatcher());
+# InlineBox
+#  \ InlineBox
+#    \ WhitespaceBox
+#    \ TextBox
+#    \ WhitespaceBox
+$one = $first->get_content();
+is(trim($one),'TEST','expected content found');
+

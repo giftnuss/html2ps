@@ -5,6 +5,10 @@ require_once HTML2PS_DIR . 'lib/interfaces/Parser.php';
 
 require_once HTML2PS_DIR . 'lib/types/ContentType.php';
 
+
+require_once HTML2PS_DIR . 'globals.php';
+require_once HTML2PS_DIR . 'dom.php5.inc.php';
+
 require_once(HTML2PS_DIR.'utils_array.php');
 require_once(HTML2PS_DIR.'utils_graphic.php');
 require_once(HTML2PS_DIR.'utils_url.php');
@@ -30,8 +34,6 @@ require_once(HTML2PS_DIR.'output.fastps.class.php');
 require_once(HTML2PS_DIR.'output.fastps.l2.class.php');
 require_once(HTML2PS_DIR.'output.png.class.php');
 // require_once(HTML2PS_DIR.'output.pcl.class.php');
-
-require_once(HTML2PS_DIR.'stubs.common.inc.php');
 
 require_once(HTML2PS_DIR.'media.layout.inc.php');
 
@@ -835,7 +837,7 @@ class Pipeline
     $box = $this->_layout_item($data_id, $media, $offset, $context, $postponed_filter);
 
     if (is_null($box)) {
-      error_log(sprintf(_('Could not fetch: %s'), (string)$data_id));
+      error_log(sprintf('Could not fetch: %s', (string)$data_id));
       return true;
     }
 

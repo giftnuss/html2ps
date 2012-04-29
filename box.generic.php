@@ -1,8 +1,8 @@
 <?php
-// $Header: /cvsroot/html2ps/box.generic.php,v 1.73 2007/05/06 18:49:29 Konstantin Exp $
-
-require_once(HTML2PS_DIR.'globals.php');
-
+/**
+ * @author Konstantin
+ * @package box
+ */
 class GenericBox
 {
   var $_cache;
@@ -16,6 +16,7 @@ class GenericBox
   var $_id;
 
   var $_cached_base_font_size;
+  public $uid;
 
   function __construct()
   {
@@ -32,12 +33,9 @@ class GenericBox
     $this->default_baseline = 0;
 
     $this->set_tagname(null);
+    $this->set_uid(Box::uid());
 
-    /**
-     * Assign an unique box identifier
-     */
-    $GLOBALS['g_box_uid']++;
-    $this->uid = $GLOBALS['g_box_uid'];
+    //    $this->uid = $GLOBALS['g_box_uid'];
 
     $this->_id = null;
   }
@@ -54,14 +52,21 @@ class GenericBox
   }
 
   /**
+   * set the unique identifier
+   */
+  function set_uid($uid)
+  {
+      $this->uid = $uid;
+  }
+  /**
    * see get_property for optimization description
    */
   function setCSSProperty($code, $value)
   {
     static $cache = array();
     if (!isset($cache[$code])) {
-      $cache[$code] =& CSS::get_handler($code);
-    };
+      $cache[$code] = CSS::get_handler($code);
+    }
 
     $cache[$code]->replace_array($value, $this->_css);
   }
@@ -71,7 +76,7 @@ class GenericBox
    * so even a slight overhead for CSS::get_handler call
    * accumulates in a significiant processing delay.
    */
-  function &get_css_property($code)
+  function get_css_property($code)
   {
     static $cache = array();
     if (!isset($cache[$code])) {
@@ -82,23 +87,28 @@ class GenericBox
     return $value;
   }
 
-  function get_tagname() {
+  function get_tagname()
+  {
     return $this->_tagname;
   }
 
-  function set_tagname($tagname) {
+  function set_tagname($tagname)
+  {
     $this->_tagname = $tagname;
   }
 
-  function get_content() {
+  function get_content()
+  {
     return '';
   }
 
-  function show_postponed(&$driver) {
+  function show_postponed(&$driver)
+  {
     $this->show($driver);
   }
 
-  function copy_style(&$box) {
+  function copy_style(&$box)
+  {
     // TODO: object references
     $this->_css = $box->_css;
   }
@@ -108,7 +118,8 @@ class GenericBox
    * while initializing box object. $base_font_size cound be calculated
    * only once and stored in a static variable.
    */
-  function _readCSSLengths($state, $property_list) {
+  function _readCSSLengths($state, $property_list)
+  {
     if (is_null($this->_cached_base_font_size)) {
       $font =& $this->get_css_property(CSS_FONT);
       $this->_cached_base_font_size = $font->size->getPoints();
@@ -131,7 +142,8 @@ class GenericBox
     }
   }
 
-  function _readCSS($state, $property_list) {
+  function _readCSS($state, $property_list)
+  {
     foreach ($property_list as $property) {
       $value = $state->get_property($property);
 
@@ -151,7 +163,8 @@ class GenericBox
     }
   }
 
-  function readCSS(&$state) {
+  function readCSS(&$state)
+  {
     /**
      * Determine font size to be used in this box (required for em/ex units)
      */
@@ -195,19 +208,21 @@ class GenericBox
     };
   }
 
-  function set_id($id) {
+  function set_id($id)
+  {
     $this->_id = $id;
 
     if (!isset($GLOBALS['__html_box_id_map'][$id])) {
-      $GLOBALS['__html_box_id_map'][$id] =& $this;
-    };
+      $GLOBALS['__html_box_id_map'][$id] = $this;
+    }
   }
 
   function get_id() {
     return $this->_id;
   }
 
-  function show(&$driver) {
+  function show(&$driver)
+  {
     // If debugging mode is on, draw the box outline
     global $g_config;
     if ($g_config['debugbox']) {
@@ -235,51 +250,61 @@ class GenericBox
 
   function pre_reflow_images() {}
 
-  function set_top($value) {
+  function set_top($value)
+  {
     $this->_top = $value;
   }
 
-  function set_left($value) {
+  function set_left($value)
+  {
     $this->_left = $value;
   }
 
-  function offset($dx, $dy) {
+  function offset($dx, $dy)
+  {
     $this->_left += $dx;
     $this->_top  += $dy;
   }
 
   // Calculate the content upper-left corner position in curent flow
-  function guess_corner(&$parent) {
+  function guess_corner($parent)
+  {
     $this->put_left($parent->_current_x + $this->get_extra_left());
     $this->put_top($parent->_current_y - $this->get_extra_top());
   }
 
-  function put_left($value) {
+  function put_left($value)
+  {
     $this->_left = $value;
   }
 
-  function put_top($value)  {
+  function put_top($value)
+  {
     $this->_top = $value + $this->getBaselineOffset();
   }
 
   /**
    * Get Y coordinate of the top content area edge
    */
-  function get_top() {
+  function get_top()
+  {
     return
       $this->_top -
       $this->getBaselineOffset();
   }
 
-  function get_right() {
+  function get_right()
+  {
     return $this->get_left() + $this->get_width();
   }
 
-  function get_left() {
+  function get_left()
+  {
     return $this->_left;
   }
 
-  function get_bottom() {
+  function get_bottom()
+  {
     return $this->get_top() - $this->get_height();
   }
 
@@ -329,7 +354,7 @@ class GenericBox
 
   function reflow(&$parent, &$context)
   {
-    
+
   }
 
   function reflow_inline() { }
@@ -438,30 +463,35 @@ class GenericBox
     if ($this->get_css_property(CSS_POSITION) <> POSITION_STATIC &&
         $this->get_css_property(CSS_POSITION) <> POSITION_RELATIVE) {
       return true;
-    };
+    }
 
     if (is_null($this->parent)) {
       return true;
-    };
+    }
 
     return $this->parent->mayBeExpanded();
   }
 
-  function isLineBreak() {
+  function isLineBreak()
+  {
     return false;
   }
 
-  function get_min_width_natural($context) {
+  function get_min_width_natural($context)
+  {
     return $this->get_min_width($context);
   }
 
-  function is_note_call() {
+  function is_note_call()
+  {
     return isset($this->note_call);
   }
 
-  /* DOM compatibility */
-  function &get_parent_node() {
+  /**
+   * box model DOM compatibility
+   */
+  function get_parent_node()
+  {
     return $this->parent;
   }
 }
-?>
