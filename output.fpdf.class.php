@@ -126,12 +126,14 @@ extends
     $this->pdf->add_field_pushbuttonsubmit($x, $y, $w, $h, $field_name, $value,  $actionURL);
   }
 
-  function field_checkbox($x, $y, $w, $h, $name, $value, $checked) {
+  function field_checkbox($x, $y, $w, $h, $name, $value, $checked)
+  {
     $this->_coords2pdf_annotation($x, $y);
     $this->pdf->add_field_checkbox($x, $y, $w, $h, $name, $value, $checked);
   }
 
-  function field_radio($x, $y, $w, $h, $groupname, $value, $checked) {
+  function field_radio($x, $y, $w, $h, $groupname, $value, $checked)
+  {
     static $generated_group_index = 0;
     if (is_null($groupname)) {
       $generated_group_index ++;
@@ -142,25 +144,30 @@ extends
     $this->pdf->add_field_radio($x, $y, $w, $h, $groupname, $value, $checked);
   }
 
-  function field_select($x, $y, $w, $h, $name, $value, $options) { 
+  function field_select($x, $y, $w, $h, $name, $value, $options)
+  { 
     $this->_coords2pdf_annotation($x, $y);
     $this->pdf->add_field_select($x, $y, $w, $h, $name, $value, $options);
   }
 
-  function fill() { 
+  function fill()
+  { 
     $this->pdf->Fill();
   }
 
-  function findfont($name, $encoding) { 
+  function findfont($name, $encoding)
+  { 
     // Todo: encodings handling
     return $name;
   }
 
-  function font_ascender($name, $encoding) { 
+  function font_ascender($name, $encoding)
+  { 
     return $this->pdf->GetFontAscender($name, $encoding);
   }
 
-  function font_descender($name, $encoding) { 
+  function font_descender($name, $encoding)
+  { 
     return $this->pdf->GetFontDescender($name, $encoding);
   }
 

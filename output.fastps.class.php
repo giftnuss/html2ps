@@ -5,7 +5,8 @@ define('FASTPS_STATUS_DOCUMENT_INITIALIZED',0);
 define('FASTPS_STATUS_OUTPUT_STARTED',1);
 define('FASTPS_STATUS_OUTPUT_TERMINATED',2);
 
-class OutputDriverFastPS extends OutputDriverGenericPS {
+class OutputDriverFastPS extends OutputDriverGenericPS
+{
   var $found_fonts;
   var $used_encodings;
   var $font_factory;
@@ -15,11 +16,13 @@ class OutputDriverFastPS extends OutputDriverGenericPS {
   var $underline;
   var $linethrough;
 
-  function OutputDriverFastPS(&$image_encoder) { 
-    $this->OutputDriverGenericPS($image_encoder);
+  function __construct($image_encoder)
+  { 
+    parent::__construct($image_encoder);
   }
 
-  function add_link($x, $y, $w, $h, $target) { 
+  function add_link($x, $y, $w, $h, $target)
+  { 
     $this->write(sprintf("[ /Rect [ %.2f %.2f %.2f %.2f ] /Action << /Subtype /URI /URI (%s) >> /Border [0 0 0] /Subtype /Link /ANN pdfmark\n",
                          $x, $y, $x+$w, $y-$h, $this->_string($target)));
   }
@@ -29,21 +32,25 @@ class OutputDriverFastPS extends OutputDriverGenericPS {
                          $left, $top, $left + $width, $top - $height, $anchor->page, $anchor->y));
   }
 
-  function circle($x, $y, $r) { 
+  function circle($x, $y, $r)
+  { 
     $this->moveto($x, $y);
     $this->write(sprintf("%.2f %.2f %.2f 0 360 arc\n", $x, $y, $r));
   }
 
-  function clip() {
+  function clip()
+  {
     $this->write("clip newpath\n");
   }
 
-  function close() {
+  function close()
+  {
     $this->_terminate_output();
     fclose($this->data);
   }
 
-  function closepath() {
+  function closepath()
+  {
     $this->write("closepath\n");
   }
 
@@ -57,11 +64,13 @@ class OutputDriverFastPS extends OutputDriverGenericPS {
     $this->linethrough = $linethrough;
   }
   
-  function fill() { 
+  function fill()
+  { 
     $this->write("fill\n");
   }
   
-  function _findfont($name, $encoding) {
+  function _findfont($name, $encoding)
+  {
     $font =& $this->font_factory->get_type1($name, $encoding);
     if (is_null($font)) {
       $this->error_message .= $this->font_factory->error_message();
@@ -399,4 +408,3 @@ class OutputDriverFastPS extends OutputDriverGenericPS {
   }
 }
 
-?>

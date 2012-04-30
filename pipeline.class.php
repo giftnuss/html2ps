@@ -1252,20 +1252,20 @@ class Pipeline
       foreach ($at_rules as $at_rule) {
         $selector = $at_rule->getSelector();
         $boxes[$selector] = BoxPageMargin::create($this, $at_rule);
-      };
-    };
+      }
+    }
 
     $status = $this->layout_engine->process($box, $media, $this->output_driver, $context);
     if (is_null($status)) {
       error_log('Pipeline::_process_item: layout routine failed');
       $dummy = null;
       return $dummy;
-    };
+    }
 
     // Run post-layout tree filters
     for ($i=0; $i<count($this->post_tree_filters); $i++) {
       $this->post_tree_filters[$i]->process($box);
-    };
+    }
 
     return $box;
   }

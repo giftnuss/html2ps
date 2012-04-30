@@ -1,7 +1,8 @@
 <?php
 // $Header: /cvsroot/html2ps/output._generic.class.php,v 1.17 2007/05/17 13:55:13 Konstantin Exp $
 
-class OutputDriverGeneric extends OutputDriver {
+class OutputDriverGeneric extends OutputDriver
+{
   var $media;
   var $bottom;
   var $left;
@@ -39,7 +40,8 @@ class OutputDriverGeneric extends OutputDriver {
 
   var $anchors;
 
-  function OutputDriverGeneric() {
+  function __construct()
+  {
     // Properties setup
     $this->set_debug_boxes(false);
     $this->set_filename($this->mk_filename());
@@ -53,11 +55,13 @@ class OutputDriverGeneric extends OutputDriver {
     $this->anchors = array();
   }
 
-  function postpone(&$box) {
+  function postpone(&$box)
+  {
     $this->_postponed[] =& $box;
   }
 
-  function show_postponed() {
+  function show_postponed()
+  {
     $size = count($this->_postponed);
     for ($i=0; $i<$size; $i++) {
       $box =& $this->_postponed[$i];
@@ -69,7 +73,8 @@ class OutputDriverGeneric extends OutputDriver {
     };
   }
 
-  function show_postponed_in_absolute() {
+  function show_postponed_in_absolute()
+  {
     $size = count($this->_postponed);
     for ($i=0; $i<$size; $i++) {
       $box =& $this->_postponed[$i];
@@ -84,7 +89,8 @@ class OutputDriverGeneric extends OutputDriver {
     };
   }
 
-  function show_postponed_in_fixed() {
+  function show_postponed_in_fixed()
+  {
     $size = count($this->_postponed);
     for ($i=0; $i<$size; $i++) {
       $box =& $this->_postponed[$i];
@@ -98,7 +104,8 @@ class OutputDriverGeneric extends OutputDriver {
     };
   }
 
-  function next_page($old_page_height) {
+  function next_page($old_page_height)
+  {
     $this->setFootnoteAreaHeight(0);
     $this->setFootnoteCount(0);
     $this->setPageHeight(mm2pt($this->media->real_height()));
@@ -299,10 +306,12 @@ class OutputDriverGeneric extends OutputDriver {
     };
   }
 
-  function prepare() {
+  function prepare()
+  {
   }
 
-  function reset(&$media) {
+  function reset($media)
+  {
     $this->update_media($media);
     $this->_postponed = array();
 
@@ -312,7 +321,8 @@ class OutputDriverGeneric extends OutputDriver {
     $this->current_page = 0;
   }
 
-  function &get_media() {
+  function get_media()
+  {
     return $this->media;
   }
 
