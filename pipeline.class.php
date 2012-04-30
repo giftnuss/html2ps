@@ -890,7 +890,8 @@ class Pipeline
 
       $this->output_driver->next_page($current_page_offset);
 
-      // Preparen list of postponed (floating and relative-positioned) boxes for the current page
+      // Prepare list of postponed (floating and relative-positioned) boxes
+      // for the current page
       $postponed_filter->process($box, null, $this);
 
       $this->reset_counter('footnote', 0);
@@ -942,7 +943,8 @@ class Pipeline
                                                      'document' => $box));
   }
 
-  function _output() {
+  function _output()
+  {
     $temporary_output_filename = $this->output_driver->get_filename();
 
     for ($i=0; $i<count($this->output_filters); $i++) {
@@ -962,10 +964,11 @@ class Pipeline
     };
 
     $this->output = $this->destination->process($temporary_output_filename, $content_type);
-    unlink($temporary_output_filename);
+    //unlink($temporary_output_filename);
+    echo("REMOVE LATER - $temporary_output_filename\n");
   }
 
-  function set_destination(&$destination)
+  function set_destination($destination)
   {
     $this->destination = $destination;
   }

@@ -19,8 +19,14 @@ isa_ok($media,'Media','media object');
 $outputdriver = new OutputDriverFPDF($media);
 $pipeline->set_output_driver($outputdriver);
 
+is($outputdriver->get_filename(),'KKK','output filename');
+
 $layoutengine = new LayoutEngineDefault;
 $pipeline->layout_engine = $layoutengine;
+
+$destination = new DestinationFile('pipeline1');
+$destination->setOutputDir(dirname(__FILE__) . '/temp');
+$pipeline->destination = $destination;
 
 $pipeline->prepare($media);
 
@@ -49,4 +55,20 @@ isa_ok($pipeline->layout_engine,'LayoutEngineDefault','LayoutEngine');
 $context = new FlowContext();
 
 $layoutengine->process($first, $media, $pipeline->output_driver, $context);
+
+$one = $first->get_content();
+is(trim($one),'TEST','expected content found');
+
+$postponed_filter = new PostTreeFilterPostponed($outputdriver);
+$postponed_filter->process($box, null, $pipeline);
+
+$pipeline->_show_item($first, 0, $context, $media, $postponed_filter);
+
+$pdf = $outputdriver->pdf;
+print_r($pdf);
+
+$pipeline->close();
+
+
+
 

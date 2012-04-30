@@ -1035,7 +1035,8 @@ EOF
     }
   }
 
-  class FPDF {
+  class FPDF
+  {
     //Private properties
     
     var $page;               //current page number
@@ -2734,11 +2735,12 @@ EOF
     function _out($s)
     {
       if ($this->state == FPDF_STATE_PAGE_STARTED) {
-        $this->pages[$this->page].=$s."\n";
+        $this->pages[$this->page] .= $s."\n";
       } else {
-        $this->buffer.=$s."\n";
+        $this->buffer.= $s."\n";
       }
     }
   }
 //}
-?>
+
+
