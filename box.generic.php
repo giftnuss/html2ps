@@ -81,10 +81,9 @@ class GenericBox
     static $cache = array();
     if (!isset($cache[$code])) {
       $cache[$code] = CSS::get_handler($code);
-    };
+    }
 
-    $value =& $cache[$code]->get($this->_css);
-    return $value;
+    return $cache[$code]->get($this->_css);
   }
 
   function get_tagname()
@@ -102,15 +101,14 @@ class GenericBox
     return '';
   }
 
-  function show_postponed(&$driver)
+  function show_postponed(OutputDriver $driver)
   {
     $this->show($driver);
   }
 
-  function copy_style(&$box)
+  function copy_style(GenericBox $box)
   {
-    // TODO: object references
-    $this->_css = $box->_css;
+    $this->_css = clone($box->_css);
   }
 
   /**
@@ -123,7 +121,7 @@ class GenericBox
     if (is_null($this->_cached_base_font_size)) {
       $font =& $this->get_css_property(CSS_FONT);
       $this->_cached_base_font_size = $font->size->getPoints();
-    };
+    }
 
     foreach ($property_list as $property) {
       $value = $state->get_property($property);
@@ -163,7 +161,7 @@ class GenericBox
     }
   }
 
-  function readCSS(&$state)
+  function readCSS(CSSState $state)
   {
     /**
      * Determine font size to be used in this box (required for em/ex units)
@@ -171,14 +169,14 @@ class GenericBox
     $value = $state->get_property(CSS_FONT);
     if ($value === CSS_PROPERTY_INHERIT) {
       $value = $state->getInheritedProperty(CSS_FONT);
-    };
+    }
     $base_font_size = $state->getBaseFontSize();
 
     if (is_object($value)) {
       $value = $value->copy();
       $value->doInherit($state);
       $value->units2pt($base_font_size);
-    };
+    }
 
     $this->setCSSProperty(CSS_FONT, $value);
 
@@ -191,27 +189,26 @@ class GenericBox
                           CSS_DISPLAY,
                           CSS_VISIBILITY));
 
-    $this->_readCSSLengths($state,
-                           array(CSS_VERTICAL_ALIGN));
+    $this->_readCSSLengths($state, array(CSS_VERTICAL_ALIGN));
 
     // '-html2ps-link-destination'
     global $g_config;
     if ($g_config["renderlinks"]) {
-      $this->_readCSS($state,
-                      array(CSS_HTML2PS_LINK_DESTINATION));
-    };
+      $this->_readCSS($state,array(CSS_HTML2PS_LINK_DESTINATION));
+    }
 
     // Save ID attribute value
+ #   print_r($state);
     $id = $state->get_property(CSS_HTML2PS_LINK_DESTINATION);
     if (!is_null($id)) {
       $this->set_id($id);
-    };
+    }
   }
 
   function set_id($id)
   {
     $this->_id = $id;
-
+    echo ">>> $id <<<\n";
     if (!isset($GLOBALS['__html_box_id_map'][$id])) {
       $GLOBALS['__html_box_id_map'][$id] = $this;
     }

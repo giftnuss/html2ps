@@ -21,8 +21,8 @@ function inc_frame_level()
   }
 }
 
-/// Called when frame (and all nested frames, of course) processing have
-/// been completed
+//! Called when frame (and all nested frames, of course) processing have
+//! been completed
 function dec_frame_level()
 {
   global $g_frame_level;
@@ -91,7 +91,7 @@ function _fix_display_position_float(&$css_state)
   }
 }
 
-function create_pdf_box(&$root, Pipeline $pipeline)
+function create_pdf_box(DOMTree $root, Pipeline $pipeline)
 {
   // we must to be sure that first element is object
   if (is_object($root)) {
@@ -113,7 +113,8 @@ function create_pdf_box(&$root, Pipeline $pipeline)
   }
 }
 
-function &create_document_box(&$root, &$pipeline) {
+function create_document_box(DOMTree $root, Pipeline $pipeline)
+{
   return BlockBox::create($root, $pipeline);
 }
 
@@ -150,7 +151,7 @@ function create_node_box(&$root, Pipeline $pipeline)
   // values from 'style' attribute
   if ($root->has_attribute("style")) {
     parse_style_attr($root, $css_state, $pipeline);
-  };
+  }
 
   _fix_tag_display($default_display, $css_state, $pipeline);
 

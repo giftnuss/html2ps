@@ -5,18 +5,18 @@ class TreeWalkerDepthFirst
 {
   var $_callback;
 
-  function TreeWalkerDepthFirst($callback) 
+  function TreeWalkerDepthFirst($callback)
   {
     $this->_callback = $callback;
   }
 
-  function run(&$node) 
+  function run(&$node)
   {
     call_user_func($this->_callback, array('node' => &$node));
     $this->walk_element($node);
   }
 
-  function walk_element(&$node) 
+  function walk_element(&$node)
   {
     if (!isset($node->content)) {
       return;
@@ -36,49 +36,45 @@ function traverse_dom_tree_pdf(DOMTree $root)
     $child = $root->first_child();
     while($child) {
       $body = traverse_dom_tree_pdf($child);
-      if ($body) { 
-        return $body; 
+      if ($body) {
+        return $body;
       }
-      $child =& $child->next_sibling();
-    };
-
-    $null = null;
-    return $null;
-  case XML_ELEMENT_NODE:    
-    if (strtolower($root->tagname()) == "body") { 
-      return $root; 
+      $child = $child->next_sibling();
+    }
+    return null;
+  case XML_ELEMENT_NODE:
+    if (strtolower($root->tagname()) == "body") {
+      return $root;
     }
 
-    $child =& $root->first_child(); 
+    $child = $root->first_child();
     while ($child) {
       $body =& traverse_dom_tree_pdf($child);
-      if ($body) { 
-        return $body; 
+      if ($body) {
+        return $body;
       }
       $child =& $child->next_sibling();
-    };
-    
-    $null = null;
-    return $null;
+    }
+    return null;
   default:
-    $null = null;
-    return $null;
+    return null;
   }
-};
+}
 
-function dump_tree(&$box, $level) {
+function dump_tree(&$box, $level)
+{
   print(str_repeat(" ", $level));
   if (is_a($box, 'TextBox')) {
     print(get_class($box).":".$box->uid.":".join('/', $box->words)."\n");
-  } else {
+  }
+  else {
     print(get_class($box).":".$box->uid."\n");
-  };
+  }
 
   if (isset($box->content)) {
     for ($i=0; $i<count($box->content); $i++) {
       dump_tree($box->content[$i], $level+1);
-    };
-  };
-};
+    }
+  }
+}
 
-?>

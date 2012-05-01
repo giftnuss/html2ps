@@ -37,7 +37,7 @@ class CSSState
   {
     foreach ($property_list as $property) {
       $this->set_property($property, $property_data->get_css_property($property));
-    };
+    }
   }
 
   function popState()
@@ -156,10 +156,9 @@ class CSSState
   {
     static $cache = array();
     if (!isset($cache[$code])) {
-      $cache[$code] =& CSS::get_handler($code);
-    };
-    $value =& $cache[$code]->get($this->_state[0]);
-    return $value;
+      $cache[$code] = CSS::get_handler($code);
+    }
+    return $cache[$code]->get($this->_state[0]);
   }
 
   function get_propertyDefaultFlag($code)

@@ -90,11 +90,11 @@ $g_tag_attrs = array(
                                         'align'  => 'attr_img_align'
                                         ),
                      'marquee' => array(
-                                        'width'  => 'attr_width', 
+                                        'width'  => 'attr_width',
                                         'height' => 'attr_height_required'
                                         ),
                      'object'  => array(
-                                        'width'  => 'attr_width', 
+                                        'width'  => 'attr_width',
                                         'height' => 'attr_height'
                                         ),
                      'ol'      => array(
@@ -105,22 +105,22 @@ $g_tag_attrs = array(
                                         'align' => 'attr_align'
                                         ),
                      'table'   => array(
-                                        'border'      => 'attr_table_border', 
-                                        'bordercolor' => 'attr_table_bordercolor', 
+                                        'border'      => 'attr_table_border',
+                                        'bordercolor' => 'attr_table_bordercolor',
                                         'align'       => 'attr_table_float_align',
                                         'bgcolor'     => 'attr_bgcolor',
                                         'width'       => 'attr_width',
-                                        'background'  => 'attr_background', 
-                                        'height'      => 'attr_height', 
-                                        'cellspacing' => 'attr_cellspacing', 
+                                        'background'  => 'attr_background',
+                                        'height'      => 'attr_height',
+                                        'cellspacing' => 'attr_cellspacing',
                                         'cellpadding' => 'attr_cellpadding',
                                         'rules'       => 'attr_table_rules' // NOTE that 'rules' should appear _after_ 'border' handler!
                                         ),
                      'td'      => array(
-                                        'align'      => 'attr_align', 
-                                        'valign'     => 'attr_valign', 
-                                        'height'     => 'attr_height', 
-                                        'background' => 'attr_background', 
+                                        'align'      => 'attr_align',
+                                        'valign'     => 'attr_valign',
+                                        'height'     => 'attr_height',
+                                        'background' => 'attr_background',
                                         'bgcolor'    => 'attr_bgcolor',
                                         'nowrap'     => 'attr_nowrap',
                                         'width'      => 'attr_width'
@@ -130,18 +130,18 @@ $g_tag_attrs = array(
                                         'cols'       => 'attr_textarea_cols'
                                         ),
                      'th'      => array(
-                                        'align'      => 'attr_align', 
-                                        'valign'     => 'attr_valign', 
-                                        'height'     => 'attr_height', 
-                                        'background' => 'attr_background', 
+                                        'align'      => 'attr_align',
+                                        'valign'     => 'attr_valign',
+                                        'height'     => 'attr_height',
+                                        'background' => 'attr_background',
                                         'bgcolor'    => 'attr_bgcolor',
                                         'nowrap'     => 'attr_nowrap',
                                         'width'      => 'attr_width'
                                         ),
                      'tr'      => array(
                                         'align'   => 'attr_align',
-                                        'bgcolor' => 'attr_bgcolor', 
-                                        'valign'  => 'attr_row_valign', 
+                                        'bgcolor' => 'attr_bgcolor',
+                                        'valign'  => 'attr_row_valign',
                                         'height'  => 'attr_height'
                                         ),
                      'ul'      => array(
@@ -152,42 +152,48 @@ $g_tag_attrs = array(
 
 
 function execute_attrs_before($root, &$pipeline) { execute_attrs($root, '_before', $pipeline); }
-function execute_attrs_after($root, &$pipeline) { execute_attrs($root, '_after', $pipeline); }
+function execute_attrs_after($root, &$pipeline)
+{
+  execute_attrs($root, '_after', $pipeline);
+}
 function execute_attrs_after_styles($root, &$pipeline) { execute_attrs($root, '_after_styles', $pipeline); }
 
-function execute_attrs(&$root, $suffix, &$pipeline) {
+function execute_attrs(DOMTree $root, $suffix, Pipeline $pipeline)
+{
   global $g_tag_attrs;
 
   foreach ($g_tag_attrs['*'] as $attr => $fun) {
     if ($root->has_attribute($attr)) {
-      $fun = $fun.$suffix;
+      $fun = $fun . $suffix;
       $fun($root, $pipeline);
-    };
-  };
+    }
+  }
 
   if (array_key_exists($root->tagname(), $g_tag_attrs)) {
     foreach ($g_tag_attrs[$root->tagname()] as $attr => $fun) {
       if ($root->has_attribute($attr)) {
-        $fun = $fun.$suffix;
+        $fun = $fun . $suffix;
         $fun($root, $pipeline);
-      };
-    };
-  };
-};
+      }
+    }
+  }
+}
 
 // ========= Handlers
 
 // A NAME
-function attr_name_before(&$root, &$pipeline) {
-  $handler =& CSS::get_handler(CSS_HTML2PS_LINK_DESTINATION);
+function attr_name_before(DOMTree $root, Pipeline $pipeline)
+{
+  $handler = CSS::get_handler(CSS_HTML2PS_LINK_DESTINATION);
   $handler->css($root->get_attribute('name'), $pipeline);
 }
 function attr_name_after_styles(&$root, &$pipeline) {};
 function attr_name_after(&$root, &$pipeline) {};
 
 // A ID
-function attr_id_before(&$root, &$pipeline) {
-  $handler =& CSS::get_handler(CSS_HTML2PS_LINK_DESTINATION);
+function attr_id_before(DOMTree $root, Pipeline $pipeline)
+{
+  $handler = CSS::get_handler(CSS_HTML2PS_LINK_DESTINATION);
   $handler->css($root->get_attribute('id'), $pipeline);
 }
 function attr_id_after_styles(&$root, &$pipeline) {};
@@ -202,8 +208,9 @@ function attr_href_before(&$root, &$pipeline) {
 function attr_href_after_styles(&$root, &$pipeline) {};
 function attr_href_after(&$root, &$pipeline) {};
 
-// IFRAME 
-function attr_frameborder_before(&$root, &$pipeline) {
+// IFRAME
+function attr_frameborder_before(&$root, &$pipeline)
+{
   $css_state =& $pipeline->get_current_css_state();
   $handler =& CSS::get_handler(CSS_BORDER);
 
@@ -214,7 +221,7 @@ function attr_frameborder_before(&$root, &$pipeline) {
   case '0':
     $handler->css('none', $pipeline);
     break;
-  };
+  }
 }
 function attr_frameborder_after_styles(&$root, &$pipeline) {};
 function attr_frameborder_after(&$root, &$pipeline) {};
@@ -249,7 +256,7 @@ function attr_body_text_after(&$root, &$pipeline) {};
 function attr_body_link_before(&$root, &$pipeline) {
   $color = $root->get_attribute('link');
 
-  // -1000 means priority modifier; so, any real CSS rule will have more priority than 
+  // -1000 means priority modifier; so, any real CSS rule will have more priority than
   // this fake rule
 
   $collection = new CSSPropertyCollection();
@@ -262,7 +269,7 @@ function attr_body_link_before(&$root, &$pipeline) {
 
   $css =& $pipeline->get_current_css();
   $css->add_rule($rule, $pipeline);
-} 
+}
 function attr_body_link_after_styles(&$root, &$pipeline) {};
 function attr_body_link_after(&$root, &$pipeline) {};
 
@@ -310,7 +317,7 @@ function attr_body_marginwidth_after(&$root, &$pipeline) {};
 function attr_nowrap_before(&$root, &$pipeline) {
   $css_state =& $pipeline->get_current_css_state();
   $css_state->set_property(CSS_HTML2PS_NOWRAP, NOWRAP_NOWRAP);
-} 
+}
 
 function attr_nowrap_after_styles(&$root, &$pipeline) {}
 function attr_nowrap_after(&$root, &$pipeline) {}
@@ -353,10 +360,10 @@ function attr_background_after(&$root, &$pipeline) {}
 
 function attr_table_float_align_before(&$root, &$pipeline) {}
 function attr_table_float_align_after_styles(&$root, &$pipeline) {
-  if ($root->get_attribute('align') === 'center') {     
+  if ($root->get_attribute('align') === 'center') {
     $margin_left =& CSS::get_handler(CSS_MARGIN_LEFT);
     $margin_left->css('auto',$pipeline);
-    
+
     $margin_right =& CSS::get_handler(CSS_MARGIN_RIGHT);
     $margin_right->css('auto',$pipeline);
   } else {
@@ -402,7 +409,7 @@ function attr_self_align_before(&$root, &$pipeline) {
                       $css_state);
     break;
   default:
-    $handler->replace(LA_LEFT, 
+    $handler->replace(LA_LEFT,
                       $css_state);
     break;
   };
@@ -419,7 +426,7 @@ function attr_table_bordercolor_before(&$root, &$pipeline) {
   $css_state =& $pipeline->get_current_css_state();
   $border =& $css_state->get_property(CSS_HTML2PS_TABLE_BORDER);
   $border =& $border->copy();
-  
+
   $border->left->color   = $color;
   $border->right->color  = $color;
   $border->top->color    = $color;
@@ -437,7 +444,7 @@ function attr_table_bordercolor_after_styles(&$root, &$pipeline) {
 //   $css_state->popState();
 }
 
-function attr_table_bordercolor_after(&$root, &$pipeline) { 
+function attr_table_bordercolor_after(&$root, &$pipeline) {
 //   $css_state =& $pipeline->get_current_css_state();
 //   $css_state->popState();
 }
@@ -455,7 +462,7 @@ function attr_border_before(&$root, &$pipeline) {
   $border->right->width  = Value::fromData($width, 'px');
   $border->top->width    = Value::fromData($width, 'px');
   $border->bottom->width = Value::fromData($width, 'px');
-  
+
   $border->left->style   = BS_SOLID;
   $border->right->style  = BS_SOLID;
   $border->top->style    = BS_SOLID;
@@ -499,7 +506,7 @@ function attr_table_rules_before(&$root, &$pipeline) {
   case 'all':
     break;
   };
- 
+
   $css_state->set_property(CSS_HTML2PS_TABLE_BORDER, $border);
 }
 
@@ -519,12 +526,12 @@ function attr_table_border_before(&$root, &$pipeline) {
   $border->right->width  = Value::fromData($width, UNIT_PX);
   $border->top->width    = Value::fromData($width, UNIT_PX);
   $border->bottom->width = Value::fromData($width, UNIT_PX);
-  
+
   $border->left->style   = BS_SOLID;
   $border->right->style  = BS_SOLID;
   $border->top->style    = BS_SOLID;
   $border->bottom->style = BS_SOLID;
-  
+
   $css_state->set_property(CSS_BORDER, $border);
 
   $css_state->pushState();
@@ -536,7 +543,7 @@ function attr_table_border_after_styles(&$root, &$pipeline) {}
 
 function attr_table_border_after(&$root, &$pipeline) {
   $css_state =& $pipeline->get_current_css_state();
-  $css_state->popState();  
+  $css_state->popState();
 }
 
 // === dir
@@ -544,10 +551,10 @@ function attr_dir_before(&$root, &$pipeline) {
   $handler =& CSS::get_handler(CSS_TEXT_ALIGN);
   switch (strtolower($root->get_attribute('dir'))) {
   case 'ltr':
-    $handler->css('left',$pipeline); 
+    $handler->css('left',$pipeline);
     return;
   case 'rtl':
-    $handler->css('right',$pipeline); 
+    $handler->css('right',$pipeline);
     return;
   };
 }
@@ -558,7 +565,7 @@ function attr_dir_after(&$root, &$pipeline) {}
 // === align
 function attr_align_before(&$root, &$pipeline) {
   $handler =& CSS::get_handler(CSS_TEXT_ALIGN);
-  $handler->css($root->get_attribute('align'),$pipeline); 
+  $handler->css($root->get_attribute('align'),$pipeline);
 
   $handler =& CSS::get_handler(CSS_HTML2PS_ALIGN);
   $handler->css($root->get_attribute('align'),$pipeline);
@@ -586,12 +593,12 @@ function attr_valign_before(&$root, &$pipeline) {
 
 function attr_valign_after_styles(&$root, &$pipeline) {}
 function attr_valign_after(&$root, &$pipeline) {}
-              
+
 // bgcolor
 
 function attr_bgcolor_before(&$root, &$pipeline) {
   $handler =& CSS::get_handler(CSS_BACKGROUND_COLOR);
-  $handler->css($root->get_attribute('bgcolor'), $pipeline); 
+  $handler->css($root->get_attribute('bgcolor'), $pipeline);
 }
 function attr_bgcolor_after_styles(&$root, &$pipeline) {}
 function attr_bgcolor_after(&$root, &$pipeline) {}
@@ -879,10 +886,9 @@ function attr_textarea_cols_after(&$root, &$pipeline) {}
  */
 function attr_hr_color_before(&$root, &$pipeline) {
   $handler =& CSS::get_handler(CSS_BORDER_COLOR);
-  $handler->css($root->get_attribute('color'), $pipeline); 
+  $handler->css($root->get_attribute('color'), $pipeline);
 }
 function attr_hr_color_after_styles(&$root, &$pipeline) {}
 function attr_hr_color_after(&$root, &$pipeline) {}
 
 
-?>

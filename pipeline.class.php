@@ -5,8 +5,6 @@ require_once HTML2PS_DIR . 'lib/interfaces/Parser.php';
 
 require_once HTML2PS_DIR . 'lib/types/ContentType.php';
 
-
-require_once HTML2PS_DIR . 'globals.php';
 require_once HTML2PS_DIR . 'dom.php5.inc.php';
 
 require_once(HTML2PS_DIR.'utils_array.php');

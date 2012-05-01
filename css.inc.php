@@ -27,8 +27,8 @@ class CSS
       $handlers = $this->getHandlers();
       foreach ($handlers as $property => $handler) {
         $this->_defaultState[$property] = $handler->default_value();
-      };
-    };
+      }
+    }
 
     return $this->_defaultState;
   }
@@ -111,26 +111,24 @@ class CSS
 
   public static function get_handler($property)
   {
-    $css = CSS::get();
-    $handler = $css->_get_handler($property);
-    return $handler;
+    return CSS::get()->_get_handler($property);
   }
 
   protected function _get_handler($property)
   {
     if (isset($this->_handlers[$property])) {
       return $this->_handlers[$property];
-    } else {
-      $dumb = null;
-      return $dumb;
-    };
+    }
+    else {
+      return null;
+    }
   }
 
   function _name2code($key)
   {
     if (!isset($this->_mapping[$key])) {
       return null;
-    };
+    }
 
     return $this->_mapping[$key];
   }
@@ -163,7 +161,10 @@ class CSS
    */
   public static function get_identifier_regexp()
   {
-    return '-?(?:[_a-z]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])(?:[_a-z0-9-]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*';
+    return '-?(?:[_a-z]|[\200-\377]|\\[0-9a-f]{1,6}' .
+              '(?:\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])'.
+           '(?:[_a-z0-9-]|[\200-\377]|\\[0-9a-f]{1,6}(?:\r\n|'.
+              '[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*';
   }
 
   function is_identifier($string)

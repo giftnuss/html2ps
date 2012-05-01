@@ -4,22 +4,11 @@ require_once dirname(dirname(__FILE__)) . '/TestBase.php';
 
 plan(2);
 
-$html = <<<__HTML__
-<html>
-<style type="text/css">
-body {
-  margin: 0;
-  padding: 0;
-}
-</style>
-<div id="block" style="position: absolute; left: 10mm; top: 20mm;">
-&nbsp;CONTAINER
-</div>
-</html>
-__HTML__;
-
 try {
-    $doc = make_doc($html);
+    $doc = make_doc('<html>');
+    print_r(CSS::get());
+exit(0);
+
     isa_ok($doc,'InlineBox','document root is a "InlineBox"');
 
     ok($block = $doc->get_element_by_id('block'),"document contains block");

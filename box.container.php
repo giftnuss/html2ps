@@ -17,11 +17,11 @@ require_once(HTML2PS_DIR.'strategy.width.max.natural.php');
 /**
  * @package HTML2PS
  * @subpackage Document
- * 
- * The GenericContainerBox class is a common superclass for all document elements able 
+ *
+ * The GenericContainerBox class is a common superclass for all document elements able
  * to contain other elements. This class does provide the line-box handling utilies and
  * some minor float related-functions.
- * 
+ *
  */
 class GenericContainerBox extends GenericFormattedBox
 {
@@ -34,7 +34,7 @@ class GenericContainerBox extends GenericFormattedBox
   var $_first_line;
 
   /**
-   * @var Array A list of child nodes in the current line box; changes dynamically 
+   * @var Array A list of child nodes in the current line box; changes dynamically
    * during the reflow process.
    * @access private
    */
@@ -63,73 +63,65 @@ class GenericContainerBox extends GenericFormattedBox
    * @access public
    */
   var $_current_y;
-  
+
   function __construct()
   {
     parent::__construct();
-
-    // By default, box does not have any content
     $this->content = array();
-
-    // Initialize line box
     $this->_line = array();
-
-    // Initialize floats-related stuff
     $this->_deferred_floats = array();
-
     $this->_additional_text_indent = 0;
 
-    // Current-point
     $this->_current_x = 0;
     $this->_current_y = 0;
 
-    // Initialize floating children array
     $this->_floats = array();
   }
 
-  function destroy() {
+  function destroy()
+  {
     for ($i=0, $size = count($this->content); $i < $size; $i++) {
       $this->content[$i]->destroy();
-    };
+    }
     unset($this->content);
 
     parent::destroy();
   }
 
-  /** 
+  /**
    * Render current container box using the specified output method.
    *
    * @param OutputDriver $driver The output driver object
-   * 
-   * @return Boolean flag indicating the success or 'null' value in case of critical rendering 
+   *
+   * @return Boolean flag indicating the success or 'null' value in case of critical rendering
    * error
    */
-  function show(&$driver) {
-    GenericFormattedBox::show($driver);
-
+  function show(OutputDriver $driver)
+  {
+    parent::show($driver);
     $overflow = $this->get_css_property(CSS_OVERFLOW);
 
     /**
      * Sometimes the content may overflow container boxes. This situation arise, for example,
      * for relative-positioned child boxes, boxes having constrained height and in some
-     * other cases. If the container box does not have CSS 'overflow' property 
+     * other cases. If the container box does not have CSS 'overflow' property
      * set to 'visible' value, the content should be visually clipped using container box
      * padding area.
      */
     if ($overflow !== OVERFLOW_VISIBLE) {
       $driver->save();
       $this->_setupClip($driver);
-    };    
+    }
 
     /**
      * Render child elements
      */
-    for ($i=0, $size = count($this->content); $i < $size; $i++) {    
-      $child =& $this->content[$i];
+    for ($i=0, $size = count($this->content); $i < $size; $i++) {
+      $child = $this->content[$i];
 
       /**
        * We'll check the visibility property here
-       * Reason: all boxes (except the top-level one) are contained in some other box, 
+       * Reason: all boxes (except the top-level one) are contained in some other box,
        * so every box will pass this check. The alternative is to add this check into every
        * box class show member.
        *
@@ -139,9 +131,9 @@ class GenericContainerBox extends GenericFormattedBox
       if ($child->isVisibleInFlow()) {
         /**
          * To reduce the drawing overhead, we'll check if some part if current child element
-         * belongs to current output page. If not, there will be no reason to draw this 
+         * belongs to current output page. If not, there will be no reason to draw this
          * child this time.
-         * 
+         *
          * @see OutputDriver::contains()
          *
          * @todo In rare cases the element content may be placed outside the element itself;
@@ -151,48 +143,48 @@ class GenericContainerBox extends GenericFormattedBox
         if ($driver->contains($child)) {
           if (is_null($child->show($driver))) {
             return null;
-          };
-        };
-      };
+          }
+        }
+      }
     }
 
-    /** 
-     * Restore previous clipping mode, if it have been modified for non-'overflow: visible' 
+    /**
+     * Restore previous clipping mode, if it have been modified for non-'overflow: visible'
      * box.
      */
     if ($overflow !== OVERFLOW_VISIBLE) {
       $driver->restore();
-    };
+    }
 
     return true;
   }
 
-  /** 
+  /**
    * Render current fixed-positioned container box using the specified output method. Unlike
    * the 'show' method, there's no check if current page viewport contains current element, as
    * fixed-positioned may be drawn on the page margins, outside the viewport.
    *
    * @param OutputDriver $driver The output driver object
-   * 
-   * @return Boolean flag indicating the success or 'null' value in case of critical rendering 
+   *
+   * @return Boolean flag indicating the success or 'null' value in case of critical rendering
    * error
    *
    * @see GenericContainerBox::show()
-   * 
-   * @todo the 'show' and 'show_fixed' method code are almost the same except the child element 
+   *
+   * @todo the 'show' and 'show_fixed' method code are almost the same except the child element
    * method called in the inner loop; also, no check is done if current viewport contains this element,
    * thus sllowinf printing data on page margins, where no data should be printed normally
    * I suppose some more generic method containing the common code should be made.
    */
-  function show_fixed(&$driver) {
-    GenericFormattedBox::show($driver);
-
+  function show_fixed(OutputDriver $driver)
+  {
+    parent::show($driver);
     $overflow = $this->get_css_property(CSS_OVERFLOW);
 
     /**
      * Sometimes the content may overflow container boxes. This situation arise, for example,
      * for relative-positioned child boxes, boxes having constrained height and in some
-     * other cases. If the container box does not have CSS 'overflow' property 
+     * other cases. If the container box does not have CSS 'overflow' property
      * set to 'visible' value, the content should be visually clipped using container box
      * padding area.
      */
@@ -200,16 +192,16 @@ class GenericContainerBox extends GenericFormattedBox
       // Save graphics state (of course, BEFORE the clipping area will be set)
       $driver->save();
       $this->_setupClip($driver);
-    };    
+    }
 
     /**
      * Render child elements
      */
     $size = count($this->content);
-    for ($i=0; $i < $size; $i++) {    
+    for ($i=0; $i < $size; $i++) {
       /**
        * We'll check the visibility property here
-       * Reason: all boxes (except the top-level one) are contained in some other box, 
+       * Reason: all boxes (except the top-level one) are contained in some other box,
        * so every box will pass this check. The alternative is to add this check into every
        * box class show member.
        *
@@ -223,70 +215,76 @@ class GenericContainerBox extends GenericFormattedBox
         if ($child->get_css_property(CSS_POSITION) != POSITION_FIXED) {
           if (is_null($child->show_fixed($driver))) {
             return null;
-          };
-        };
-      };
+          }
+        }
+      }
     }
 
-    /** 
-     * Restore previous clipping mode, if it have been modified for non-'overflow: visible' 
+    /**
+     * Restore previous clipping mode, if it have been modified for non-'overflow: visible'
      * box.
      */
     if ($overflow !== OVERFLOW_VISIBLE) {
       $driver->restore();
-    };
+    }
 
     return true;
   }
 
-  function _find(&$box) {
+  function _find(GenericFormattedBox $box)
+  {
     $size = count($this->content);
     for ($i=0; $i<$size; $i++) {
-      if ($this->content[$i]->uid == $box->uid) { 
-        return $i; 
-      };
+      if ($this->content[$i]->uid == $box->uid) {
+        return $i;
+      }
     }
     return null;
   }
 
   // Inserts new child box at the specified (zero-based) offset; 0 stands for first child
-  // 
+  //
   // @param $index index to insert child at
   // @param $box child to be inserted
   //
-  function insert_child($index, &$box) {
-    $box->parent =& $this;
+  function insert_child($index, GenericFormattedBox $box)
+  {
+    $box->parent = $this;
 
     // Offset the content array
     for ($i = count($this->content)-1; $i>= $index; $i--) {
       $this->content[$i+1] =& $this->content[$i];
-    };
+    }
 
-    $this->content[$index] =& $box;
+    $this->content[$index] = $box;
   }
 
-  function insert_before(&$what, &$where) {
+  function insert_before(&$what, &$where)
+  {
     if ($where) {
       $index = $this->_find($where);
 
-      if (is_null($index)) { 
-        return null; 
-      };
+      if (is_null($index)) {
+        return null;
+      }
 
       $this->insert_child($index, $what);
-    } else {
+    }
+    else {
       // If 'where' is not specified, 'what' should become the last child
       $this->add_child($what);
-    };
-    
+    }
+
     return $what;
   }
 
-  function add_child(&$box) {
+  function add_child(&$box)
+  {
     $this->append_child($box);
   }
 
-  function append_child(&$box) {
+  function append_child(&$box)
+  {
     // In general, this function is called like following:
     // $box->add_child(create_pdf_box(...))
     // As create_pdf_box _may_ return null value (for example, for an empty text node),
@@ -294,37 +292,37 @@ class GenericContainerBox extends GenericFormattedBox
     if ($box) {
       $box->parent =& $this;
       $this->content[] =& $box;
-    };
+    }
   }
 
-  // Get first child of current box which actually will be drawn 
-  // on the page. So, whitespace and null boxes will be ignored
-  // 
-  // See description of is_null for null box definition.
-  // (not only NullBox is treated as null box)
-  //
-  // @return reference to the first visible child of current box 
-  function &get_first() {
+  /**
+   * Get first child of current box which actually will be drawn
+   * on the page. So, whitespace and null boxes will be ignored
+   *
+   * See description of is_null for null box definition.
+   * (not only NullBox is treated as null box)
+   *
+   * @return first visible child of current box or null
+   */
+  function get_first()
+  {
     $size = count($this->content);
     for ($i=0; $i<$size; $i++) {
-      if (!Box::is_whitespace($this->content[$i]) && 
+      if (!Box::is_whitespace($this->content[$i]) &&
           !$this->content[$i]->is_null()) {
         return $this->content[$i];
-      };
-    };
-
-    // We use this construct to avoid notice messages in PHP 4.4 and PHP 5
-    $dummy = null;
-    return $dummy;
+      }
+    }
+    return null;
   }
 
-  // Get first text or image child of current box which actually will be drawn 
-  // on the page. 
-  // 
+  // Get first text or image child of current box which actually will be drawn
+  // on the page.
+  //
   // See description of is_null for null box definition.
   // (not only NullBox is treated as null box)
   //
-  // @return reference to the first visible child of current box 
+  // @return reference to the first visible child of current box
   function &get_first_data() {
     $size = count($this->content);
     for ($i=0; $i<$size; $i++) {
@@ -343,13 +341,13 @@ class GenericContainerBox extends GenericFormattedBox
     return $dummy;
   }
 
-  // Get last child of current box which actually will be drawn 
+  // Get last child of current box which actually will be drawn
   // on the page. So, whitespace and null boxes will be ignored
-  // 
+  //
   // See description of is_null for null box definition.
   // (not only NullBox is treated as null box)
   //
-  // @return reference to the last visible child of current box 
+  // @return reference to the last visible child of current box
   function &get_last() {
     for ($i=count($this->content)-1; $i>=0; $i--) {
       if (!Box::is_whitespace($this->content[$i]) && !$this->content[$i]->is_null()) {
@@ -364,7 +362,7 @@ class GenericContainerBox extends GenericFormattedBox
 
   function offset_if_first(&$box, $dx, $dy) {
     if ($this->is_first($box)) {
-      // The top-level box (page box) should never be offset 
+      // The top-level box (page box) should never be offset
       if ($this->parent) {
         if (!$this->parent->offset_if_first($box, $dx, $dy)) {
           $this->offset($dx, $dy);
@@ -374,7 +372,7 @@ class GenericContainerBox extends GenericFormattedBox
     };
     return false;
   }
-    
+
   function offset($dx, $dy) {
     parent::offset($dx, $dy);
 
@@ -423,13 +421,13 @@ class GenericContainerBox extends GenericFormattedBox
 
   // Get total height of this box content (including floats, if any)
   // Note that floats can be contained inside children, so we'll need to use
-  // this function recusively 
+  // this function recusively
   function get_real_full_height() {
     $content_size = count($this->content);
 
     $overflow = $this->get_css_property(CSS_OVERFLOW);
 
-    // Treat items with overflow: hidden specifically, 
+    // Treat items with overflow: hidden specifically,
     // as floats flown out of this boxes will not be visible
     if ($overflow == OVERFLOW_HIDDEN) {
       return $this->get_full_height();
@@ -437,25 +435,25 @@ class GenericContainerBox extends GenericFormattedBox
 
     // Check if this object is totally empty
     $first = $this->get_first();
-    if (is_null($first)) { 
-      return 0; 
+    if (is_null($first)) {
+      return 0;
     };
 
-    // Initialize the vertical extent taken by content using the 
+    // Initialize the vertical extent taken by content using the
     // very first child
     $max_top    = $first->get_top_margin();
     $min_bottom = $first->get_bottom_margin();
 
-    for ($i=0; $i<$content_size; $i++) {     
+    for ($i=0; $i<$content_size; $i++) {
       if (!$this->content[$i]->is_null()) {
-        // Check if top margin of current child is to the up 
+        // Check if top margin of current child is to the up
         // of vertical extent top margin
         $max_top    = max($max_top, $this->content[$i]->get_top_margin());
 
         /**
-         * Check if current child bottom margin will extend 
-         * the vertical space OR if it contains floats extending 
-         * this, unless this child have overflow: hidden, because this 
+         * Check if current child bottom margin will extend
+         * the vertical space OR if it contains floats extending
+         * this, unless this child have overflow: hidden, because this
          * will prevent additional content to be visible
          */
         if (!$this->content[$i]->is_container()) {
@@ -470,7 +468,7 @@ class GenericContainerBox extends GenericFormattedBox
           } else {
             $min_bottom = min($min_bottom,
                               $this->content[$i]->get_bottom_margin(),
-                              $this->content[$i]->get_top_margin() - 
+                              $this->content[$i]->get_top_margin() -
                               $this->content[$i]->get_real_full_height());
           };
         };
@@ -489,7 +487,7 @@ class GenericContainerBox extends GenericFormattedBox
     for ($i=0; $i < $size; $i++) {
       // Note that the line length should include the inline boxes margin/padding
       // as inline boxes are not directly included to the parent line box,
-      // we'll need to check the parent of current line box element, 
+      // we'll need to check the parent of current line box element,
       // and, if it is an inline box, AND this element is last or first contained element
       // add correcponsing padding value
       $element =& $this->_line[$i];
@@ -508,12 +506,12 @@ class GenericContainerBox extends GenericFormattedBox
         $first = $element->parent->get_first();
         $last  = $element->parent->get_last();
 
-        if (!is_null($first) && $first->uid === $element->uid) { 
-          $sum += $element->parent->get_extra_line_left(); 
+        if (!is_null($first) && $first->uid === $element->uid) {
+          $sum += $element->parent->get_extra_line_left();
         }
 
-        if (!is_null($last) && $last->uid === $element->uid) { 
-          $sum += $element->parent->get_extra_line_right(); 
+        if (!is_null($last) && $last->uid === $element->uid) {
+          $sum += $element->parent->get_extra_line_right();
         }
       };
     }
@@ -543,7 +541,7 @@ class GenericContainerBox extends GenericFormattedBox
 
     return $this->_line[$size-1];
   }
-  
+
   // WIDTH
 
   function get_min_width_natural(&$context) {
@@ -553,7 +551,7 @@ class GenericContainerBox extends GenericFormattedBox
      * If box does not have any context, its minimal width is determined by extra horizontal space:
      * padding, border width and margins
      */
-    if ($content_size == 0) { 
+    if ($content_size == 0) {
       $min_width = $this->_get_hor_extra();
       return $min_width;
     };
@@ -563,25 +561,25 @@ class GenericContainerBox extends GenericFormattedBox
      */
     $white_space = $this->get_css_property(CSS_WHITE_SPACE);
     $pseudo_nowrap = $this->get_css_property(CSS_HTML2PS_NOWRAP);
-    if ($white_space   == WHITESPACE_NOWRAP || 
-        $pseudo_nowrap == NOWRAP_NOWRAP) { 
+    if ($white_space   == WHITESPACE_NOWRAP ||
+        $pseudo_nowrap == NOWRAP_NOWRAP) {
       $min_width = $this->get_min_nowrap_width($context);
-      return $min_width; 
+      return $min_width;
     }
 
     /**
      * We need to add text indent size to the width of the first item
      */
     $start_index = 0;
-    while ($start_index < $content_size && 
-           $this->content[$start_index]->out_of_flow()) { 
-      $start_index++; 
+    while ($start_index < $content_size &&
+           $this->content[$start_index]->out_of_flow()) {
+      $start_index++;
     };
 
     if ($start_index < $content_size) {
       $ti = $this->get_css_property(CSS_TEXT_INDENT);
-      $minw = 
-        $ti->calculate($this) + 
+      $minw =
+        $ti->calculate($this) +
         $this->content[$start_index]->get_min_width_natural($context);
     } else {
       $minw = 0;
@@ -606,7 +604,7 @@ class GenericContainerBox extends GenericFormattedBox
 
   function get_min_width(&$context) {
     $strategy = new StrategyWidthMin();
-    return $strategy->apply($this, $context);    
+    return $strategy->apply($this, $context);
   }
 
   function get_min_nowrap_width(&$context) {
@@ -616,7 +614,7 @@ class GenericContainerBox extends GenericFormattedBox
 
   // Note: <table width="100%" inside some block box cause this box to expand
   // $limit - maximal width which should not be exceeded; by default, there's no limit at all
-  // 
+  //
   function get_max_width_natural(&$context, $limit=10E6) {
     $strategy = new StrategyWidthMaxNatural($limit);
     return $strategy->apply($this, $context);
@@ -648,7 +646,7 @@ class GenericContainerBox extends GenericFormattedBox
         $cb = CSSTextAlign::value2pdf($this->get_css_property(CSS_TEXT_ALIGN));
         $cb($this, $context, $lastline);
       } else {
-        // Nevertheless, CENTER tag and P/DIV with ALIGN attribute set should affect the 
+        // Nevertheless, CENTER tag and P/DIV with ALIGN attribute set should affect the
         // position of non-inline children.
         $cb = CSSPseudoAlign::value2pdf($this->get_css_property(CSS_HTML2PS_ALIGN));
         $cb($this, $context, $lastline);
@@ -671,7 +669,7 @@ class GenericContainerBox extends GenericFormattedBox
         //
         $baselined[] =& $this->_line[$i];
 
-        $baseline = max($baseline, 
+        $baseline = max($baseline,
                         $this->_line[$i]->default_baseline);
       };
     };
@@ -680,7 +678,7 @@ class GenericContainerBox extends GenericFormattedBox
     for ($i=0; $i < $size_baselined; $i++) {
       $baselined[$i]->baseline = $baseline;
 
-      $height = max($height, 
+      $height = max($height,
                     $baselined[$i]->get_full_height() + $baselined[$i]->getBaselineOffset(),
                     $baselined[$i]->get_ascender() + $baselined[$i]->get_descender());
 
@@ -691,7 +689,7 @@ class GenericContainerBox extends GenericFormattedBox
     for ($i=0; $i < $size; $i++) {
       $vertical_align = $this->_line[$i]->get_css_property(CSS_VERTICAL_ALIGN);
       if ($vertical_align == VA_SUB) {
-        $this->_line[$i]->baseline = 
+        $this->_line[$i]->baseline =
           $baseline + $this->_line[$i]->get_full_height()/2;
       };
     }
@@ -720,10 +718,10 @@ class GenericContainerBox extends GenericFormattedBox
       //
       for ($i=0; $i < $size; $i++) {
         $this->_line[$i]->baseline += ($middle - $height/2);
-      };      
+      };
       $height = $middle * 2;
     };
- 
+
     for ($i=0; $i < $size; $i++) {
       $vertical_align = $this->_line[$i]->get_css_property(CSS_VERTICAL_ALIGN);
       if ($vertical_align == VA_MIDDLE) {
@@ -746,7 +744,7 @@ class GenericContainerBox extends GenericFormattedBox
       //
       for ($i=0; $i < $size; $i++) {
         $this->_line[$i]->baseline += ($bottom - $height);
-      };      
+      };
       $height = $bottom;
     };
 
@@ -783,16 +781,16 @@ class GenericContainerBox extends GenericFormattedBox
     $line_bottom = $this->_current_y;
     foreach ($this->_line AS $line_element) {
       // This line is required; say, we have sequence of text and image inside the container,
-      // AND image have greater baseline than text; in out case, text will be offset to the bottom 
+      // AND image have greater baseline than text; in out case, text will be offset to the bottom
       // of the page and we lose the gap between text and container bottom edge, unless we'll re-extend
       // containier height
 
       // Note that we're using the colapsed margin value to get the Y coordinate to extend height to,
       // as bottom margin may be collapsed with parent
 
-      $effective_bottom = 
-        $line_element->get_top() - 
-        $line_element->get_height() - 
+      $effective_bottom =
+        $line_element->get_top() -
+        $line_element->get_height() -
         $line_element->get_extra_bottom();
 
       $this->extend_height($effective_bottom);
@@ -806,7 +804,7 @@ class GenericContainerBox extends GenericFormattedBox
 
     // Reset current X coordinate to the far left
     $this->_current_x = $this->get_left();
-    
+
     // Extend Y coordinate
     $this->_current_y = $line_bottom;
 
@@ -827,7 +825,7 @@ class GenericContainerBox extends GenericFormattedBox
     $this->_line[] =& $item;
   }
 
-  // Line box should be treated as empty in following cases: 
+  // Line box should be treated as empty in following cases:
   // 1. It is really empty (so, it contains 0 boxes)
   // 2. It contains only whitespace boxes
   function line_box_empty() {
@@ -836,7 +834,7 @@ class GenericContainerBox extends GenericFormattedBox
 
     // Scan line box
     for ($i=0; $i<$size; $i++) {
-      if (!Box::is_whitespace($this->_line[$i]) && 
+      if (!Box::is_whitespace($this->_line[$i]) &&
           !$this->_line[$i]->is_null()) { return false; };
     }
 
@@ -854,14 +852,14 @@ class GenericContainerBox extends GenericFormattedBox
   }
 
   function fitFloats(&$context) {
-    $float_bottom = $context->float_bottom();     
-    if (!is_null($float_bottom)) { 
-      $this->extend_height($float_bottom); 
+    $float_bottom = $context->float_bottom();
+    if (!is_null($float_bottom)) {
+      $this->extend_height($float_bottom);
     };
-    
+
     $float_right = $context->float_right();
-    if (!is_null($float_right)) { 
-      $this->extend_width($float_right); 
+    if (!is_null($float_right)) {
+      $this->extend_width($float_right);
     };
   }
 
@@ -950,9 +948,9 @@ class GenericContainerBox extends GenericFormattedBox
     // Note that $x and $y contain just a free space corner coordinate;
     // If our float has a margin/padding space, we'll need to offset ot a little;
     // Remember that float margins are never collapsed!
-    $this->moveto($x + $this->get_extra_left(), $y - $this->get_extra_top());  
+    $this->moveto($x + $this->get_extra_left(), $y - $this->get_extra_top());
 
-    // Reflow contents. 
+    // Reflow contents.
     // Note that floating box creates a new float flow context for it children.
 
     $context->push_floats();
@@ -960,7 +958,7 @@ class GenericContainerBox extends GenericFormattedBox
     // Floating box create a separate margin collapsing context
     $context->push_collapsed_margin(0);
 
-    $this->reflow_content($context); 
+    $this->reflow_content($context);
 
     $context->pop_collapsed_margin();
 
@@ -970,18 +968,18 @@ class GenericContainerBox extends GenericFormattedBox
 
     // restore old float flow context
     $context->pop_floats();
-    
+
     // Add this  box to the list of floats in current context
     $context->add_float($this);
 
     // Now fix the value of _current_x for the parent box; it is required
     // in the following case:
     // <body><img align="left">some text
-    // in such situation floating image is flown immediately, but it the close_line call have been made before, 
+    // in such situation floating image is flown immediately, but it the close_line call have been made before,
     // so _current_x value of container box will be still equal to ots left content edge; by calling float_left_x again,
     // we'll force "some text" to be offset to the right
     $parent->_current_x = $context->float_left_x($parent->_current_x, $parent->_current_y);
-  }  
+  }
 
   function reflow_whitespace(&$linebox_started, &$previous_whitespace) {
     $previous_whitespace = false;
@@ -991,7 +989,7 @@ class GenericContainerBox extends GenericFormattedBox
     for ($i=0; $i<$size; $i++) {
       $child =& $this->content[$i];
 
-      $child->reflow_whitespace($linebox_started, $previous_whitespace);      
+      $child->reflow_whitespace($linebox_started, $previous_whitespace);
     };
 
     // remove the last whitespace in block box
@@ -999,23 +997,23 @@ class GenericContainerBox extends GenericFormattedBox
 
     // Non-inline box have terminated; we may be sure that line box will be closed
     // at this moment and new line box after this will be generated
-    if (!is_inline($this)) { 
-      $linebox_started = false; 
+    if (!is_inline($this)) {
+      $linebox_started = false;
     };
 
     return;
   }
 
   function remove_last_whitespace() {
-    if (count($this->content) == 0) { 
-      return; 
+    if (count($this->content) == 0) {
+      return;
     };
 
     $i = count($this->content)-1;
     $last = $this->content[$i];
     while ($i >= 0 && Box::is_whitespace($this->content[$i])) {
       $this->remove($this->content[$i]);
-      
+
       $i --;
       if ($i >= 0) {
         $last = $this->content[$i];
@@ -1094,25 +1092,27 @@ class GenericContainerBox extends GenericFormattedBox
   /**
    * DOMish functions
    */
-  function &get_element_by_id($id) {
+  function get_element_by_id($id)
+  {
     if (isset($GLOBALS['__html_box_id_map'])) {
       return $GLOBALS['__html_box_id_map'][$id];
-    } else {
-      $dummy = null;
-      return $dummy;
-    };
+    }
+    else {
+      return null;
+    }
   }
-  
-  /* 
-   *  this is just a fake at the moment
+
+  /**
+   * This is just a fake at the moment
    */
-  function get_body() {
+  function get_body()
+  {
     return $this;
   }
 
-  function getChildNodes() {
+  function getChildNodes()
+  {
     return $this->content;
   }
 }
 
-?>
