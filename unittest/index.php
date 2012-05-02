@@ -17,9 +17,8 @@ $reporter = new TextReporter(); // HtmlReporter();
 $testfiles = glob('test.*.php');
 
 foreach ($testfiles as $testfile) {
-  //echo $testfile,"\n";
-  //$test->addFile($testfile);
-  break;
+  echo $testfile,"\n";
+  $test->addFile($testfile);
 }
 
 //$test->addFile('test.white-space.php');
@@ -27,7 +26,7 @@ foreach ($testfiles as $testfile) {
 //$test->addFile('test.input.text.php');
 //$test->addFile('test.block.absolute.php');
 //$test->addFile('test.table.border.php');
-$test->addFile(dirname(__FILE__) . '/test.link.php');
+//$test->addFile(dirname(__FILE__) . '/test.link.php');
 
 
 $test->run(new $reporter);
