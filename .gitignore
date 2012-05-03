@@ -1,6 +1,7 @@
 .DS_Store
-cache/
+public_html/cache/
 *~
-out/
-html/
-latex/
+public_html/out/
+public_html/html/
+public_html/latex/
+lib/
