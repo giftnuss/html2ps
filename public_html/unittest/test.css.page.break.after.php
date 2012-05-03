@@ -10,8 +10,8 @@ class TestCSSPageBreakAfter extends GenericTest {
   function testCSSPageBreakAfter2() {
     $tree = $this->runPipeline(file_get_contents('test.css.page.break.after.2.html'),
                                $media);
-    $page_heights = PageBreakLocator::get_pages($tree, 
-                                               mm2pt($media->real_height()), 
+    $page_heights = PageBreakLocator::get_pages($tree,
+                                               mm2pt($media->real_height()),
                                                mm2pt($media->height() - $media->margins['top']));
 
     $this->assertEqual(count($page_heights), 2);
@@ -19,7 +19,7 @@ class TestCSSPageBreakAfter extends GenericTest {
     $div = $tree->get_element_by_id('div');
     $h1 = $tree->get_element_by_id('h1');
 
-    $this->assertEqual($page_heights[0], $div->get_full_height());
+    $this->assertWithinMargin($page_heights[0], $div->get_full_height(), 0.001);
   }
 }
 
