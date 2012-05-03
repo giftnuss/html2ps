@@ -373,7 +373,7 @@ function &create_node_box(&$root, &$pipeline) {
     $box->setCSSProperty(CSS_BACKGROUND, $handler->default_value());
 
     // Create "clean" block box
-    $wrapper =& new BlockBox();
+    $wrapper = new BlockBox();
     $wrapper->readCSS($pipeline->get_current_css_state());    
     $wrapper->add_child($box);
 
@@ -520,7 +520,7 @@ function &create_pdf_pseudoelement($root, $pe_type, &$pipeline) {
     $handler->css('transparent',$pipeline);
     
     // Create "clean" block box
-    $wrapper =& new BlockBox();
+    $wrapper = new BlockBox();
     $wrapper->readCSS($pipeline->get_current_css_state());
     $wrapper->add_child($box);
         
